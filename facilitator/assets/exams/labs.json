@@ -61,6 +61,26 @@
         "examDurationInMinutes": 120
       },
       {
+        "id": "cka-004",
+        "assetPath": "assets/exams/cka/004",
+        "name": "CKA Mock Exam 01 (theplatformlab)",
+        "category": "CKA",
+        "description": "15-question mock exam adapted from theplatformlab/CKA-Certified-Kubernetes-Administrator (MIT): ConfigMap troubleshooting, RBAC, node maintenance, static PV/PVC, three-tier NetworkPolicies, Helm, RBAC auditing, HPA, TLS Ingress, scheduler troubleshooting, StatefulSets, quotas, Pod Security and sidecars.",
+        "warmUpTimeInSeconds": 360,
+        "difficulty": "Medium",
+        "examDurationInMinutes": 120
+      },
+      {
+        "id": "cka-005",
+        "assetPath": "assets/exams/cka/005",
+        "name": "CKA Mock Exam 02 (theplatformlab)",
+        "category": "CKA",
+        "description": "15-question mock exam adapted from theplatformlab/CKA-Certified-Kubernetes-Administrator (MIT): DNS, rollbacks, Secrets, DaemonSets with tolerations, API server health, ConfigMap reloads, PriorityClasses, NodePort, CronJobs, CSR certificates, PDBs, CRDs, Pod Security, dynamic provisioning and quotas.",
+        "warmUpTimeInSeconds": 360,
+        "difficulty": "Medium",
+        "examDurationInMinutes": 120
+      },
+      {
         "id": "docker-001",
         "assetPath": "assets/exams/other/001",
         "name": "Docker Speed Run - Core Concepts",

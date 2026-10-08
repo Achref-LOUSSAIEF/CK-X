@@ -1,0 +1,10 @@
+{
+  "lab": "cka-005",
+  "workerNodes": 2,
+  "answers": "assets/exams/cka/005/answers.md",
+  "questions": "assessment.json",
+  "totalMarks": 100,
+  "lowScore": 60,
+  "mediumScore": 75,
+  "highScore": 85
+}

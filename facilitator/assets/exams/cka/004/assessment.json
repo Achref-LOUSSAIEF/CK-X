@@ -1,0 +1,420 @@
+{
+  "questions": [
+    {
+      "id": "1",
+      "namespace": "production",
+      "machineHostname": "ckad9999",
+      "question": "The Pod `app-frontend` in the namespace `production` is in `CrashLoopBackOff`. Its container expects a configuration file at `/etc/app/config.yaml`, which does not exist in the image.\n\n1. Create a ConfigMap `app-config` in `production` with the key `config.yaml` and the content `database_host: postgres.production.svc.cluster.local`\n2. Mount it so that the file `/etc/app/config.yaml` exists in the `app-frontend` container (keep the Pod name, image and command)\n3. Make sure the Pod is `Running`\n\nTip: volumes of an existing Pod cannot be edited in place.",
+      "concepts": [
+        "troubleshooting",
+        "configmaps",
+        "volumes"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ConfigMap app-config has key config.yaml with the right content",
+          "verificationScriptFile": "q1_s1_validate_configmap.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "app-frontend is Running and reads /etc/app/config.yaml",
+          "verificationScriptFile": "q1_s2_validate_pod.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "namespace": "staging",
+      "machineHostname": "ckad9999",
+      "question": "A developer (user `dev-user`) needs to list Pods and Deployments in the namespace `staging`, and nowhere else.\n\n1. Create a Role `pod-deploy-lister` in `staging` that allows `get` and `list` on `pods` and `deployments`\n2. Create a RoleBinding `dev-user-binding` that grants it to the user `dev-user`\n\nVerify with `kubectl auth can-i list pods -n staging --as dev-user`.",
+      "concepts": [
+        "rbac",
+        "roles",
+        "authorization"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "dev-user can list pods and deployments in staging only",
+          "verificationScriptFile": "q2_s1_validate_permissions.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        },
+        {
+          "id": "2",
+          "description": "Role and RoleBinding use the required names",
+          "verificationScriptFile": "q2_s2_validate_objects.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "namespace": "maintenance",
+      "machineHostname": "ckad9999",
+      "question": "The node `k3d-cluster-agent-1` needs maintenance. It runs the Deployment `web-tier` (3 replicas) and a standalone Pod `db-local` that keeps important data on the node (`emptyDir`).\n\n1. Prevent any new Pods from being scheduled on `k3d-cluster-agent-1`\n2. Move all `web-tier` Pods off `k3d-cluster-agent-1` (they must stay at `3` Ready replicas)\n3. The Pod `db-local` must **not** be evicted, deleted or recreated — it must keep running on `k3d-cluster-agent-1`\n\nNote: think about what `kubectl drain` would do to `db-local`.",
+      "concepts": [
+        "cluster maintenance",
+        "cordon",
+        "drain"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "k3d-cluster-agent-1 is unschedulable",
+          "verificationScriptFile": "q3_s1_validate_cordon.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "web-tier has 3 Ready replicas, none on k3d-cluster-agent-1",
+          "verificationScriptFile": "q3_s2_validate_web_tier.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "db-local is the original Pod, still Running on k3d-cluster-agent-1",
+          "verificationScriptFile": "q3_s3_validate_db_local.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "namespace": "databases",
+      "machineHostname": "ckad9999",
+      "question": "The Deployment `db-app` in the namespace `databases` needs shared persistent storage.\n\n1. Create a StorageClass `fast-ssd` with provisioner `kubernetes.io/no-provisioner` (static provisioning)\n2. Create a PersistentVolume `db-pv`: `5Gi`, access mode `ReadWriteMany`, StorageClass `fast-ssd`, `hostPath` `/mnt/db-data`\n3. Create a PersistentVolumeClaim `db-storage` in `databases`: `5Gi`, `ReadWriteMany`, StorageClass `fast-ssd`\n4. Update `db-app` to mount the claim at `/data` (volume name `data`)",
+      "concepts": [
+        "storage",
+        "persistent volumes",
+        "storage classes"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "StorageClass fast-ssd and PV db-pv are correct",
+          "verificationScriptFile": "q4_s1_validate_sc_pv.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "PVC db-storage is Bound to db-pv",
+          "verificationScriptFile": "q4_s2_validate_pvc.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "db-app mounts db-storage at /data and is available",
+          "verificationScriptFile": "q4_s3_validate_deployment.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "namespace": "shop",
+      "machineHostname": "ckad9999",
+      "question": "All Pods in the namespace `shop` can currently talk to each other. Implement isolation with three NetworkPolicies:\n\n1. `frontend-policy`: Pods with `tier=frontend` accept ingress on TCP port `80` only (from any source)\n2. `backend-policy`: Pods with `tier=backend` accept ingress only from `tier=frontend` Pods on TCP port `3000`\n3. `database-policy`: Pods with `tier=database` accept ingress only from `tier=backend` Pods on TCP port `5432`\n\nTest Pods `frontend`, `backend`, `database` and `tester` (no tier label) already exist. All have `wget`.",
+      "concepts": [
+        "network policies",
+        "networking"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Three policies select the right Pods, sources and ports",
+          "verificationScriptFile": "q5_s1_validate_spec.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        },
+        {
+          "id": "2",
+          "description": "Allowed and denied traffic behaves as required",
+          "verificationScriptFile": "q5_s2_validate_enforcement.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "namespace": "monitoring",
+      "machineHostname": "ckad9999",
+      "question": "A Helm chart `monitoring` exists locally in `/tmp/exam/helm-charts/monitoring` on `ckad9999`.\n\nInstall it as the release `monitoring-stack` in the namespace `monitoring` (create the namespace if needed), overriding these values:\n\n- `replica_count` = `3`\n- `storage_size` = `50Gi`\n- `persistence.enabled` = `true`\n\nInspect the chart's `values.yaml` first.",
+      "concepts": [
+        "helm",
+        "package management"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Release monitoring-stack is deployed in monitoring with the overrides",
+          "verificationScriptFile": "q6_s1_validate_release.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Chart resources reflect the values",
+          "verificationScriptFile": "q6_s2_validate_resources.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "Container runtime configuration requires node access, which this lab does not provide, so inspect it through the API instead.\n\nWrite one line per node to `/tmp/exam/q7/runtimes.txt` on `ckad9999`, in the format:\n\n`<node-name> <container-runtime-version>`\n\nfor example `node1 containerd://1.7.0`. Use the values Kubernetes reports for each node.",
+      "concepts": [
+        "cluster architecture",
+        "container runtime",
+        "nodes"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "runtimes.txt lists every node with its runtime",
+          "verificationScriptFile": "q7_s1_validate_runtimes.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "namespace": "audit-lab",
+      "machineHostname": "ckad9999",
+      "question": "There were unexpected reads of ConfigMaps in the namespace `default`. API audit logging requires control-plane access, which this lab does not provide, so investigate with RBAC instead.\n\n1. Find which ServiceAccounts in the namespace `audit-lab` are allowed to `get` ConfigMaps in the namespace `default`. Write their names, one per line, to `/tmp/exam/q8/cm-access.txt` on `ckad9999`\n2. Revoke that access for the ServiceAccount `deployer` only, by deleting the binding that grants it. Do not delete the ServiceAccount and do not change the access of any other ServiceAccount",
+      "concepts": [
+        "rbac",
+        "security",
+        "troubleshooting"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "cm-access.txt lists exactly the ServiceAccounts with access",
+          "verificationScriptFile": "q8_s1_validate_file.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "deployer lost access; ci and the ServiceAccounts still exist",
+          "verificationScriptFile": "q8_s2_validate_revoke.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "namespace": "production",
+      "machineHostname": "ckad9999",
+      "question": "The Deployment `web-app` in the namespace `production` runs `2` replicas.\n\nCreate a HorizontalPodAutoscaler named `web-app-hpa` for it that keeps the average CPU utilization at `70%`, with a minimum of `2` and a maximum of `10` replicas.",
+      "concepts": [
+        "autoscaling",
+        "hpa"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "HPA web-app-hpa targets web-app with 2-10 replicas at 70% CPU",
+          "verificationScriptFile": "q9_s1_validate_hpa.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "namespace": "web-api",
+      "machineHostname": "ckad9999",
+      "question": "The Service `api` (port `80`) in the namespace `web-api` must be exposed through an Ingress. The TLS Secret `api-tls-cert` already exists.\n\nCreate an Ingress `api-ingress` in `web-api` with ingress class `traefik`:\n\n- TLS for host `api.example.com` using the Secret `api-tls-cert`\n- Host `api.example.com`, path `/api` (pathType `Prefix`) → `api:80`\n- Host `api.example.com`, path `/health` (pathType `Exact`) → `api:80`",
+      "concepts": [
+        "ingress",
+        "tls",
+        "networking"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Ingress has TLS for api.example.com with api-tls-cert",
+          "verificationScriptFile": "q10_s1_validate_tls.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Ingress routes /api (Prefix) and /health (Exact) to api:80",
+          "verificationScriptFile": "q10_s2_validate_rules.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "namespace": "sched-debug",
+      "machineHostname": "ckad9999",
+      "question": "The Pods of the Deployment `report-generator` in the namespace `sched-debug` have been `Pending` for a long time, and `kubectl describe` shows **no scheduling events** at all.\n\nFind out why no scheduler is placing them and fix the Deployment so that both replicas get scheduled by the cluster's default scheduler and run.\n\n(On a kubeadm cluster this is also what you would see if the `kube-scheduler` static Pod were down — check `kubectl get pods -n kube-system` in that case.)",
+      "concepts": [
+        "troubleshooting",
+        "scheduling",
+        "control plane"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment uses the default scheduler",
+          "verificationScriptFile": "q11_s1_validate_scheduler.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Both replicas are Running",
+          "verificationScriptFile": "q11_s2_validate_running.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "namespace": "db-cluster",
+      "machineHostname": "ckad9999",
+      "question": "In the namespace `db-cluster`, deploy a StatefulSet `database-cluster`:\n\n- `3` replicas, Pod label `app=database-cluster`\n- Container `postgres`, image `postgres:16-alpine`, port `5432`, env `POSTGRES_PASSWORD=example` and `PGDATA=/var/lib/postgresql/data/pgdata`\n- A `volumeClaimTemplate` named `db-storage` requesting `10Gi` (`ReadWriteOnce`, default StorageClass), mounted at `/var/lib/postgresql/data`\n- A **headless** Service `database-cluster` on port `5432`, so that Pods get stable DNS names such as `database-cluster-0.database-cluster`",
+      "concepts": [
+        "statefulsets",
+        "headless services",
+        "storage"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Headless Service database-cluster on port 5432",
+          "verificationScriptFile": "q12_s1_validate_service.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "StatefulSet spec is correct",
+          "verificationScriptFile": "q12_s2_validate_statefulset.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "3 Pods Ready with bound PVCs and stable DNS",
+          "verificationScriptFile": "q12_s3_validate_runtime.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "namespace": "test",
+      "machineHostname": "ckad9999",
+      "question": "The namespace `test` consumes too many resources. Configure:\n\n1. A ResourceQuota `test-quota` limiting the namespace to `requests.cpu: 4` and `requests.memory: 8Gi` in total\n2. A LimitRange `test-limits` for type `Container` with:\n   - `min`: CPU `100m`, memory `128Mi`\n   - `max`: CPU `1`, memory `1Gi`\n   - `defaultRequest`: CPU `100m`, memory `128Mi`; `default` (limit): CPU `500m`, memory `512Mi`\n\nA Pod requesting `2` CPUs and `2Gi` memory must then be rejected (try it with `--dry-run=server`).",
+      "concepts": [
+        "resource management",
+        "resourcequota",
+        "limitrange"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ResourceQuota test-quota is correct",
+          "verificationScriptFile": "q13_s1_validate_quota.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "LimitRange test-limits is correct",
+          "verificationScriptFile": "q13_s2_validate_limitrange.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "A 2 CPU / 2Gi Pod is rejected, a small Pod is accepted",
+          "verificationScriptFile": "q13_s3_validate_admission.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "namespace": "restricted",
+      "machineHostname": "ckad9999",
+      "question": "Configure Pod Security Admission for the namespace `restricted` (create it if missing):\n\n1. `enforce` mode at level `restricted`\n2. `audit` mode at level `baseline`\n\nThen verify that a Pod with `privileged: true` is denied (e.g. with `kubectl apply --dry-run=server`).",
+      "concepts": [
+        "pod security",
+        "security",
+        "admission"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Namespace restricted has the PSA labels",
+          "verificationScriptFile": "q14_s1_validate_labels.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "A privileged Pod is rejected",
+          "verificationScriptFile": "q14_s2_validate_denied.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "Create a Pod `app-with-logger` in the namespace `default`:\n\n- Container `nginx`, image `nginx:1.25`, mounting the volume `log-volume` at `/var/log/nginx`\n- Container `logger`, image `busybox:1.36`, mounting `log-volume` at `/logs` and running `tail -F /logs/access.log`\n- `log-volume` is an `emptyDir`\n\nBoth containers must keep running, and requests to nginx must show up in the logs of `logger`.",
+      "concepts": [
+        "multi-container pods",
+        "sidecar",
+        "volumes"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod spec has both containers sharing log-volume",
+          "verificationScriptFile": "q15_s1_validate_spec.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Both containers run and logger shows nginx requests",
+          "verificationScriptFile": "q15_s2_validate_behaviour.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    }
+  ]
+}

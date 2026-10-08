@@ -1,0 +1,443 @@
+{
+  "questions": [
+    {
+      "id": "1",
+      "namespace": "backend",
+      "machineHostname": "ckad9999",
+      "question": "An application in the namespace `backend` must call the Service `web-ui` (port `3000`) in the namespace `frontend` by DNS.\n\n1. Write the **fully qualified** DNS name of the Service to `/tmp/exam/q1/dns-name.txt` on `ckad9999`\n2. Create a Pod `dns-test` in the namespace `backend` (image `busybox:1.36`, command `sleep 3600`)\n3. From `dns-test`, run `nslookup` on that name and save the output to `/tmp/exam/q1/nslookup.txt`",
+      "concepts": [
+        "dns",
+        "service discovery",
+        "networking"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "dns-name.txt contains the Service FQDN",
+          "verificationScriptFile": "q1_s1_validate_fqdn.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "dns-test Pod runs in backend",
+          "verificationScriptFile": "q1_s2_validate_pod.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "nslookup.txt shows the Service resolving to its ClusterIP",
+          "verificationScriptFile": "q1_s3_validate_nslookup.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "namespace": "payments",
+      "machineHostname": "ckad9999",
+      "question": "The Deployment `payment-service` in the namespace `payments` was updated several times, and the latest update broke it.\n\n1. Inspect the rollout history and find the revision that introduced the problem. Write that revision number to `/tmp/exam/q2/bad-revision.txt` on `ckad9999`\n2. Roll back to the last **working** revision\n3. Make sure all `3` replicas are Ready",
+      "concepts": [
+        "deployments",
+        "rollouts",
+        "rollback"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "bad-revision.txt names the broken revision",
+          "verificationScriptFile": "q2_s1_validate_bad_revision.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "payment-service rolled back to nginx:1.25 with 3 Ready replicas",
+          "verificationScriptFile": "q2_s2_validate_rollback.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "namespace": "app-secrets",
+      "machineHostname": "ckad9999",
+      "question": "In the namespace `app-secrets`:\n\n1. Create a Secret `db-creds` with the keys `username=dbuser`, `password=secret123` and `database=appdb`\n2. Create a Deployment `db-client` (1 replica, image `busybox:1.36`, command `sleep 3600`) that exposes them as **environment variables** `DB_USERNAME`, `DB_PASSWORD` and `DB_DATABASE` (not as files)\n\nThe application must not print the values to its logs.",
+      "concepts": [
+        "secrets",
+        "environment variables",
+        "deployments"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Secret db-creds has the three keys",
+          "verificationScriptFile": "q3_s1_validate_secret.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "db-client references the Secret through env vars, no secret volumes",
+          "verificationScriptFile": "q3_s2_validate_deployment.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Pod sees the values and does not log them",
+          "verificationScriptFile": "q3_s3_validate_runtime.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "namespace": "monitoring",
+      "machineHostname": "ckad9999",
+      "question": "The control-plane node `k3d-cluster-server-0` carries the taint `node-role.kubernetes.io/control-plane:NoSchedule`.\n\nCreate a DaemonSet `monitoring-agent` in the namespace `monitoring` that runs on **every** node, including the control plane:\n\n- Pod label `app=monitoring-agent`\n- Container `agent`, image `busybox:1.36`, command `sh -c 'while true; do sleep 3600; done'` (stands in for a real agent such as `datadog/agent`)\n- Tolerate exactly that control-plane taint (key `node-role.kubernetes.io/control-plane`, effect `NoSchedule`)",
+      "concepts": [
+        "daemonsets",
+        "taints",
+        "tolerations"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "DaemonSet tolerates the control-plane taint",
+          "verificationScriptFile": "q4_s1_validate_toleration.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "An agent Pod is Ready on every node",
+          "verificationScriptFile": "q4_s2_validate_coverage.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "Users report that the API server seems slow. The control-plane node is not reachable over SSH in this lab, so check it through the API:\n\n1. Save the output of the API server's **verbose readiness endpoint** to `/tmp/exam/q5/readyz.txt` on `ckad9999`\n2. Find the port the API server listens on, by looking at the endpoints of the `kubernetes` Service in the `default` namespace, and write it to `/tmp/exam/q5/apiserver-port.txt`",
+      "concepts": [
+        "troubleshooting",
+        "api server",
+        "cluster architecture"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "readyz.txt contains the verbose readiness checks",
+          "verificationScriptFile": "q5_s1_validate_readyz.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "apiserver-port.txt contains the API server port",
+          "verificationScriptFile": "q5_s2_validate_port.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "namespace": "config-reload",
+      "machineHostname": "ckad9999",
+      "question": "The Deployment `config-app` in the namespace `config-reload` reads its mode from the ConfigMap `app-config` through the environment variable `APP_MODE`, which is only read when a container starts.\n\n1. Change the key `APP_MODE` in `app-config` to `production`\n2. Additionally mount the ConfigMap as a volume named `config` at `/etc/app` in the container (no `subPath`, so future file changes are picked up automatically)\n3. Make sure all running Pods use the new value, without deleting the Deployment",
+      "concepts": [
+        "configmaps",
+        "rollouts",
+        "volumes"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ConfigMap updated and mounted without subPath",
+          "verificationScriptFile": "q6_s1_validate_spec.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "All Pods see APP_MODE=production in env and file",
+          "verificationScriptFile": "q6_s2_validate_runtime.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "namespace": "priority-lab",
+      "machineHostname": "ckad9999",
+      "question": "Set up workload priorities:\n\n1. Create a PriorityClass `critical` with value `1000` and a PriorityClass `standard` with value `100` (neither is the global default)\n2. In the namespace `priority-lab`, create the Pods `critical-pod-1` and `critical-pod-2` using `critical`, and `standard-pod` using `standard` (all image `nginx:1.25`)\n\nWhen a node runs short on resources, lower-priority Pods are preempted first.",
+      "concepts": [
+        "scheduling",
+        "priorityclass",
+        "preemption"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "PriorityClasses have the right values",
+          "verificationScriptFile": "q7_s1_validate_classes.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Pods run with the expected priorities",
+          "verificationScriptFile": "q7_s2_validate_pods.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "namespace": "legacy",
+      "machineHostname": "ckad9999",
+      "question": "The legacy application `legacy-app` (label `app=legacy-app`, container port `3000`) in the namespace `legacy` must be reachable from outside the cluster without an Ingress.\n\nCreate a Service `legacy-app` of the appropriate type that:\n\n- listens on Service port `8080` and forwards to container port `3000`\n- is exposed on every node at port `30808`\n\n(NodePorts must be in the range 30000-32767, so a node port of 8080 is not possible.)",
+      "concepts": [
+        "services",
+        "nodeport",
+        "networking"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Service legacy-app is a NodePort 8080 -> 3000 on 30808",
+          "verificationScriptFile": "q8_s1_validate_service.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "The app answers on a node IP at port 30808",
+          "verificationScriptFile": "q8_s2_validate_connectivity.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "namespace": "backups",
+      "machineHostname": "ckad9999",
+      "question": "In the namespace `backups`, create a CronJob `backup-job` that:\n\n- runs every day at `2:00 AM`\n- uses container `backup`, image `busybox:1.36`, command `sh -c 'echo backup done'`\n- keeps only the last `3` successful Jobs\n- is **suspended** (it must not run until someone resumes it)",
+      "concepts": [
+        "cronjobs",
+        "scheduling",
+        "workloads"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "CronJob schedule, history and container",
+          "verificationScriptFile": "q9_s1_validate_spec.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "CronJob is suspended",
+          "verificationScriptFile": "q9_s2_validate_suspend.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "`kubeadm certs renew` needs control-plane access, which this lab does not provide, so practice the Kubernetes certificate API instead. A private key and a certificate signing request for the user `john` were generated in `/tmp/exam/q10/` (`john.key`, `john.csr`).\n\n1. Create a CertificateSigningRequest `john` from `john.csr` with signer `kubernetes.io/kube-apiserver-client`, usage `client auth` and an expiration of `86400` seconds\n2. Approve it\n3. Save the issued certificate (PEM) to `/tmp/exam/q10/john.crt`",
+      "concepts": [
+        "certificates",
+        "authentication",
+        "security"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "CSR john uses the right signer, usage and expiration",
+          "verificationScriptFile": "q10_s1_validate_csr.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "CSR approved and certificate issued",
+          "verificationScriptFile": "q10_s2_validate_approved.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "john.crt is the issued certificate for CN=john",
+          "verificationScriptFile": "q10_s3_validate_crt.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "namespace": "pdb-lab",
+      "machineHostname": "ckad9999",
+      "question": "The Deployment `web-app` in the namespace `pdb-lab` runs `10` replicas (label `app=web-app`) and must never lose more than `2` Pods at once during voluntary disruptions such as node drains.\n\nCreate a PodDisruptionBudget `app-pdb` that enforces this using `maxUnavailable`.",
+      "concepts": [
+        "pod disruption budgets",
+        "cluster maintenance"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "PDB app-pdb selects app=web-app with maxUnavailable 2",
+          "verificationScriptFile": "q11_s1_validate_spec.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "PDB currently allows exactly 2 disruptions",
+          "verificationScriptFile": "q11_s2_validate_status.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "namespace": "crd-db",
+      "machineHostname": "ckad9999",
+      "question": "Your team installed a CustomResourceDefinition for `Database` objects.\n\n1. Find the CRD and its API group/version\n2. Create a `Database` named `prod-db` in the namespace `crd-db` with `spec.engine: postgres`, `spec.version: \"16\"` and `spec.storageGB: 20`\n3. Delete the obsolete `Database` named `legacy-db` in `crd-db`",
+      "concepts": [
+        "crds",
+        "custom resources",
+        "api"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Database prod-db exists with the right spec",
+          "verificationScriptFile": "q12_s1_validate_create.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Database legacy-db is deleted (CRD kept)",
+          "verificationScriptFile": "q12_s2_validate_delete.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "namespace": "restricted-apps",
+      "machineHostname": "ckad9999",
+      "question": "The namespace `restricted-apps` enforces the Pod Security Standard `restricted`. A legacy Pod must run as **root**, which that level forbids. Pod Security Admission has no per-Pod exceptions, so isolate it in its own namespace instead:\n\n1. Create a namespace `privileged-apps` that enforces the `baseline` level\n2. Run a Pod `privileged-pod` there (image `nginx:1.25`) with `securityContext.runAsUser: 0`\n3. Leave `restricted-apps` unchanged, so it still rejects Pods that run as root",
+      "concepts": [
+        "pod security",
+        "security",
+        "namespaces"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "privileged-apps enforces baseline and privileged-pod runs as root",
+          "verificationScriptFile": "q13_s1_validate_privileged_ns.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        },
+        {
+          "id": "2",
+          "description": "restricted-apps still enforces restricted",
+          "verificationScriptFile": "q13_s2_validate_restricted_ns.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "namespace": "dyn-storage",
+      "machineHostname": "ckad9999",
+      "question": "Configure dynamic provisioning:\n\n1. Create a StorageClass `ssd-provisioner` using the cluster's provisioner `rancher.io/local-path`, with `volumeBindingMode: WaitForFirstConsumer` and `reclaimPolicy: Delete`\n2. In the namespace `dyn-storage`, create a PVC `my-ssd-claim` requesting `20Gi` (`ReadWriteOnce`) from that class\n3. Create a Pod `app-using-ssd` (image `nginx:1.25`) that mounts the claim at `/usr/share/nginx/html` (volume name `ssd-volume`)\n\nConfirm that a PersistentVolume was created automatically and bound.",
+      "concepts": [
+        "storage",
+        "storage classes",
+        "dynamic provisioning"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "StorageClass ssd-provisioner is correct",
+          "verificationScriptFile": "q14_s1_validate_storageclass.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "PVC is Bound to a dynamically provisioned PV",
+          "verificationScriptFile": "q14_s2_validate_pvc.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "app-using-ssd mounts the claim and runs",
+          "verificationScriptFile": "q14_s3_validate_pod.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "namespace": "batch-jobs",
+      "machineHostname": "ckad9999",
+      "question": "Set up resource governance for the namespace `batch-jobs`:\n\n1. A ResourceQuota `batch-jobs-quota` with `limits.cpu: 10` and `limits.memory: 20Gi`\n2. A LimitRange `batch-jobs-limits` for type `Container` with `min` CPU `500m` / memory `256Mi` and `max` CPU `4` / memory `8Gi`\n   (also set `default` limits of CPU `1` / memory `1Gi` and `defaultRequest` of CPU `500m` / memory `256Mi`, so Pods without resources are admitted)\n\nThen verify that a Pod with a container asking for `6` CPUs is rejected.",
+      "concepts": [
+        "resource management",
+        "resourcequota",
+        "limitrange"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ResourceQuota batch-jobs-quota is correct",
+          "verificationScriptFile": "q15_s1_validate_quota.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "LimitRange batch-jobs-limits is correct",
+          "verificationScriptFile": "q15_s2_validate_limitrange.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "A 6 CPU Pod is rejected, a Pod without resources is admitted",
+          "verificationScriptFile": "q15_s3_validate_admission.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    }
+  ]
+}
