@@ -6,7 +6,6 @@
     <title>Exam Results - CK-X Simulator</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/results.css">
-    <link rel="stylesheet" href="/css/feedback.css">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -85,7 +84,6 @@
     </div>
 
     <script src="/js/results.js"></script>
-    <script src="/js/feedback.js"></script>
     <script>
         // Set the current year for copyright
         document.getElementById('currentYear').textContent = new Date().getFullYear();
@@ -112,58 +110,5 @@
         </div>
     </div>
     
-    <!-- Feedback Modal -->
-    <div id="feedbackModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4>Your Feedback Matters</h4>
-            </div>
-            <div class="modal-body">
-                <div class="feedback-form">
-                    <div class="rating-container">
-                        <p>How would you rate your overall experience with CK-X?</p>
-                        <div class="star-rating">
-                            <input type="radio" id="star5" name="rating" value="5" />
-                            <label for="star5" title="5 stars"><i class="fas fa-star"></i></label>
-                            <input type="radio" id="star4" name="rating" value="4" />
-                            <label for="star4" title="4 stars"><i class="fas fa-star"></i></label>
-                            <input type="radio" id="star3" name="rating" value="3" />
-                            <label for="star3" title="3 stars"><i class="fas fa-star"></i></label>
-                            <input type="radio" id="star2" name="rating" value="2" />
-                            <label for="star2" title="2 stars"><i class="fas fa-star"></i></label>
-                            <input type="radio" id="star1" name="rating" value="1" />
-                            <label for="star1" title="1 star"><i class="fas fa-star"></i></label>
-                        </div>
-                    </div>
-                    
-                    <div class="feedback-text">
-                        <label for="feedbackComment">How was your overall experience?</label>
-                        <textarea id="feedbackComment" rows="4" placeholder="Please share your thoughts..."></textarea>
-                    </div>
-                    
-                    <div class="testimonial-option">
-                        <input type="checkbox" id="testimonialConsent" />
-                        <label for="testimonialConsent">I'd like to be featured in testimonials</label>
-                    </div>
-                    
-                    <div id="testimonialFields" style="display: none;">
-                        <div class="form-field">
-                            <label for="testimonialName">Name <span class="required">*</span></label>
-                            <input type="text" id="testimonialName" placeholder="Your name" required />
-                        </div>
-                        <div class="form-field">
-                            <label for="testimonialSocial">Social Handle (optional)</label>
-                            <input type="text" id="testimonialSocial" placeholder="@yoursocialhandle" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="submitFeedbackBtn" class="btn btn-primary">
-                    <i class="fas fa-paper-plane me-2"></i> Submit Feedback
-                </button>
-            </div>
-        </div>
-    </div>
 </body>
 </html> 

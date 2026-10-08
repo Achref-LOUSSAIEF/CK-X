@@ -581,80 +581,139 @@ body {
     padding-bottom: 6rem;
 }
 
-/* Premium exam styles */
-.premium-info {
-    background-color: #e8f4fd;
-    border: 1px solid #b8dff5;
-    color: #1a5490;
-    box-shadow: 0 2px 8px rgba(26, 84, 144, 0.08);
+/* Exam picker: certification tabs */
+.category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
-.premium-content-wrapper {
-    color: #1a5490;
-}
-
-.premium-intro {
-    color: #1a5490;
-    font-size: 1rem;
-    line-height: 1.5;
-    font-weight: 600;
-}
-
-.premium-meta-container {
-    border-top-color: rgba(26, 84, 144, 0.15) !important;
-}
-
-.premium-meta-container .exam-meta {
-    color: #0f3d6b;
+.category-tab {
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: var(--dark-color);
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
     font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: var(--transition);
+}
+
+.category-tab:hover {
+    border-color: var(--primary-light);
+}
+
+.category-tab.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}
+
+.category-count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 999px;
+    padding: 0 0.45rem;
+}
+
+.category-tab.active .category-count {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Exam picker: lab cards */
+.lab-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.lab-card {
+    text-align: left;
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #fff;
+    padding: 0.85rem 1rem;
+    transition: var(--transition);
+}
+
+.lab-card:hover {
+    border-color: var(--primary-light);
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.08);
+}
+
+.lab-card:focus-visible,
+.category-tab:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.lab-card.selected {
+    border-color: var(--primary-color);
+    background: #f5f5ff;
+    box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.lab-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.lab-card-title {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.lab-card-check {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid #d1d5db;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: transparent;
+}
+
+.lab-card.selected .lab-card-check {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}
+
+.lab-card-desc {
+    margin: 0.35rem 0 0.6rem;
+    font-size: 0.875rem;
+    color: var(--gray-color);
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.lab-card-meta {
     display: flex;
     align-items: center;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: #4a5568;
+}
+
+.lab-badge {
     font-weight: 600;
+    border-radius: 6px;
+    padding: 0.1rem 0.5rem;
 }
 
-.premium-meta-container .exam-meta svg {
-    fill: #0f3d6b;
-    flex-shrink: 0;
-}
-
-.premium-info .premium-features h6 {
-    color: #1a5490;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-    font-size: 0.95rem;
-}
-
-.premium-info .premium-features h6 i {
-    color: #3b82f6;
-}
-
-.premium-list {
-    list-style: none;
-    padding-left: 0;
-}
-
-.premium-list li {
-    padding: 0.4rem 0;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    color: #1a5490;
-    font-weight: 500;
-}
-
-.premium-list li i {
-    color: #3b82f6;
-    font-size: 1rem;
-    flex-shrink: 0;
-}
-
-/* Premium badge in dropdown */
-select option[data-premium="true"] {
-    font-weight: 600;
-    color: #3b82f6;
-}
-
-/* Free badge in dropdown */
-select option[data-premium="false"] {
-    color: #28a745;
-} 
+.lab-badge.easy { background: #d1fae5; color: #065f46; }
+.lab-badge.medium { background: #fef3c7; color: #92400e; }
+.lab-badge.hard { background: #fee2e2; color: #991b1b; }

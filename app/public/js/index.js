@@ -5,9 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const examSelectionModal = new bootstrap.Modal(document.getElementById('examSelectionModal'));
     
     // Form elements
-    const examCategorySelect = document.getElementById('examCategory');
-    const examNameSelect = document.getElementById('examName');
-    const examDescription = document.getElementById('examDescription');
+    const categoryTabs = document.getElementById('examCategoryTabs');
+    const labList = document.getElementById('labList');
     const startSelectedExamBtn = document.getElementById('startSelectedExam');
     const viewPastResultsBtn = document.getElementById('viewPastResultsBtn');
     
@@ -275,208 +274,130 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
     
-    // Populate the lab categories dropdown
-    function populateLabCategories() {
-        // Get unique categories
-        const categories = [...new Set(labs.map(lab => lab.category))];
-        
-        // If CKAD is available, select it by default
-        if (categories.includes('CKAD')) {
-            examCategorySelect.value = 'CKAD';
-            filterLabsByCategory('CKAD');
-        } else if (categories.length > 0) {
-            examCategorySelect.value = categories[0];
-            filterLabsByCategory(categories[0]);
-        }
-    }
-    
-    // Premium exam configuration
-    const premiumExams = {
-        'CKA': {
-            url: 'https://sailor.sh/certified-kubernetes-administrator-cka-certification-ready-mock-exam-bundle/',
-            name: 'CKA Premium Mock Exam Bundle'
-        },
-        'CKAD': {
-            url: 'https://sailor.sh/certified-kubernetes-application-developer-ckad-certification-ready-mock-exam-bundle/',
-            name: 'CKAD Premium Mock Exam Bundle'
-        },
-        'CKS': {
-            url: 'https://sailor.sh/certified-kubernetes-security-specialist-cks-certification-ready-mock-exam-bundle/',
-            name: 'CKS Premium Mock Exam Bundle'
-        },
-        'KCNA': {
-            url: 'https://sailor.sh/kubernetes-and-cloud-native-associate-kcna-certification-ready-mock-exam-bundle/',
-            name: 'KCNA Premium Mock Exam Bundle'
-        },
-        'KCSA': {
-            url: 'https://sailor.sh/kubernetes-and-cloud-native-security-associate-kcsa-certification-ready-mock-exam-bundle/',
-            name: 'KCSA Premium Mock Exam Bundle'
-        }
+    // Display names and order for certification categories
+    const CATEGORY_INFO = {
+        CKA:   'CKA - Kubernetes Administrator',
+        CKAD:  'CKAD - Application Developer',
+        CKS:   'CKS - Security Specialist',
+        KCNA:  'KCNA - Cloud Native Associate',
+        KCSA:  'KCSA - Cloud Native Security Associate',
+        Other: 'Other'
     };
-    
-    // Filter labs by category and populate the labs dropdown
-    function filterLabsByCategory(category) {
-        const filteredLabs = labs.filter(lab => lab.category === category);
-        
-        // Clear existing options
-        examNameSelect.innerHTML = '<option value="">Select a lab</option>';
-        
-        let hasPremium = false;
-        
-        // Add premium exam option if available for this category
-        if (premiumExams[category]) {
-            const premiumOption = document.createElement('option');
-            premiumOption.value = `premium_${category}`;
-            premiumOption.textContent = `🏆 ${premiumExams[category].name}`;
-            premiumOption.setAttribute('data-premium', 'true');
-            premiumOption.setAttribute('data-url', premiumExams[category].url);
-            examNameSelect.appendChild(premiumOption);
-            hasPremium = true;
-        }
-        
-        // Add filtered labs to the dropdown with FREE badge
-        filteredLabs.forEach(lab => {
-            const option = document.createElement('option');
-            option.value = lab.id;
-            option.textContent = `🆓 ${lab.name}`;
-            option.setAttribute('data-premium', 'false');
-            examNameSelect.appendChild(option);
+    const CATEGORY_ORDER = Object.keys(CATEGORY_INFO);
+    let activeCategory = null;
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text == null ? '' : String(text);
+        return div.innerHTML;
+    }
+
+    function savedCategory() {
+        try { return localStorage.getItem('ckx_last_category'); } catch (e) { return null; }
+    }
+
+    // Build one tab per category that actually has labs
+    function populateLabCategories() {
+        const categories = [...new Set(labs.map(lab => lab.category))].sort((a, b) => {
+            const ia = CATEGORY_ORDER.indexOf(a), ib = CATEGORY_ORDER.indexOf(b);
+            return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
         });
-        
-        // Enable the lab name select
-        examNameSelect.disabled = false;
-        
-        // Select premium exam by default if available, otherwise select first free lab
-        if (hasPremium) {
-            examNameSelect.value = `premium_${category}`;
-            // Trigger the change event to show premium description
-            const selectedOption = examNameSelect.options[examNameSelect.selectedIndex];
-            const premiumUrl = selectedOption.getAttribute('data-url');
-            showPremiumDescription(category, premiumUrl);
-        } else if (filteredLabs.length > 0) {
-            examNameSelect.value = filteredLabs[0].id;
-            updateLabDescription(filteredLabs[0]);
+        categoryTabs.innerHTML = '';
+        categories.forEach(category => {
+            const count = labs.filter(lab => lab.category === category).length;
+            const tab = document.createElement('button');
+            tab.type = 'button';
+            tab.className = 'category-tab';
+            tab.setAttribute('role', 'tab');
+            tab.dataset.category = category;
+            tab.title = CATEGORY_INFO[category] || category;
+            tab.innerHTML = `${escapeHtml(category)} <span class="category-count">${count}</span>`;
+            tab.addEventListener('click', () => selectCategory(category));
+            categoryTabs.appendChild(tab);
+        });
+        const preferred = savedCategory();
+        const initial = categories.includes(activeCategory) ? activeCategory
+            : categories.includes(preferred) ? preferred
+            : categories.includes('CKA') ? 'CKA' : categories[0];
+        if (initial) {
+            selectCategory(initial);
         } else {
-            examDescription.textContent = 'No labs available for this category.';
-            startSelectedExamBtn.disabled = true;
+            labList.innerHTML = '<div class="text-muted small">No exams available.</div>';
         }
     }
-    
-    // Update the lab description when a lab is selected
-    function updateLabDescription(lab) {
-        // Hide premium info for free labs
-        const premiumInfo = document.getElementById('premiumInfo');
-        const examDescription = document.getElementById('examDescription');
-        
-        if (premiumInfo) {
-            premiumInfo.style.display = 'none';
+
+    function selectCategory(category) {
+        activeCategory = category;
+        try { localStorage.setItem('ckx_last_category', category); } catch (e) { /* ignore */ }
+        categoryTabs.querySelectorAll('.category-tab').forEach(tab => {
+            const active = tab.dataset.category === category;
+            tab.classList.toggle('active', active);
+            tab.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        renderLabList(category);
+    }
+
+    function difficultyClass(difficulty) {
+        const d = (difficulty || 'Medium').toLowerCase();
+        return d === 'easy' ? 'easy' : d === 'hard' ? 'hard' : 'medium';
+    }
+
+    // Render the labs of a category as selectable cards
+    function renderLabList(category) {
+        const filteredLabs = labs.filter(lab => lab.category === category)
+            .sort((a, b) => String(a.id).localeCompare(String(b.id), undefined, { numeric: true }));
+        labList.innerHTML = '';
+        selectedLab = null;
+        startSelectedExamBtn.disabled = true;
+
+        if (filteredLabs.length === 0) {
+            labList.innerHTML = '<div class="text-muted small">No exams available for this certification.</div>';
+            return;
         }
-        
-        // Show the exam description box for free labs
-        if (examDescription) {
-            examDescription.style.display = 'block';
-        }
-        
-        // Create a nicely formatted description
-        const difficultyText = lab.difficulty || 'Medium';
-        const examTimeText = lab.examDurationInMinutes || lab.estimatedTime || '30';
-        
-        const descriptionHTML = `
-            <div class="exam-details">
-                <p class="mb-0">${lab.description || 'No description available.'}</p>
-            </div>
-            <div class="exam-meta-container mt-3 pt-2 border-top">
-                <div class="d-flex justify-content-start align-items-center">
-                    <div class="exam-meta me-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart-fill me-1" viewBox="0 0 16 16">
-                            <path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2z"/>
-                        </svg>
-                        Difficulty: ${difficultyText}
-                    </div>
-                    <div class="exam-meta">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock me-1" viewBox="0 0 16 16">
-                            <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-                        </svg>
-                        Exam Time: ${examTimeText} minutes
-                    </div>
+
+        filteredLabs.forEach(lab => {
+            const difficulty = lab.difficulty || 'Medium';
+            const minutes = lab.examDurationInMinutes || lab.estimatedTime || 30;
+            const card = document.createElement('button');
+            card.type = 'button';
+            card.className = 'lab-card';
+            card.setAttribute('role', 'radio');
+            card.setAttribute('aria-checked', 'false');
+            card.dataset.labId = lab.id;
+            card.title = lab.description || '';
+            card.innerHTML = `
+                <div class="lab-card-head">
+                    <span class="lab-card-title">${escapeHtml(lab.name)}</span>
+                    <span class="lab-card-check" aria-hidden="true"><i class="fas fa-check"></i></span>
                 </div>
-            </div>
-        `;
-        
-        // No need to add styles dynamically anymore since they're in the CSS file
-        
-        // Use innerHTML to render the HTML content
-        examDescription.innerHTML = descriptionHTML;
+                <p class="lab-card-desc">${escapeHtml(lab.description || 'No description available.')}</p>
+                <div class="lab-card-meta">
+                    <span class="lab-badge ${difficultyClass(difficulty)}">${escapeHtml(difficulty)}</span>
+                    <span><i class="far fa-clock me-1"></i>${escapeHtml(minutes)} min</span>
+                </div>`;
+            card.addEventListener('click', () => selectLab(lab.id));
+            card.addEventListener('dblclick', () => { selectLab(lab.id); startSelectedExamBtn.click(); });
+            labList.appendChild(card);
+        });
+
+        selectLab(filteredLabs[0].id);
+    }
+
+    function selectLab(labId) {
+        const lab = labs.find(l => l.id === labId);
+        if (!lab) return;
         selectedLab = lab;
+        labList.querySelectorAll('.lab-card').forEach(card => {
+            const active = card.dataset.labId === labId;
+            card.classList.toggle('selected', active);
+            card.setAttribute('aria-checked', active ? 'true' : 'false');
+        });
         startSelectedExamBtn.disabled = false;
     }
-    
-    // Event listener for the exam category select
-    examCategorySelect.addEventListener('change', function() {
-        filterLabsByCategory(this.value);
-    });
-    
-    // Helper function to show premium description
-    function showPremiumDescription(category, premiumUrl) {
-        const premiumInfo = document.getElementById('premiumInfo');
-        const examDescription = document.getElementById('examDescription');
-        
-        // Hide the blue description box for premium exams
-        examDescription.style.display = 'none';
-        
-        premiumInfo.style.display = 'block';
-        selectedLab = { isPremium: true, url: premiumUrl, category: category };
-        startSelectedExamBtn.disabled = false;
-        startSelectedExamBtn.textContent = 'GET INSTANT ACCESS →';
-    }
-    
-    // Event listener for the exam name select
-    examNameSelect.addEventListener('change', function() {
-        const premiumInfo = document.getElementById('premiumInfo');
-        const examDescription = document.getElementById('examDescription');
-        
-        if (this.value) {
-            const selectedOption = this.options[this.selectedIndex];
-            const isPremium = selectedOption.getAttribute('data-premium') === 'true';
-            
-            if (isPremium) {
-                // Premium exam selected
-                const premiumUrl = selectedOption.getAttribute('data-url');
-                const category = examCategorySelect.value;
-                showPremiumDescription(category, premiumUrl);
-            } else {
-                // Free exam selected
-                const lab = labs.find(lab => lab.id === this.value);
-                if (lab) {
-                    updateLabDescription(lab);
-                    premiumInfo.style.display = 'none';
-                    examDescription.style.display = 'block';
-                    startSelectedExamBtn.textContent = 'START EXAM';
-                }
-            }
-        } else {
-            examDescription.textContent = 'No lab selected.';
-            examDescription.style.display = 'block';
-            premiumInfo.style.display = 'none';
-            selectedLab = null;
-            startSelectedExamBtn.disabled = true;
-            startSelectedExamBtn.textContent = 'START EXAM';
-        }
-    });
-    
+
     // Event listener for the start selected exam button
     startSelectedExamBtn.addEventListener('click', function() {
         if (selectedLab) {
-            // Check if it's a premium exam
-            if (selectedLab.isPremium) {
-                // Open premium exam URL in new tab
-                window.open(selectedLab.url, '_blank');
-                examSelectionModal.hide();
-                return;
-            }
-            
-            // Regular free exam flow
             examSelectionModal.hide();
             showLoadingOverlay(); // Show the loading overlay instead of pageLoader
             updateLoadingMessage('Starting lab environment...');
