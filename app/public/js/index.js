@@ -1,8 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const startExamBtn = document.getElementById('startExamBtn');
     const pageLoader = document.getElementById('pageLoader');
     const loaderMessage = document.getElementById('loaderMessage');
-    const examSelectionModal = new bootstrap.Modal(document.getElementById('examSelectionModal'));
+    // The exam picker is now the page itself; keep a tiny shim for code paths that used the old modal
+    const examSelectionModal = {
+        show() { document.getElementById('labList').scrollIntoView({ behavior: 'smooth', block: 'start' }); },
+        hide() {}
+    };
+    const activeExamBanner = document.getElementById('activeExamBanner');
+    const pickerSelection = document.getElementById('pickerSelection');
     
     // Form elements
     const categoryTabs = document.getElementById('examCategoryTabs');
@@ -48,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             viewPastResultsBtn.closest('li').style.display = 'block';
                         }
                     }
+                    showActiveExamBanner(data);
                     
                     // If exam is in PREPARING state, show loading overlay and start polling
                     if (data.status === 'PREPARING') {
@@ -70,52 +76,54 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // Event listener for the "Start Exam" button
-    startExamBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        console.log('Checking for active exam sessions...');
-        // First check if there's any active exam
+    // Banner above the picker for an exam that is still running or was just graded
+    function showActiveExamBanner(data) {
+        if (!activeExamBanner) return;
+        const name = (data.info && data.info.name) || 'Current exam';
+        const link = document.getElementById('continueExamLink');
+        document.getElementById('activeExamName').textContent = name;
+        if (data.status === 'READY') {
+            link.textContent = 'Continue';
+            link.href = `/exam.html?id=${data.id}`;
+        } else if (data.status === 'EVALUATING' || data.status === 'EVALUATED') {
+            activeExamBanner.querySelector('strong').textContent = 'Last exam:';
+            link.textContent = 'View results';
+            link.href = `/results?id=${data.id}`;
+        } else {
+            return;
+        }
+        activeExamBanner.hidden = false;
+    }
+
+    // Start button: make sure no other exam is active before launching the selected lab
+    startSelectedExamBtn.addEventListener('click', function() {
+        if (!selectedLab) return;
         fetch('/facilitator/api/v1/exams/current')
             .then(response => {
                 if (response.status === 404) {
-                    console.log('No active exam found, proceeding with new exam');
-                    // No active exam, proceed as normal
-                    if (labs.length > 0) {
-                        console.log('Using pre-loaded labs data');
-                        examSelectionModal.show();
-                    } else {
-                        console.log('No pre-loaded labs data available, fetching now...');
-                        fetchLabs(true);
-                    }
+                    launchSelectedLab();
                     return null;
                 }
-                
                 if (!response.ok) {
                     console.error('Error checking current exam status:', response.status);
+                    launchSelectedLab();
                     return null;
                 }
-                
                 return response.json();
             })
             .then(data => {
                 if (data && data.id) {
-                    console.log('Active exam found:', data.id, 'Status:', data.status);
-                    // Active exam found, show warning modal
                     showActiveExamWarningModal(data);
+                } else if (data) {
+                    launchSelectedLab();
                 }
             })
             .catch(error => {
                 console.error('Error checking for active exam:', error);
-                // Proceed anyway in case of error
-                if (labs.length > 0) {
-                    examSelectionModal.show();
-                } else {
-                    fetchLabs(true);
-                }
+                launchSelectedLab();
             });
     });
-    
+
     // Function to show warning modal for active exam
     function showActiveExamWarningModal(examData) {
         // Create modal HTML
@@ -202,13 +210,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 localStorage.removeItem('currentExamData');
                 localStorage.removeItem('currentExamId');
                 
-                // Proceed with starting a new exam
+                // Proceed with the lab picked on the page
                 hideLoadingOverlay();
-                if (labs.length > 0) {
-                    examSelectionModal.show();
-                } else {
-                    fetchLabs(true);
-                }
+                if (activeExamBanner) activeExamBanner.hidden = true;
+                launchSelectedLab();
             })
             .catch(error => {
                 console.error('Error terminating exam:', error);
@@ -261,7 +266,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Labs loaded successfully, count:', labs.length);
                 if (showLoader) {
                     pageLoader.style.display = 'none';
-                    examSelectionModal.show();
                 }
                 populateLabCategories();
             })
@@ -269,8 +273,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error fetching labs:', error);
                 if (showLoader) {
                     pageLoader.style.display = 'none';
-                    alert('Failed to load labs. Please try again later.');
                 }
+                labList.innerHTML = '<div class="text-danger small">Could not load the exams. Is the facilitator running? Reload the page to retry.</div>';
             });
     }
     
@@ -349,6 +353,7 @@ document.addEventListener('DOMContentLoaded', function() {
         labList.innerHTML = '';
         selectedLab = null;
         startSelectedExamBtn.disabled = true;
+        if (pickerSelection) pickerSelection.textContent = 'No exam selected';
 
         if (filteredLabs.length === 0) {
             labList.innerHTML = '<div class="text-muted small">No exams available for this certification.</div>';
@@ -393,10 +398,13 @@ document.addEventListener('DOMContentLoaded', function() {
             card.setAttribute('aria-checked', active ? 'true' : 'false');
         });
         startSelectedExamBtn.disabled = false;
+        if (pickerSelection) {
+            pickerSelection.textContent = `${lab.name} · ${lab.examDurationInMinutes || 30} min`;
+        }
     }
 
-    // Event listener for the start selected exam button
-    startSelectedExamBtn.addEventListener('click', function() {
+    // Create the exam for the selected lab and wait until the environment is ready
+    function launchSelectedLab() {
         if (selectedLab) {
             examSelectionModal.hide();
             showLoadingOverlay(); // Show the loading overlay instead of pageLoader
@@ -446,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Failed to start the lab. Please try again later.');
             });
         }
-    });
+    }
 
     // Add new functions for exam status handling
     function showLoadingOverlay() {

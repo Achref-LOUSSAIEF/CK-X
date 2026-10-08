@@ -22,7 +22,7 @@
     </div>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="/">CK-X Cloud</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -45,118 +45,44 @@
         </div>
     </nav>
 
-    <!-- Hero Section - Full Height -->
-    <section class="hero-section full-height d-flex align-items-center text-center position-relative">
-        <div class="container hero-content">
-            <h1 class="display-4 mb-4">Kubernetes Certification Exam Simulator</h1>
-            <p class="lead mb-5">Practice in a realistic environment that mirrors the actual CKA, CKAD, and other Kubernetes certification exams</p>
-            <a href="#" class="btn btn-light btn-lg start-exam-btn" id="startExamBtn">START EXAM</a>
-        </div>
-        
-        <div class="scroll-indicator">
-            <p>SCROLL TO EXPLORE</p>
-            <i class="fas fa-chevron-down"></i>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features">
-        <div class="container">
-            <div class="features-wrapper">
-                <div class="features-header">
-                    <h2 class="section-title">Key Features</h2>
-                    <p class="section-subtitle">Everything you need to prepare for your Kubernetes certification exams</p>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="feature-card">
-                            <div class="feature-icon-container">
-                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M26 4H6C4.89543 4 4 4.89543 4 6V22C4 23.1046 4.89543 24 6 24H26C27.1046 24 28 23.1046 28 22V6C28 4.89543 27.1046 4 26 4Z" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M12 28H20" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M16 24V28" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M13 16L15 18L19 14" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                            <h4>Real Exam Environment</h4>
-                            <p>Practice in a simulated environment that closely resembles the actual Kubernetes certification exam interface.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="feature-card">
-                            <div class="feature-icon-container">
-                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M16 4V6" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M7.51471 7.51472L8.92893 8.92894" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M4 16H6" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M7.51471 24.4853L8.92893 23.0711" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M16 26V28" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M24.4853 24.4853L23.0711 23.0711" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M26 16H28" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M24.4853 7.51472L23.0711 8.92894" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M16 20C18.2091 20 20 18.2091 20 16C20 13.7909 18.2091 12 16 12C13.7909 12 12 13.7909 12 16C12 18.2091 13.7909 20 16 20Z" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                            <h4>Multiple Certification Support</h4>
-                            <p>Practice for CKA, CKAD, and other Kubernetes certification exams with tailored scenarios for each exam type.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="feature-card">
-                            <div class="feature-icon-container">
-                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="16" cy="16" r="12" stroke="#4f46e5" stroke-width="2.5"/>
-                                    <path d="M16 10V16L20 20" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round"/>
-                                </svg>
-                            </div>
-                            <h4>Timed Practice</h4>
-                            <p>Prepare for the time pressure of the actual exams with our realistic timer functionality.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="feature-card">
-                            <div class="feature-icon-container">
-                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 16H26" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M6 8H26" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M6 24H26" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <circle cx="10" cy="8" r="2" fill="#4f46e5"/>
-                                    <circle cx="22" cy="16" r="2" fill="#4f46e5"/>
-                                    <circle cx="14" cy="24" r="2" fill="#4f46e5"/>
-                                </svg>
-                            </div>
-                            <h4>Detailed Scoring & Solutions</h4>
-                            <p>Review your performance with comprehensive exam scores and access detailed solutions to enhance your learning.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="feature-card">
-                            <div class="feature-icon-container">
-                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M16 28C22.6274 28 28 22.6274 28 16C28 9.37258 22.6274 4 16 4C9.37258 4 4 9.37258 4 16C4 22.6274 9.37258 28 16 28Z" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M11 16L15 20L22 13" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                            <h4>Realistic Kubernetes Cluster</h4>
-                            <p>Practice on actual Kubernetes infrastructure that mimics the exam environment with pre-configured namespaces and resources.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="feature-card">
-                            <div class="feature-icon-container">
-                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M26 28V25C26 23.9391 25.5786 22.9217 24.8284 22.1716C24.0783 21.4214 23.0609 21 22 21H10C8.93913 21 7.92172 21.4214 7.17157 22.1716C6.42143 22.9217 6 23.9391 6 25V28" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M16 17C18.7614 17 21 14.7614 21 12C21 9.23858 18.7614 7 16 7C13.2386 7 11 9.23858 11 12C11 14.7614 13.2386 17 16 17Z" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                            <h4>User-Focused Experience</h4>
-                            <p>Enjoy a streamlined and accessible interface designed to help you focus on mastering Kubernetes concepts without distractions.</p>
-                        </div>
-                    </div>
-                </div>
+    <!-- Exam picker (home page) -->
+    <main class="picker-page">
+        <div class="picker-shell">
+            <div class="picker-intro">
+                <h1>Choose an exam</h1>
+                <p>Pick a certification and a lab. A fresh Kubernetes cluster is prepared for every attempt.</p>
             </div>
+
+            <div class="active-exam-banner" id="activeExamBanner" hidden>
+                <div>
+                    <strong>Exam in progress:</strong> <span id="activeExamName">-</span>
+                </div>
+                <a class="btn btn-sm btn-primary" id="continueExamLink" href="#">Continue</a>
+            </div>
+
+            <section class="picker-card" aria-label="Exam selection">
+                <form id="examSelectionForm" onsubmit="return false;">
+                    <div class="picker-section">
+                        <div class="picker-label" id="examCategoryLabel">Certification</div>
+                        <div class="category-tabs" id="examCategoryTabs" role="tablist" aria-labelledby="examCategoryLabel"></div>
+                    </div>
+                    <div class="picker-section">
+                        <div class="picker-label" id="labListLabel">Exam</div>
+                        <div class="lab-list" id="labList" role="radiogroup" aria-labelledby="labListLabel">
+                            <div class="text-muted small">Loading exams...</div>
+                        </div>
+                    </div>
+                </form>
+                <div class="picker-actions">
+                    <div class="picker-selection" id="pickerSelection">No exam selected</div>
+                    <button type="button" class="btn btn-primary picker-start" id="startSelectedExam" disabled>
+                        Start exam <i class="fas fa-arrow-right ms-1"></i>
+                    </button>
+                </div>
+            </section>
+            <p class="picker-note">By starting an exam, you accept the <a href="https://github.com/sailor-sh/CK-X/blob/master/docs/PRIVACY_POLICY.md" target="_blank" rel="noopener">Privacy Policy</a>.</p>
         </div>
-    </section>
+    </main>
 
     <!-- Add loading overlay -->
     <div class="loading-overlay" id="loadingOverlay">
@@ -174,48 +100,13 @@
         </div>
     </div>
 
-    <!-- Exam Selection Modal -->
-    <div class="modal fade" id="examSelectionModal" tabindex="-1" aria-labelledby="examSelectionModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 680px;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="examSelectionModalLabel">Select Your Exam</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="examSelectionForm">
-                        <div class="mb-3">
-                            <label class="form-label" id="examCategoryLabel">Certification</label>
-                            <div class="category-tabs" id="examCategoryTabs" role="tablist" aria-labelledby="examCategoryLabel"></div>
-                        </div>
-                        <div class="mb-1">
-                            <label class="form-label" id="labListLabel">Exam</label>
-                            <div class="lab-list" id="labList" role="radiogroup" aria-labelledby="labListLabel">
-                                <div class="text-muted small">Loading exams...</div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer flex-column align-items-stretch py-1">
-                    <div class="d-flex justify-content-end gap-2 mb-1">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
-                        <button type="button" class="btn btn-primary" id="startSelectedExam" disabled>START EXAM</button>
-                    </div>
-                    <div class="text-muted text-center w-100" style="font-size: 0.65rem;">
-                        By clicking on Start exam, you accept our <a href="https://github.com/sailor-sh/CK-X/blob/master/docs/PRIVACY_POLICY.md" target="_blank">Privacy Policy</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script src="/js/index.js"></script>
 
     <!-- Footer -->
-    <footer class="text-center py-4 mt-4">
+    <footer class="text-center py-4">
         <p>Made with <span style="color: #ff3366;">❤️</span> | <a href="https://play.sailor.sh" target="_blank">sailor.sh</a></p>
     </footer>
 </body>

@@ -717,3 +717,123 @@ body {
 .lab-badge.easy { background: #d1fae5; color: #065f46; }
 .lab-badge.medium { background: #fef3c7; color: #92400e; }
 .lab-badge.hard { background: #fee2e2; color: #991b1b; }
+
+/* Home page: exam picker */
+.picker-page {
+    min-height: calc(100vh - 160px);
+    padding: 2.5rem 0 1rem;
+}
+
+.picker-shell {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+.picker-intro h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem;
+}
+
+.picker-intro p {
+    color: var(--gray-color);
+    margin: 0 0 1.5rem;
+}
+
+.picker-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: var(--border-radius);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.picker-card form {
+    padding: 1.25rem 1.25rem 0.5rem;
+}
+
+.picker-section {
+    margin-bottom: 1.25rem;
+}
+
+.picker-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--gray-color);
+    margin-bottom: 0.6rem;
+}
+
+.picker-actions {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1.25rem;
+    background: rgba(255, 255, 255, 0.96);
+    border-top: 1px solid #e5e7eb;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+.picker-selection {
+    font-size: 0.875rem;
+    color: var(--gray-color);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.picker-start {
+    flex-shrink: 0;
+    border-radius: 8px;
+    padding: 0.55rem 1.25rem;
+    font-weight: 600;
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.picker-start:hover:not(:disabled) {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.picker-note {
+    font-size: 0.75rem;
+    color: var(--gray-color);
+    text-align: center;
+    margin: 0.9rem 0 0;
+}
+
+.active-exam-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    color: #3730a3;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.active-exam-banner[hidden] {
+    display: none;
+}
+
+.lab-card.selected {
+    border-width: 1px;
+    background: #f5f5ff;
+}
+
+@media (max-width: 576px) {
+    .picker-page { padding-top: 1.5rem; }
+    .picker-intro h1 { font-size: 1.4rem; }
+    .picker-card form { padding: 1rem 1rem 0.25rem; }
+    .picker-actions { padding: 0.75rem 1rem; }
+}
