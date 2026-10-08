@@ -1,0 +1,562 @@
+{
+  "questions": [
+    {
+      "id": "1",
+      "namespace": "trbl-deploy",
+      "machineHostname": "ckad9999",
+      "question": "The Deployment `payment-api` in the namespace `trbl-deploy` should run `2` replicas, but none of its Pods ever become Ready.\n\nInvestigate and fix **all** problems so that both replicas are Running and Ready.\n\n- The container image must be `nginx:1.25-alpine`\n- Keep the readiness probe (do not remove it), but make sure it checks the port nginx actually listens on",
+      "concepts": [
+        "troubleshooting",
+        "deployments",
+        "probes"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment uses image nginx:1.25-alpine",
+          "verificationScriptFile": "q1_s1_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Readiness probe is kept and targets port 80",
+          "verificationScriptFile": "q1_s2_validate_probe.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Both replicas are Ready",
+          "verificationScriptFile": "q1_s3_validate_ready.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "namespace": "trbl-svc",
+      "machineHostname": "ckad9999",
+      "question": "In the namespace `trbl-svc`, the Deployment `web` is running correctly, but the Service `web-svc` does not route any traffic to it. Requests from the Pod `client` (e.g. `wget -qO- -T 3 http://web-svc`) time out or fail.\n\nFix the **Service** so that `http://web-svc` (port `80`) returns the nginx page from the `client` Pod.\n\nDo **not** modify the Deployment `web`.",
+      "concepts": [
+        "troubleshooting",
+        "services",
+        "endpoints"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Service selects the web Pods (endpoints exist) and Deployment is unchanged",
+          "verificationScriptFile": "q2_s1_validate_endpoints.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Service port 80 forwards to container port 80",
+          "verificationScriptFile": "q2_s2_validate_ports.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "client Pod can reach http://web-svc",
+          "verificationScriptFile": "q2_s3_validate_connectivity.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "namespace": "trbl-sched",
+      "machineHostname": "ckad9999",
+      "question": "The Pods of the Deployment `batch-processor` in the namespace `trbl-sched` are stuck in `Pending`.\n\nFind out why with `kubectl describe` / events, then fix the Deployment so that both replicas run:\n\n- Remove the node constraint that no node in the cluster satisfies\n- Set the container CPU request to `100m` (keep the memory request `64Mi` unchanged)",
+      "concepts": [
+        "troubleshooting",
+        "scheduling",
+        "resource-management"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Impossible nodeSelector removed",
+          "verificationScriptFile": "q3_s1_validate_nodeselector.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "CPU request is 100m and memory request still 64Mi",
+          "verificationScriptFile": "q3_s2_validate_requests.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Both replicas are available",
+          "verificationScriptFile": "q3_s3_validate_available.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "namespace": "trbl-config",
+      "machineHostname": "ckad9999",
+      "question": "The Deployment `order-worker` in the namespace `trbl-config` cannot start its container (check the Pod status and events).\n\n**Without modifying the Deployment**, fix the problem:\n\n1. Create the missing Secret `order-db` with the key `password` and the value `Sup3rS3cret!`\n2. The ConfigMap `order-config` already exists, but it does not contain the key the Deployment expects. Add that key with the value `orders` (keep the existing keys)\n\nThe Deployment must end up with `1` available replica.",
+      "concepts": [
+        "troubleshooting",
+        "secrets",
+        "configmaps"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Secret order-db has password=Sup3rS3cret!",
+          "verificationScriptFile": "q4_s1_validate_secret.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "ConfigMap provides queue_name=orders and keeps existing keys",
+          "verificationScriptFile": "q4_s2_validate_configmap.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Deployment unchanged and 1 replica available",
+          "verificationScriptFile": "q4_s3_validate_available.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "namespace": "logging",
+      "machineHostname": "ckad9999",
+      "question": "The Pod `audit-app` in the namespace `logging` has two containers: `app` and `shipper`.\n\n1. Write **every** log line of the container `app` that contains the word `ERROR` to the file `/tmp/exam/q5/errors.log` on `ckad9999`. Lines from the `shipper` container must not be included.\n2. Write the name of the node on which `audit-app` is running to `/tmp/exam/q5/node.txt` (just the node name).",
+      "concepts": [
+        "logging",
+        "troubleshooting",
+        "multi-container pods"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "errors.log contains exactly the ERROR lines of container app",
+          "verificationScriptFile": "q5_s1_validate_errors_file.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "node.txt contains the node running audit-app",
+          "verificationScriptFile": "q5_s2_validate_node_file.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "namespace": "metrics-lab",
+      "machineHostname": "ckad9999",
+      "question": "Three Pods with the label `app=analytics` are running in the namespace `metrics-lab`.\n\nUsing the Metrics API (`kubectl top`), find the Pod with label `app=analytics` that consumes the **most CPU** and write its name to `/tmp/exam/q6/top-pod.txt` on `ckad9999`.\n\nNote: metrics can take a minute to appear after the Pods start.",
+      "concepts": [
+        "monitoring",
+        "metrics-server",
+        "troubleshooting"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "top-pod.txt names the highest-CPU analytics Pod",
+          "verificationScriptFile": "q6_s1_validate_top_pod.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "namespace": "maintenance",
+      "machineHostname": "ckad9999",
+      "question": "The worker node `k3d-cluster-agent-0` needs to go down for maintenance.\n\n1. Mark `k3d-cluster-agent-0` as unschedulable\n2. Safely evict all workloads from it (DaemonSet-managed Pods may stay)\n\nAfter the maintenance preparation, the Deployment `maint-web` in the namespace `maintenance` must still have `3` Ready replicas, none of them on `k3d-cluster-agent-0`.\n\nDo **not** delete the node. You should not need `--force`.",
+      "concepts": [
+        "cluster maintenance",
+        "cordon",
+        "drain"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "k3d-cluster-agent-0 is unschedulable (and still exists)",
+          "verificationScriptFile": "q7_s1_validate_cordon.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "maint-web has 3 Ready replicas, none on k3d-cluster-agent-0",
+          "verificationScriptFile": "q7_s2_validate_evicted.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "namespace": "rbac-lab",
+      "machineHostname": "ckad9999",
+      "question": "Configure RBAC for two teams:\n\n1. Create a ClusterRole `node-viewer` that allows `get`, `list` and `watch` on `nodes` and `persistentvolumes`. Bind it to the **user** `jane` with a ClusterRoleBinding named `jane-node-viewer`.\n2. In the namespace `rbac-lab`, create a Role `deploy-manager` that allows `get`, `list`, `create`, `update`, `patch` and `delete` on `deployments`. Bind it to the **group** `developers` with a RoleBinding named `developers-deploy-manager`.\n\nVerify with `kubectl auth can-i ... --as jane` and `--as someone --as-group developers`.",
+      "concepts": [
+        "rbac",
+        "clusterroles",
+        "authorization"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "jane can read nodes and PVs cluster-wide but not modify them",
+          "verificationScriptFile": "q8_s1_validate_jane.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "developers can manage deployments only in rbac-lab",
+          "verificationScriptFile": "q8_s2_validate_developers.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "RBAC objects use the required names and subject kinds",
+          "verificationScriptFile": "q8_s3_validate_objects.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "namespace": "crd-lab",
+      "machineHostname": "ckad9999",
+      "question": "Extend the Kubernetes API with a CustomResourceDefinition:\n\n- Name: `backups.ops.example.com`, group `ops.example.com`, kind `Backup`, plural `backups`, singular `backup`, short name `bk`\n- Scope: `Namespaced`, single version `v1` (served and storage)\n- Schema: `spec.schedule` of type `string` (required) and `spec.retentionDays` of type `integer` with a minimum of `1`\n\nThen create a `Backup` named `nightly` in the namespace `crd-lab` with `schedule: \"0 2 * * *\"` and `retentionDays: 7`.\n\n`kubectl get bk -n crd-lab` must list it.",
+      "concepts": [
+        "crds",
+        "api extension",
+        "operators"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "CRD has correct names, group and scope",
+          "verificationScriptFile": "q9_s1_validate_crd.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "CRD v1 schema validates schedule (string, required) and retentionDays (integer, min 1)",
+          "verificationScriptFile": "q9_s2_validate_schema.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Backup nightly exists with the requested values",
+          "verificationScriptFile": "q9_s3_validate_cr.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "namespace": "ingress-lab",
+      "machineHostname": "ckad9999",
+      "question": "Two Deployments, `shop` (label `app=shop`) and `api` (label `app=api`), are running in the namespace `ingress-lab`. Both listen on port `80`.\n\n1. Create a ClusterIP Service `shop-svc` exposing `shop` on port `80`\n2. Create a ClusterIP Service `api-svc` exposing `api` on port `8080` (forwarding to container port `80`)\n3. Create an Ingress `shop-ingress` with ingress class `traefik` for the host `shop.example.local`:\n   - path `/api` (pathType `Prefix`) → `api-svc:8080`\n   - path `/` (pathType `Prefix`) → `shop-svc:80`",
+      "concepts": [
+        "services",
+        "ingress",
+        "networking"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Services shop-svc and api-svc are correct and have endpoints",
+          "verificationScriptFile": "q10_s1_validate_services.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Ingress shop-ingress routes / and /api correctly",
+          "verificationScriptFile": "q10_s2_validate_ingress.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "namespace": "np-db",
+      "machineHostname": "ckad9999",
+      "question": "The namespace `np-db` contains a Pod `db` (label `app=db`) exposed by the Service `db` on port `80`.\n\n1. Create a NetworkPolicy `default-deny-ingress` in `np-db` that denies **all** ingress traffic to every Pod in the namespace\n2. Create a NetworkPolicy `allow-backend-api` in `np-db` that allows ingress to Pods with label `app=db` on TCP port `80` **only** from Pods with label `role=api` that run in namespaces labeled `team=backend`\n\nTest Pods already exist: `np-backend/api` (should be allowed), `np-backend/worker` and `np-other/api` (should be denied).",
+      "concepts": [
+        "network policies",
+        "networking",
+        "security"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "default-deny-ingress selects all Pods and denies ingress",
+          "verificationScriptFile": "q11_s1_validate_default_deny.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "allow-backend-api combines namespace and pod selector on TCP 80",
+          "verificationScriptFile": "q11_s2_validate_allow_policy.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Traffic is allowed only from np-backend/api",
+          "verificationScriptFile": "q11_s3_validate_enforcement.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "namespace": "ds-lab",
+      "machineHostname": "ckad9999",
+      "question": "Create a DaemonSet `node-agent` in the namespace `ds-lab` that runs one Pod on **every** node of the cluster (including the control-plane node):\n\n- Pod label: `app=node-agent`\n- Container `agent`, image `busybox:1.36`, command `sh -c 'while true; do sleep 3600; done'`\n- Mount the host directory `/var/log` **read-only** at `/host/log` (volume name `varlog`)\n- Resource requests: CPU `10m`, memory `16Mi`",
+      "concepts": [
+        "daemonsets",
+        "workloads",
+        "volumes"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "DaemonSet spec is correct",
+          "verificationScriptFile": "q12_s1_validate_spec.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "A Ready node-agent Pod runs on every node",
+          "verificationScriptFile": "q12_s2_validate_coverage.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "namespace": "batch-lab",
+      "machineHostname": "ckad9999",
+      "question": "In the namespace `batch-lab`:\n\n1. Create a CronJob `log-cleanup` that runs every `15` minutes with:\n   - container `cleanup`, image `busybox:1.36`, command `sh -c 'echo cleaning logs; sleep 5'`\n   - `concurrencyPolicy: Forbid`\n   - keep `2` successful and `1` failed Job in history\n   - Jobs are retried at most `2` times (`backoffLimit`) and killed after `60` seconds (`activeDeadlineSeconds`)\n   - Pod `restartPolicy: Never`\n2. Without waiting for the schedule, trigger a Job named `log-cleanup-manual` **from the CronJob** and make sure it completes successfully.",
+      "concepts": [
+        "cronjobs",
+        "jobs",
+        "workloads"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "CronJob log-cleanup spec is correct",
+          "verificationScriptFile": "q13_s1_validate_cronjob.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Job log-cleanup-manual was created from the CronJob",
+          "verificationScriptFile": "q13_s2_validate_manual_job.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Job log-cleanup-manual completed successfully",
+          "verificationScriptFile": "q13_s3_validate_job_complete.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "namespace": "sidecar-lab",
+      "machineHostname": "ckad9999",
+      "question": "Create a Pod `web-logger` in the namespace `sidecar-lab` that runs on the node `k3d-cluster-server-0`:\n\n- Two `emptyDir` volumes: `html` and `logs`\n- Init container `setup` (`busybox:1.36`) that writes the text `Hello CKA` to `/work/index.html` (volume `html` mounted at `/work`)\n- **Native sidecar** container `log-tailer` (`busybox:1.36`), defined as an init container with `restartPolicy: Always`, running `tail -F /var/log/nginx/access.log` (volume `logs` mounted at `/var/log/nginx`)\n- Main container `nginx` (`nginx:1.25`) mounting `html` at `/usr/share/nginx/html` and `logs` at `/var/log/nginx`\n\n`curl localhost` inside the `nginx` container must return `Hello CKA`, and the request must appear in the logs of `log-tailer`.",
+      "concepts": [
+        "sidecar containers",
+        "init containers",
+        "volumes",
+        "scheduling"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pod runs on k3d-cluster-server-0 and is Ready",
+          "verificationScriptFile": "q14_s1_validate_pod.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "setup init container and log-tailer native sidecar configured",
+          "verificationScriptFile": "q14_s2_validate_containers.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "nginx serves Hello CKA and log-tailer sees the request",
+          "verificationScriptFile": "q14_s3_validate_behaviour.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "namespace": "storage-ops",
+      "machineHostname": "ckad9999",
+      "question": "In the namespace `storage-ops`, the PersistentVolumeClaim `ledger-data` holds important data. Its dynamically provisioned PersistentVolume would be **deleted** together with the claim.\n\n1. Change the reclaim policy of the PersistentVolume bound to `ledger-data` to `Retain`\n2. Add the label `tier=critical` to that PersistentVolume\n3. Write the name of that PersistentVolume to `/tmp/exam/q15/pv-name.txt` on `ckad9999`\n\nDo not delete or recreate the PVC.",
+      "concepts": [
+        "storage",
+        "persistent volumes",
+        "reclaim policy"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "PV bound to ledger-data has reclaim policy Retain",
+          "verificationScriptFile": "q15_s1_validate_retain.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "PV is labeled tier=critical",
+          "verificationScriptFile": "q15_s2_validate_label.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "pv-name.txt contains the PV name",
+          "verificationScriptFile": "q15_s3_validate_pv_file.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "namespace": "ci",
+      "machineHostname": "ckad9999",
+      "question": "A CI system needs read-only access to the namespace `ci`.\n\n1. Create a ServiceAccount `ci-bot` in the namespace `ci`\n2. Create a long-lived token Secret `ci-bot-token` (type `kubernetes.io/service-account-token`) for `ci-bot`\n3. Create a RoleBinding `ci-bot-view` in `ci` that grants the built-in ClusterRole `view` to `ci-bot`\n4. Create the kubeconfig file `/tmp/exam/q16/ci-bot.kubeconfig` on `ckad9999` containing:\n   - a cluster `ckx` using the same API server and CA as your current kubeconfig\n   - a user `ci-bot` authenticating with the token from `ci-bot-token`\n   - a context `ci-context` (cluster `ckx`, user `ci-bot`, namespace `ci`) set as the **current context**\n\n`kubectl --kubeconfig /tmp/exam/q16/ci-bot.kubeconfig get pods` must work.",
+      "concepts": [
+        "service accounts",
+        "kubeconfig",
+        "authentication",
+        "rbac"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ServiceAccount ci-bot and token Secret ci-bot-token exist",
+          "verificationScriptFile": "q16_s1_validate_sa_token.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "RoleBinding ci-bot-view grants ClusterRole view in ci",
+          "verificationScriptFile": "q16_s2_validate_rolebinding.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "kubeconfig works with context ci-context and read-only access",
+          "verificationScriptFile": "q16_s3_validate_kubeconfig.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "namespace": "spread-lab",
+      "machineHostname": "ckad9999",
+      "question": "The nodes `k3d-cluster-server-0` and `k3d-cluster-agent-1` are labeled with the zone key `topology.ckx.io/zone` (`zone-a` and `zone-b`).\n\nCreate a Deployment `spread-web` in the namespace `spread-lab`:\n\n- `4` replicas, image `nginx:1.25`, Pod label `app=spread-web`\n- A topology spread constraint with `maxSkew: 1` over the key `topology.ckx.io/zone`, `whenUnsatisfiable: DoNotSchedule`, selecting Pods with `app=spread-web`\n\nAll 4 replicas must be Running and evenly spread across the two zones.",
+      "concepts": [
+        "scheduling",
+        "topology spread constraints",
+        "deployments"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Topology spread constraint configured",
+          "verificationScriptFile": "q17_s1_validate_constraint.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "4 replicas Running, 2 per zone",
+          "verificationScriptFile": "q17_s2_validate_distribution.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "namespace": "trbl-dns",
+      "machineHostname": "ckad9999",
+      "question": "Pods of the Deployment `resolver` in the namespace `trbl-dns` cannot resolve any Service names, e.g. `nslookup kubernetes.default.svc.cluster.local` fails.\n\nFix the Deployment so its Pods use the **cluster DNS** again (do not hard-code the CoreDNS IP).",
+      "concepts": [
+        "troubleshooting",
+        "dns",
+        "coredns"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "dnsPolicy uses cluster DNS without hard-coded nameservers",
+          "verificationScriptFile": "q18_s1_validate_dnspolicy.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Pods can resolve kubernetes.default.svc.cluster.local",
+          "verificationScriptFile": "q18_s2_validate_resolution.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    }
+  ]
+}

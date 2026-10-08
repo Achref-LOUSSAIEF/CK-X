@@ -51,6 +51,16 @@
         "examDurationInMinutes": 60
       },
       {
+        "id": "cka-003",
+        "assetPath": "assets/exams/cka/003",
+        "name": "CKA Practice Lab - Troubleshooting & Cluster Operations",
+        "category": "CKA",
+        "description": "18 exam-style tasks weighted toward the Troubleshooting domain: broken deployments, services, scheduling and DNS, container logs and metrics, node drain, RBAC, CRDs, Ingress, NetworkPolicies, DaemonSets, CronJobs, native sidecars, PV reclaim policy, ServiceAccount kubeconfigs and topology spread constraints.",
+        "warmUpTimeInSeconds": 360,
+        "difficulty": "Hard",
+        "examDurationInMinutes": 120
+      },
+      {
         "id": "docker-001",
         "assetPath": "assets/exams/other/001",
         "name": "Docker Speed Run - Core Concepts",
