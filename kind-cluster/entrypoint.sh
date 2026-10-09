@@ -31,8 +31,12 @@ done
 
 echo "$(date '+%Y-%m-%d %H:%M:%S') | [SUCCESS] Docker service is ready and operational"
 
-#pull kindest/node image
-# docker pull kindest/node:$KIND_DEFAULT_VERSION
+# Pre-pull the pinned k3s node image in the background so the first exam starts faster
+K3S_IMAGE=$(sed -n 's/^K3S_IMAGE=\${K3S_IMAGE:-\(.*\)}$/\1/p' /usr/local/bin/env-setup)
+if [ -n "$K3S_IMAGE" ]; then
+    echo "$(date '+%Y-%m-%d %H:%M:%S') | [INFO] Pre-pulling $K3S_IMAGE in the background"
+    (docker pull "$K3S_IMAGE" >/dev/null 2>&1 || true) &
+fi
 
 #add user for ssh access
 adduser -S -D -H -s /sbin/nologin -G sshd sshd

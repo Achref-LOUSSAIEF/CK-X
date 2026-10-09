@@ -23,16 +23,12 @@ RUN apt-get update && apt-get install -y \
 # Accept build-time architecture argument
 ARG TARGETARCH
 
-#install kubectl for x86_64 and ARM64 architectures
-RUN if [ "$TARGETARCH" = "amd64" ]; then \
-    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
-    && chmod +x kubectl \
-    && mv kubectl /usr/local/bin/kubectl; \
-    elif [ "$TARGETARCH" = "arm64" ]; then \
-    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl" \
-    && chmod +x kubectl \
-    && mv kubectl /usr/local/bin/kubectl; \
-    fi
+# Install kubectl, pinned to the same Kubernetes version as the exam cluster
+# (K3S_IMAGE in kind-cluster/scripts/env-setup)
+ARG KUBECTL_VERSION=v1.35.9
+RUN curl -fsSLo /usr/local/bin/kubectl "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${TARGETARCH:-amd64}/kubectl" \
+    && chmod +x /usr/local/bin/kubectl \
+    && kubectl version --client
 
 # Install Helm
 RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \

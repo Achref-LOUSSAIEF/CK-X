@@ -9,6 +9,7 @@ This is a personal fork of [CK-X](https://github.com/sailor-sh/CK-X) by Sailor.s
 - **3 extra CKA labs** (48 tasks, about 113 automatic checks). See [Labs](#labs).
 - **Simple home page.** The site opens directly on the exam list: pick a certification, pick a lab, start. No landing page, and no paid "premium bundle" entries in the list.
 - **No pop-ups.** The automatic rating/testimonial pop-up after an exam is gone.
+- **Kubernetes v1.35**, like the current CKA/CKAD/CKS exams. The exam cluster and the `kubectl` in the exam terminal are pinned to the same version (v1.35.9).
 - **No usage tracking.** `TRACK_METRICS` is set to `false`, so nothing is sent to the external CK-X metrics server.
 
 ## Labs
@@ -34,6 +35,7 @@ The two mock exams are adapted from [theplatformlab/CKA-Certified-Kubernetes-Adm
 - 4 GB RAM minimum, 8 GB recommended
 - About 10 GB of free disk space
 - Linux, macOS, or Windows with WSL2
+- cgroup v2, which Kubernetes 1.35 requires. This is the default on Docker Desktop and on current Linux distributions; on Linux, `stat -fc %T /sys/fs/cgroup/` should print `cgroup2fs`.
 
 ## Quick start
 
@@ -70,6 +72,7 @@ docker compose restart nginx
 | `localhost:30080` shows `{"message":"Facilitator Service API"}` | Containers got new internal addresses after a rebuild. Run `docker compose restart nginx`. |
 | New labs or interface changes don't appear | The prebuilt images are still in use. Run `docker compose build webapp facilitator && docker compose up -d`, then reload with Ctrl+Shift+R. |
 | Port 30080 already in use | Another copy of CK-X is running (for example the one installed by the upstream installer). Stop it with `docker compose down` in its folder. |
+| Changing the Kubernetes version | Edit `K3S_IMAGE` in `kind-cluster/scripts/env-setup` and `KUBECTL_VERSION` in `jumphost/Dockerfile` (keep them on the same minor version), then run `docker compose build k8s-api-server jumphost && docker compose up -d`. |
 | Lab preparation never finishes | Check the cluster logs with `docker compose logs -f k8s-api-server` and make sure Docker has enough memory. |
 
 ## Adding your own labs
