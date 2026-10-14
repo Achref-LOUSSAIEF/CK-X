@@ -50,6 +50,28 @@ if [ -f "k3d-config.yaml" ]; then
     rm -f k3d-config.yaml
 fi
 
+# A cluster left over from an interrupted session would make "k3d cluster create" fail
+if k3d cluster list 2>/dev/null | grep -q "^$CLUSTER_NAME "; then
+    echo "$(date '+%Y-%m-%d %H:%M:%S') | Removing the leftover cluster '$CLUSTER_NAME'"
+    k3d cluster delete "$CLUSTER_NAME"
+fi
+
+# Use the local Docker Hub cache when it is available (see image-cache)
+REGISTRIES=""
+if /usr/local/bin/image-cache start; then
+    REGISTRIES='registries:
+  use:
+    - k3d-ckx-cache:5000
+  config: |
+    mirrors:
+      "docker.io":
+        endpoint:
+          - http://k3d-ckx-cache:5000'
+    echo "$(date '+%Y-%m-%d %H:%M:%S') | Pulling Docker Hub images through the local cache"
+else
+    echo "$(date '+%Y-%m-%d %H:%M:%S') | Local image cache not available, pulling from Docker Hub"
+fi
+
 # Generate K3d config
 cat <<EOF > /tmp/k3d-config.yaml
 apiVersion: k3d.io/v1alpha5
@@ -74,6 +96,7 @@ options:
       - arg: "--tls-san=localhost"
         nodeFilters:
           - server:*
+$REGISTRIES
 EOF
 
 echo "Cluster config with $NUM_WORKERS worker nodes generated: /tmp/k3d-config.yaml"

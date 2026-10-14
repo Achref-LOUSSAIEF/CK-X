@@ -1,0 +1,77 @@
+#!/bin/sh
+# ===============================================================================
+#   Local pull-through cache of Docker Hub for the exam cluster
+#
+#   Every exam starts a brand-new k3d cluster whose nodes have no images, so
+#   each attempt used to download nginx, busybox, the k3s system images ...
+#   from Docker Hub again. This registry keeps a copy of every image pulled
+#   through it (on the ckx-image-cache volume), and the cluster nodes use it
+#   as a mirror for docker.io. If the cache is down, containerd falls back to
+#   Docker Hub, so it can never block an exam.
+#
+#   image-cache start     create or start the registry, wait until it answers
+#   image-cache prewarm   pull the images used by the labs into the cache
+#   image-cache status    list the cached repositories
+#
+#   Set CKX_IMAGE_CACHE=false in the environment of the k8s-api-server service
+#   (docker-compose.yaml) to disable it.
+# ===============================================================================
+
+NAME=ckx-cache            # k3d names the container k3d-ckx-cache
+PORT=5000
+DATA=/var/lib/ckx-cache
+IMAGES=/usr/local/bin/cache-images.txt
+# set by entrypoint.sh from the service environment (SSH sessions don't inherit it)
+CKX_IMAGE_CACHE=${CKX_IMAGE_CACHE:-$(cat /etc/ckx-image-cache 2>/dev/null)}
+
+log() { echo "$(date '+%Y-%m-%d %H:%M:%S') | [image-cache] $1"; }
+
+ready() { wget -q -O /dev/null "http://127.0.0.1:$PORT/v2/" 2>/dev/null; }
+
+start() {
+    [ "${CKX_IMAGE_CACHE:-true}" = "true" ] || { log "disabled (CKX_IMAGE_CACHE=${CKX_IMAGE_CACHE})"; return 1; }
+    ready && return 0
+    if docker inspect "k3d-$NAME" >/dev/null 2>&1; then
+        docker start "k3d-$NAME" >/dev/null 2>&1
+    else
+        mkdir -p "$DATA"
+        k3d registry create "$NAME" --port "0.0.0.0:$PORT" \
+            --proxy-remote-url https://registry-1.docker.io \
+            -v "$DATA:/var/lib/registry" >/dev/null 2>&1 \
+            || log "k3d registry create failed (maybe created at the same time by another call), waiting for it"
+    fi
+    i=0
+    while [ $i -lt 30 ]; do
+        ready && { log "ready on port $PORT"; return 0; }
+        i=$((i+1)); sleep 1
+    done
+    log "registry did not answer"
+    return 1
+}
+
+prewarm() {
+    [ -f "$IMAGES" ] || return 0
+    start || return 1
+    # pull again only when the list changes
+    stamp="$DATA/.prewarmed-$(md5sum "$IMAGES" | cut -c1-12)"
+    [ -f "$stamp" ] && return 0
+    log "pre-pulling the lab images into the cache"
+    grep -v '^[[:space:]]*\(#\|$\)' "$IMAGES" | while read -r image; do
+        ref=$image
+        case "$ref" in */*) ;; *) ref="library/$ref" ;; esac
+        if docker pull -q "127.0.0.1:$PORT/$ref" >/dev/null 2>&1; then
+            docker rmi "127.0.0.1:$PORT/$ref" >/dev/null 2>&1
+        else
+            log "could not cache $image"
+        fi
+    done
+    touch "$stamp"
+    log "pre-pull done"
+}
+
+case "$1" in
+    start) start ;;
+    prewarm) prewarm ;;
+    status) wget -q -O - "http://127.0.0.1:$PORT/v2/_catalog?n=1000"; echo ;;
+    *) echo "usage: image-cache start|prewarm|status"; exit 2 ;;
+esac

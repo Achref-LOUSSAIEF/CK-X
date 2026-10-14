@@ -48,6 +48,12 @@ adduser -S -D -H -s /sbin/nologin -G sshd sshd
 echo "$(date '+%Y-%m-%d %H:%M:%S') | [INFO] Installing k3d"
 TAG=v5.8.3 bash /usr/local/bin/k3d-install.sh
 
+# env-setup runs over SSH and does not see this container's environment
+echo "${CKX_IMAGE_CACHE:-true}" > /etc/ckx-image-cache
+
+# Start the local Docker Hub cache and fill it with the lab images in the background
+(/usr/local/bin/image-cache prewarm || true) &
+
 sleep 10
 touch /ready
 

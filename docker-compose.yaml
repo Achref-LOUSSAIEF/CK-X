@@ -178,11 +178,15 @@ services:
     container_name: kind-cluster
     hostname: k8s-api-server
     privileged: true # Required for running containers inside KIND
+    environment:
+      - CKX_IMAGE_CACHE=true # local Docker Hub cache for the exam cluster; false to disable
     expose:
       - "6443"
       - "22"
     volumes:
       - kube-config:/home/candidate/.kube # Shared volume for Kubernetes config
+      - ckx-docker:/var/lib/docker # k3s and k3d images survive restarts and rebuilds
+      - ckx-image-cache:/var/lib/ckx-cache # local Docker Hub cache (see kind-cluster/scripts/image-cache)
     deploy:
       resources:
         limits:
@@ -270,3 +274,5 @@ networks:
 
 volumes:
   kube-config: # Shared volume for Kubernetes configuration
+  ckx-docker: # Docker data of the cluster container
+  ckx-image-cache: # Images cached from Docker Hub

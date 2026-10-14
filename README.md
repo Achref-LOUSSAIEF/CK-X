@@ -6,12 +6,14 @@ This is a personal fork of [CK-X](https://github.com/sailor-sh/CK-X) by Sailor.s
 
 ## What's different in this fork
 
-- **CKA only.** The CKAD, CKS and Docker labs were removed; six CKA exams and a Helm lab remain, listed in a recommended order from Easy to Hard.
-- **4 extra CKA exams** (62 tasks). See [Labs](#labs).
+- **CKA only.** The CKAD, CKS and Docker labs were removed; eight CKA exams, a random CKA exam and a Helm lab remain, listed in a recommended order from Easy to Hard.
+- **6 extra CKA exams** (94 tasks) and **CKA Random**, a new mix on every attempt. See [Labs](#labs).
+- **Score by domain.** The results page shows your score for each of the five CKA domains and compares the total with the real pass mark (66%).
 - **Simple home page.** The site opens directly on the exam list: pick a certification, pick a lab, start. No landing page, and no paid "premium bundle" entries in the list.
 - **Closer to the real exam interface.** Each question has its own host to SSH to, Firefox in the exam desktop only opens the allowed documentation (kubernetes.io and helm.sh), the question panel doesn't reveal the topic (no "Concepts" line), and there is no plain-terminal view and no Terminate button during the exam, only End Exam.
 - **No pop-ups.** The automatic rating/testimonial pop-up after an exam is gone.
 - **Kubernetes v1.35**, like the current CKA exam. The exam cluster and the `kubectl` in the exam terminal are pinned to the same version (v1.35.9).
+- **Faster start-up.** A local pull-through cache keeps a copy of every Docker Hub image the labs use, and the cluster container keeps its Docker data, so after the first exam the cluster and the lab Pods start without downloading everything again.
 - **No usage tracking.** `TRACK_METRICS` is set to `false`, so nothing is sent to the external CK-X metrics server.
 
 ## Labs
@@ -81,6 +83,7 @@ docker compose restart nginx
 | New labs or interface changes don't appear | The prebuilt images are still in use. Run `docker compose build webapp facilitator && docker compose up -d`, then reload with Ctrl+Shift+R. |
 | Port 30080 already in use | Another copy of CK-X is running (for example the one installed by the upstream installer). Stop it with `docker compose down` in its folder. |
 | Changing the Kubernetes version | Edit `K3S_IMAGE` in `kind-cluster/scripts/env-setup` and `KUBECTL_VERSION` in `jumphost/Dockerfile` (keep them on the same minor version), then run `docker compose build k8s-api-server jumphost && docker compose up -d`. |
+| Check or disable the image cache | `docker compose exec k8s-api-server image-cache status` lists the cached images. To turn the cache off, set `CKX_IMAGE_CACHE=false` under `k8s-api-server` in `docker-compose.yaml` and run `docker compose up -d`. To empty it: `docker compose down` then `docker volume rm ck-x_ckx-image-cache` (the prefix is your folder name). |
 | Lab preparation never finishes | Check the cluster logs with `docker compose logs -f k8s-api-server` and make sure Docker has enough memory. |
 
 ## Adding your own labs
