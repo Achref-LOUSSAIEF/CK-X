@@ -105,10 +105,8 @@
                     Exam Interface
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="examInterfaceDropdown">
-                    <li><a class="dropdown-item" href="#" id="resizeTerminalBtn">Resize Terminal</a></li>
+                    <li><a class="dropdown-item" href="#" id="resizeTerminalBtn">Reset Panel Layout</a></li>
                     <li><a class="dropdown-item" href="#" id="fullscreenBtn">Toggle Fullscreen</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#" id="toggleViewBtn">Switch to Terminal</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="https://github.com/sailor-sh/CK-X">Help</a></li>
                 </ul>
@@ -188,19 +186,6 @@
                 </div>
                 <iframe id="vnc-frame" class="terminal-iframe" src="about:blank"></iframe>
                 <div id="connectionStatus" class="connection-status">Connecting to Session...</div>
-            </div>
-            
-            <!-- SSH Terminal Container (initially hidden) -->
-            <div class="ssh-terminal-container" id="sshTerminalContainer" style="display: none;">
-                <div class="terminal-controls">
-                    <button class="btn btn-sm btn-outline-secondary" id="fullscreenTerminalBtn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z"/>
-                        </svg>
-                    </button>
-                </div>
-                <div id="terminal" class="terminal"></div>
-                <div id="sshConnectionStatus" class="connection-status">Connecting to SSH...</div>
             </div>
         </div>
     </div>

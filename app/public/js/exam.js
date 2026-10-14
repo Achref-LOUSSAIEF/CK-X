@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const vncFrame = document.getElementById('vnc-frame');
     const connectionStatus = document.getElementById('connectionStatus');
     const startExamBtn = document.getElementById('startExamBtn');
-    const toggleViewBtn = document.getElementById('toggleViewBtn');
     const sshTerminalContainer = document.getElementById('sshTerminalContainer');
     const sshConnectionStatus = document.getElementById('sshConnectionStatus');
     const viewResultsBtn = document.getElementById('viewResultsBtn');
@@ -44,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let examInfo = {}; // Store exam information
     let currentQuestionId = 1;
     let questions = [];
-    let isTerminalActive = false;
     let isCompletedExamMode = false;
     
     // Add event listener for page unload to clean up resources
@@ -585,45 +583,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Toggle between VNC and Terminal views
-    function toggleView() {
-        const terminalContainer = document.querySelector('.terminal-container');
-        
-        if (isTerminalActive) {
-            // Switch to VNC
-            sshTerminalContainer.style.display = 'none';
-            terminalContainer.style.display = 'flex';
-            toggleViewBtn.textContent = 'Switch to Terminal';
-            isTerminalActive = false;
-        } else {
-            // Switch to Terminal
-            terminalContainer.style.display = 'none';
-            sshTerminalContainer.style.display = 'flex';
-            toggleViewBtn.textContent = 'Switch to Remote Desktop';
-            isTerminalActive = true;
-            
-            // Show toast notification about real exam constraints
-            UiUtils.showToast('Note: In the actual certification exam, only remote desktop access is available. Terminal access is provided here for practice convenience.', {
-                bgColor: 'bg-info',
-                textColor: 'text-white',
-                delay: 8000
-            });
-            
-            // Initialize terminal if not already done
-            if (!TerminalService.isInitialized()) {
-                TerminalService.initTerminal(sshTerminalContainer, true);
-            } else {
-                // Resize terminal to fit container
-                TerminalService.resizeTerminal(sshTerminalContainer);
-            }
-            
-            // Give a little time for the display change to take effect, then resize again
-            setTimeout(() => {
-                TerminalService.resizeTerminal(sshTerminalContainer);
-            }, 300);
-        }
-    }
-    
     // Initialize the exam UI
     function initExamUI() {
         // Set the first question
@@ -719,13 +678,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
-        // Setup toggle view button
-        if (toggleViewBtn) {
-            toggleViewBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                toggleView();
-            });
-        }
         
         // Add fullscreen change event listener to update UI accordingly
         document.addEventListener('fullscreenchange', () => UiUtils.updateFullscreenUI(fullscreenBtn));

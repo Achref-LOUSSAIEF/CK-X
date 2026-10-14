@@ -65,8 +65,6 @@ function generateQuestionContent(question) {
         const originalData = question.originalData || {};
         const machineHostname = originalData.machineHostname || 'N/A';
         const namespace = originalData.namespace || 'N/A';
-        const concepts = originalData.concepts || [];
-        const conceptsString = concepts.join(', ');
         
         // Format question content with improved styling
         const formattedQuestionContent = processQuestionContent(question.content);
@@ -82,10 +80,6 @@ function generateQuestionContent(question) {
                     
                     <div class="mb-3">
                         <strong>Namespace:</strong> <span class="text-primary">${namespace}</span>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <strong>Concepts:</strong> <span class="text-primary">${conceptsString}</span>
                     </div>
                     
                     <hr class="my-3">
