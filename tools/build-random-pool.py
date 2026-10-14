@@ -27,11 +27,11 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 EXAMS = os.path.join(ROOT, "facilitator", "assets", "exams")
 OUT = os.path.join(EXAMS, "cka", "random", "pool.json")
 
-SOURCES = ["cka/002", "cka/003", "cka/004", "cka/005", "cka/006", "cka/007", "cka/008"]
+SOURCES = ["cka/002", "cka/003", "cka/004", "cka/005", "cka/006", "cka/007", "cka/008", "cka/009", "cka/010"]
 
 # Tasks that drain or cordon a node: they evict the Pods of every other task
 # on that node, so they only make sense in their own exam.
-EXCLUDE = {"cka/003/7", "cka/004/3", "cka/007/12"}
+EXCLUDE = {"cka/003/7", "cka/004/3", "cka/007/12", "cka/010/14"}
 
 NODE_RE = re.compile(r"k3d-cluster-(?:agent-[01]|server-0)")
 NODE_CHANGES = re.compile(r"kubectl (?:taint|label) (?:node|nodes|no)\b|kubectl (?:cordon|drain|uncordon)\b")
@@ -70,6 +70,7 @@ def analyse(lab, q, answers):
     files = [os.path.join(EXAMS, lab, "scripts", "setup", f"q{qid}_setup.sh")]
     files += [os.path.join(EXAMS, lab, "scripts", "validation", v["verificationScriptFile"]) for v in q["verification"]]
     scripts = "\n".join(open(f, encoding="utf-8").read() for f in files if os.path.exists(f))
+    setup = open(files[0], encoding="utf-8").read() if os.path.exists(files[0]) else ""
     text = "\n".join([q["question"], scripts, answers.get(qid, "")])
 
     claims, uses = set(), set()
@@ -99,7 +100,9 @@ def analyse(lab, q, answers):
     else:
         uses |= {f"node:{n}" for n in nodes}
     # default StorageClass
-    if "is-default-class" in scripts + answers.get(qid, ""):
+    # changing the default StorageClass happens in a setup script or in the solution;
+    # a grader that only checks the annotation does not change it
+    if "is-default-class" in setup + answers.get(qid, ""):
         claims.add("default-storageclass")
     elif re.search(r"PersistentVolumeClaim|volumeClaimTemplates|default StorageClass", text):
         uses.add("default-storageclass")

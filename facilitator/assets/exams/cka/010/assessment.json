@@ -1,0 +1,455 @@
+{
+  "questions": [
+    {
+      "id": "1",
+      "namespace": "dev",
+      "machineHostname": "cka-q1",
+      "domain": "Workloads & Scheduling",
+      "question": "In the namespace `dev`:\n\n- create a ConfigMap `app-config` with the key `APP_MODE=production`\n- create a Secret `app-secret` with the key `DB_PASS=s3cret`\n- create a Pod `app` (image `busybox:1.36`, command `sleep 3600`) that gets `APP_MODE` from the ConfigMap and `DB_PASS` from the Secret as environment variables with the same names",
+      "concepts": [
+        "configmaps",
+        "secrets",
+        "environment variables"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ConfigMap and Secret hold the values",
+          "verificationScriptFile": "q1_s1_validate_data.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "app takes APP_MODE and DB_PASS from them",
+          "verificationScriptFile": "q1_s2_validate_env.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "namespace": "dev",
+      "machineHostname": "cka-q2",
+      "domain": "Workloads & Scheduling",
+      "question": "Create a Job `pi` in the namespace `dev` (image `busybox:1.36`, command `sh -c \"echo 3.14159\"`) that completes `2` times with a parallelism of `2` and `backoffLimit: 4`. Wait until it has completed.",
+      "concepts": [
+        "jobs"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Job pi: completions 2, parallelism 2, backoffLimit 4",
+          "verificationScriptFile": "q2_s1_validate_spec.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "pi completed twice",
+          "verificationScriptFile": "q2_s2_validate_complete.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "namespace": "dev",
+      "machineHostname": "cka-q3",
+      "domain": "Workloads & Scheduling",
+      "question": "Create a CronJob `backup` in the namespace `dev` (image `busybox:1.36`, command `sh -c \"echo backup\"`) that runs every 5 minutes (`*/5 * * * *`), with `concurrencyPolicy: Forbid`, keeping only `2` successful Jobs in its history.",
+      "concepts": [
+        "cronjobs"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "backup is scheduled as requested",
+          "verificationScriptFile": "q3_s1_validate_spec.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "namespace": "media",
+      "machineHostname": "cka-q4",
+      "domain": "Workloads & Scheduling",
+      "question": "In the namespace `media`, create:\n\n- a headless Service `db` (`clusterIP: None`) selecting `app=db` on port `6379`\n- a StatefulSet `db` with `2` replicas of `redis:7.2` (container port `6379`, Pod label `app=db`) that uses `serviceName: db`\n\nBoth Pods (`db-0`, `db-1`) must be running.",
+      "concepts": [
+        "statefulsets",
+        "headless services"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Headless Service db",
+          "verificationScriptFile": "q4_s1_validate_service.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "StatefulSet db with 2 ready Pods",
+          "verificationScriptFile": "q4_s2_validate_statefulset.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "namespace": "payments",
+      "machineHostname": "cka-q5",
+      "domain": "Workloads & Scheduling",
+      "question": "Create a HorizontalPodAutoscaler for the Deployment `gateway` in the namespace `payments` that keeps between `2` and `6` replicas, targeting `70%` average CPU utilization.",
+      "concepts": [
+        "autoscaling",
+        "hpa"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "HPA gateway: 2-6 replicas at 70% CPU",
+          "verificationScriptFile": "q5_s1_validate_hpa.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "namespace": "media",
+      "machineHostname": "cka-q6",
+      "domain": "Workloads & Scheduling",
+      "question": "Update the Deployment `catalog` in the namespace `media` to the image `nginx:1.27` with a rolling update and wait until it is fully rolled out.\n\nThen write the **number of revisions** that `kubectl rollout history` shows for it to `/tmp/exam/q6/catalog-revisions.txt` on `cka-q6`.",
+      "concepts": [
+        "deployments",
+        "rolling updates",
+        "rollout history"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "catalog runs nginx:1.27 and is rolled out",
+          "verificationScriptFile": "q6_s1_validate_rollout.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "catalog-revisions.txt has the revision count",
+          "verificationScriptFile": "q6_s2_validate_revisions.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "namespace": "default",
+      "machineHostname": "cka-q7",
+      "domain": "Workloads & Scheduling",
+      "question": "The nodes have a `zone` label (`east` or `west`).\n\nCreate a Pod `east-pod` in the namespace `default` (image `nginx:1.27`) that uses **required node affinity** (not a `nodeSelector`) so that it can only run on nodes in the zone `east`. It must be running.",
+      "concepts": [
+        "node affinity",
+        "scheduling"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "east-pod uses required node affinity on zone=east",
+          "verificationScriptFile": "q7_s1_validate_spec.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "east-pod runs on a zone=east node",
+          "verificationScriptFile": "q7_s2_validate_node.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "namespace": "dev",
+      "machineHostname": "cka-q8",
+      "domain": "Services & Networking",
+      "question": "In the namespace `dev`, the Pod `restricted` (label `role=restricted`) must only be able to open **egress** connections to:\n\n- Pods labeled `app=api` in the same namespace, on TCP port `80`\n- DNS (UDP and TCP port `53`) in the namespace `kube-system`\n\nCreate the NetworkPolicy `restrict-egress` in `dev`. Test targets: the `api` Pods (`app=api`) must be reachable, the Pod `sink` (`app=other`) must not.",
+      "concepts": [
+        "network policies",
+        "egress"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "restrict-egress allows only api:80 and DNS",
+          "verificationScriptFile": "q8_s1_validate_policy.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "restricted reaches api:80 but not sink:80",
+          "verificationScriptFile": "q8_s2_validate_traffic.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "namespace": "payments",
+      "machineHostname": "cka-q9",
+      "domain": "Storage",
+      "question": "The StorageClass `local-dyn` exists. In the namespace `payments`, create a PersistentVolumeClaim `data-dyn` requesting `2Gi` (`ReadWriteOnce`) of that class, and a Pod `writer` (image `busybox:1.36`, command `sleep 3600`) that mounts it at `/data`.\n\nThe claim must be Bound and the Pod running.",
+      "concepts": [
+        "storage",
+        "dynamic provisioning"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "data-dyn requests 2Gi RWO of local-dyn and is Bound",
+          "verificationScriptFile": "q9_s1_validate_pvc.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "writer mounts data-dyn at /data and runs",
+          "verificationScriptFile": "q9_s2_validate_pod.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "namespace": "default",
+      "machineHostname": "cka-q10",
+      "domain": "Cluster Architecture, Installation & Configuration",
+      "question": "Create a ClusterRole `node-reader` that allows `get`, `list` and `watch` on `nodes`, and a ClusterRoleBinding `node-reader-dave` that grants it to the user `dave`.\n\n`dave` must not be able to delete nodes.",
+      "concepts": [
+        "rbac",
+        "clusterroles"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ClusterRoleBinding grants node-reader to dave",
+          "verificationScriptFile": "q10_s1_validate_binding.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "dave can read nodes but not delete them",
+          "verificationScriptFile": "q10_s2_validate_access.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "namespace": "media",
+      "machineHostname": "cka-q11",
+      "domain": "Services & Networking",
+      "question": "The GatewayClass `nginx-gc` exists, and in the namespace `media` the Deployment `media` is exposed by the Service `media` on port `80`. There is no gateway controller, so only the resources are graded.\n\nCreate a Gateway `main-gw` in `media` of that class with one HTTP listener named `http` on port `80`, and an HTTPRoute `media-route` in `media`, attached to `main-gw`, that sends the host `media.example.com` to the Service `media` on port `80`.",
+      "concepts": [
+        "gateway api"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Gateway main-gw with HTTP listener http:80",
+          "verificationScriptFile": "q11_s1_validate_gateway.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "HTTPRoute media-route sends media.example.com to media:80",
+          "verificationScriptFile": "q11_s2_validate_route.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "namespace": "default",
+      "machineHostname": "cka-q12",
+      "domain": "Troubleshooting",
+      "question": "Using `kubectl` with **jsonpath** output, write the InternalIP address of the node `k3d-cluster-agent-0` to `/tmp/exam/q12/node-ip.txt` on `cka-q12` (the address only).",
+      "concepts": [
+        "kubectl",
+        "jsonpath"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "node-ip.txt has the InternalIP",
+          "verificationScriptFile": "q12_s1_validate_file.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "namespace": "payments",
+      "machineHostname": "cka-q13",
+      "domain": "Troubleshooting",
+      "question": "The Secret `license` in the namespace `payments` has a key `key`. Write its **decoded** value to `/tmp/exam/q13/license.txt` on `cka-q13`.",
+      "concepts": [
+        "secrets"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "license.txt has the decoded key",
+          "verificationScriptFile": "q13_s1_validate_file.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "namespace": "payments",
+      "machineHostname": "cka-q14",
+      "domain": "Cluster Architecture, Installation & Configuration",
+      "question": "The node `k3d-cluster-agent-1` (the `pool=legacy` node) needs maintenance. Make it unschedulable and evict all workloads from it (DaemonSet Pods may stay). Leave it cordoned.\n\nThe evicted `legacy` Pods are expected to stay `Pending` afterwards, since no other node is in the legacy pool.",
+      "concepts": [
+        "drain",
+        "cluster maintenance"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "k3d-cluster-agent-1 is cordoned and runs no workload Pods",
+          "verificationScriptFile": "q14_s1_validate_drained.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "namespace": "web",
+      "machineHostname": "cka-q15",
+      "domain": "Troubleshooting",
+      "question": "The Service `web` in the namespace `web` has no ready endpoints although the Pods of the Deployment `web` are running: they never become `Ready`.\n\nFind the cause and fix the **Deployment** so that the Pods become Ready and the Service gets `2` endpoints. Keep a readiness probe.",
+      "concepts": [
+        "troubleshooting",
+        "probes"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "The readiness probe checks the nginx port",
+          "verificationScriptFile": "q15_s1_validate_probe.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Service web has 2 ready endpoints",
+          "verificationScriptFile": "q15_s2_validate_endpoints.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "namespace": "analytics",
+      "machineHostname": "cka-q16",
+      "domain": "Troubleshooting",
+      "question": "The Pods of the Deployment `analytics` in the namespace `analytics` are stuck in `Pending`.\n\nFind out why from the scheduler's events and fix the Deployment: each container should request `100m` CPU and `128Mi` memory. Both replicas must be available.",
+      "concepts": [
+        "troubleshooting",
+        "scheduling",
+        "resources"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "analytics requests 100m CPU and 128Mi memory",
+          "verificationScriptFile": "q16_s1_validate_requests.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Deployment analytics has 2 available replicas",
+          "verificationScriptFile": "q16_s2_validate_available.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "namespace": "metrics",
+      "machineHostname": "cka-q17",
+      "domain": "Services & Networking",
+      "question": "In the namespace `metrics`, the Deployment `exporter` runs Pods with two named container ports: `http` (`8080`) and `metrics` (`9100`).\n\nCreate a Service `exporter` that exposes port `80` → the container port named `http`, and port `9100` → the container port named `metrics`. Name the Service ports `http` and `metrics`, and refer to the container ports **by name**.",
+      "concepts": [
+        "services",
+        "named ports"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "exporter has the two named ports targeting the container ports by name",
+          "verificationScriptFile": "q17_s1_validate_ports.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        },
+        {
+          "id": "2",
+          "description": "exporter has endpoints on 8080 and 9100",
+          "verificationScriptFile": "q17_s2_validate_endpoints.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "namespace": "logs",
+      "machineHostname": "cka-q18",
+      "domain": "Storage",
+      "question": "In the namespace `logs`, create a Pod `log-pair` with two containers that share an `emptyDir` volume `shared`, stored **in memory** with a size limit of `64Mi`:\n\n- `writer` (image `busybox:1.36`): `sh -c 'while true; do date >> /var/log/app/app.log; sleep 5; done'`, volume mounted at `/var/log/app`\n- `reader` (image `busybox:1.36`): `sh -c 'tail -F /logs/app.log'`, the same volume mounted **read-only** at `/logs`",
+      "concepts": [
+        "volumes",
+        "emptydir",
+        "multi-container"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "log-pair shares a 64Mi in-memory emptyDir",
+          "verificationScriptFile": "q18_s1_validate_spec.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        },
+        {
+          "id": "2",
+          "description": "reader sees the writer's log",
+          "verificationScriptFile": "q18_s2_validate_runtime.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    }
+  ]
+}

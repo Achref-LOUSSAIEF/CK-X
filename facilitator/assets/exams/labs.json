@@ -97,16 +97,40 @@
       "order": 8
     },
     {
+      "id": "cka-009",
+      "assetPath": "assets/exams/cka/009",
+      "name": "CKA 9 · mockctl Practice 1",
+      "category": "CKA",
+      "description": "Exam-length practice at a steady level: Deployments and scaling, multi-container Pods, nodeSelector, taints, Services, NetworkPolicy, PV/PVC, StorageClasses, RBAC, a broken image, kubectl top, a Service without endpoints, a DaemonSet on every node, Ingress, CreateContainerConfigError, LimitRange/ResourceQuota and Pod Security Admission. Adapted from Unofficial CKA Practice Exam 1 of ericsson-james/mockctl-exam-lab (MIT, © James Ericsson).",
+      "warmUpTimeInSeconds": 360,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120,
+      "questionCount": 18,
+      "order": 9
+    },
+    {
+      "id": "cka-010",
+      "assetPath": "assets/exams/cka/010",
+      "name": "CKA 10 · mockctl Practice 2",
+      "category": "CKA",
+      "description": "Exam-length practice at a steady level: ConfigMaps and Secrets as env, Jobs, CronJobs, StatefulSets, HPA, rollout history, node affinity, egress NetworkPolicy, dynamic provisioning, ClusterRoles, Gateway API, jsonpath, Secrets, drain, readiness probes, Pending Pods, named ports and in-memory emptyDir. Adapted from Unofficial CKA Practice Exam 2 of ericsson-james/mockctl-exam-lab (MIT, © James Ericsson).",
+      "warmUpTimeInSeconds": 360,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120,
+      "questionCount": 18,
+      "order": 10
+    },
+    {
       "id": "cka-random",
       "assetPath": "assets/exams/cka/random",
       "name": "CKA Random · New Mix Every Attempt",
       "category": "CKA",
-      "description": "A different exam every time: 16 tasks drawn at random from CKA 2 to CKA 8, weighted like the real exam's domains (Troubleshooting 5, Cluster Architecture 4, Services & Networking 3, Workloads 2, Storage 2) and chosen so they never clash. Use it once you have done the other exams.",
+      "description": "A different exam every time: 16 tasks drawn at random from CKA 2 to CKA 10, weighted like the real exam's domains (Troubleshooting 5, Cluster Architecture 4, Services & Networking 3, Workloads 2, Storage 2) and chosen so they never clash. Use it once you have done the other exams.",
       "warmUpTimeInSeconds": 360,
       "difficulty": "Hard",
       "examDurationInMinutes": 120,
       "questionCount": 16,
-      "order": 9
+      "order": 11
     },
     {
       "id": "helm-001",
@@ -118,7 +142,7 @@
       "difficulty": "Medium",
       "examDurationInMinutes": 90,
       "questionCount": 12,
-      "order": 10
+      "order": 12
     }
   ]
 }

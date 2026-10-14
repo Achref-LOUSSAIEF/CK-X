@@ -25,7 +25,9 @@
       "cka/003": "CKA 5 · Troubleshooting & Cluster Operations",
       "cka/006": "CKA 6 · Final Exam Simulation",
       "cka/007": "CKA 7 · Exam Simulation II",
-      "cka/008": "CKA 8 · Exam Simulation III"
+      "cka/008": "CKA 8 · Exam Simulation III",
+      "cka/009": "CKA 9 · mockctl Practice 1",
+      "cka/010": "CKA 10 · mockctl Practice 2"
     }
   }
 }
