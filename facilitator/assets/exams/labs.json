@@ -73,6 +73,30 @@
       "order": 6
     },
     {
+      "id": "cka-007",
+      "assetPath": "assets/exams/cka/007",
+      "name": "CKA 7 · Exam Simulation II",
+      "category": "CKA",
+      "description": "Current exam style, all-new topics: jsonpath node report, DNS blocked by a default-deny egress policy, ResourceQuota troubleshooting, canary behind a Service, Service without selector, Secret key with file mode, Job completions/parallelism, aggregated ClusterRoles, weighted HTTPRoute, Kustomize overlay, Helm upgrade/rollback, drain blocked by a PDB, CrashLoopBackOff, missing StorageClass, ValidatingAdmissionPolicy and sort-by.",
+      "warmUpTimeInSeconds": 360,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120,
+      "questionCount": 16,
+      "order": 7
+    },
+    {
+      "id": "cka-008",
+      "assetPath": "assets/exams/cka/008",
+      "name": "CKA 8 · Exam Simulation III",
+      "category": "CKA",
+      "description": "Current exam style, all-new topics: StatefulSet partitioned update, immutable ConfigMaps, Downward API, stuck init container, ExternalName, egress ipBlock with except and port ranges, headless Service, projected ServiceAccount tokens, RBAC resourceNames, hardened securityContext, NoExecute tolerationSeconds, local PersistentVolumes, rollout undo to a revision, jsonpath image report, HTTPRoute header match and a broken Service.",
+      "warmUpTimeInSeconds": 360,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120,
+      "questionCount": 16,
+      "order": 8
+    },
+    {
       "id": "helm-001",
       "assetPath": "assets/exams/other/002",
       "name": "Helm Fundamentals",
@@ -82,7 +106,7 @@
       "difficulty": "Medium",
       "examDurationInMinutes": 90,
       "questionCount": 12,
-      "order": 7
+      "order": 9
     }
   ]
 }

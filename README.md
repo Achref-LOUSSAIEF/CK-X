@@ -26,10 +26,13 @@ Work through them in this order:
 | 4 | CKA 4 · Advanced Administration *(questions clarified, graders fixed)* | Hard | 20 | 120 min |
 | 5 | **CKA 5 · Troubleshooting & Cluster Operations** *(new)* | Hard | 18 | 120 min |
 | 6 | **CKA 6 · Final Exam Simulation** *(new)* | Hard | 14 | 120 min |
+| 7 | **CKA 7 · Exam Simulation II** *(new)* | Hard | 16 | 120 min |
+| 8 | **CKA 8 · Exam Simulation III** *(new)* | Hard | 16 | 120 min |
 | – | Helm Fundamentals | Medium | 12 | 90 min |
 
 - **Mock Exams A and B** are adapted from [theplatformlab/CKA-Certified-Kubernetes-Administrator](https://github.com/theplatformlab/CKA-Certified-Kubernetes-Administrator) (MIT).
 - **Final Exam Simulation** is an original exam; its list of topics was inspired by [markdjones82/CKA-PREP-2025-v2](https://github.com/markdjones82/CKA-PREP-2025-v2).
+- **Exam Simulations II and III** are original exams on topics the other labs don't cover (Downward API, local PVs, aggregated ClusterRoles, ValidatingAdmissionPolicy, PDB-blocked drains, HTTPRoute weights and header matches, and more).
 - **Not covered:** CK-X gives no SSH access to cluster nodes, so node-level tasks (kubeadm upgrades, etcd backup/restore, kubelet and control-plane repair, CNI and container runtime installation) can't be practised here. The solutions pages explain the kubeadm procedures where a lab replaced such a task.
 
 ## Requirements
