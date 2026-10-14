@@ -45,6 +45,9 @@
       ],
       "Exceptions": [
         "https://kubernetes.io/*",
+        "https://www.google.com/url*",
+        "https://google.com/url*",
+        "https://cse.google.com/*",
         "https://helm.sh/*",
         "https://gateway-api.sigs.k8s.io/*",
         "https://argoproj.github.io/argo-helm/*",
