@@ -1,33 +1,35 @@
 # CK-X Simulator — Achref's edition
 
-A self-hosted practice environment for the Kubernetes certification exams (CKA, CKAD, CKS). Every attempt runs on a fresh multi-node Kubernetes cluster in Docker, with an exam-style browser interface, a countdown timer, automatic grading and worked solutions.
+A self-hosted practice environment for the **CKA (Certified Kubernetes Administrator)** exam. Every attempt runs on a fresh multi-node Kubernetes cluster in Docker, with an exam-style browser interface, a countdown timer, automatic grading and worked solutions.
 
-This is a personal fork of [CK-X](https://github.com/sailor-sh/CK-X) by Sailor.sh. It adds more CKA labs and a simpler, ad-free interface.
+This is a personal fork of [CK-X](https://github.com/sailor-sh/CK-X) by Sailor.sh, focused only on the CKA (plus Helm practice), with more labs and a simpler, ad-free interface.
 
 ## What's different in this fork
 
-- **3 extra CKA labs** (48 tasks, about 113 automatic checks). See [Labs](#labs).
+- **CKA only.** The CKAD, CKS and Docker labs were removed; six CKA exams and a Helm lab remain, listed in a recommended order from Easy to Hard.
+- **4 extra CKA exams** (62 tasks). See [Labs](#labs).
 - **Simple home page.** The site opens directly on the exam list: pick a certification, pick a lab, start. No landing page, and no paid "premium bundle" entries in the list.
 - **No pop-ups.** The automatic rating/testimonial pop-up after an exam is gone.
-- **Kubernetes v1.35**, like the current CKA/CKAD/CKS exams. The exam cluster and the `kubectl` in the exam terminal are pinned to the same version (v1.35.9).
+- **Kubernetes v1.35**, like the current CKA exam. The exam cluster and the `kubectl` in the exam terminal are pinned to the same version (v1.35.9).
 - **No usage tracking.** `TRACK_METRICS` is set to `false`, so nothing is sent to the external CK-X metrics server.
 
 ## Labs
 
-| Certification | Lab | Tasks | Difficulty | Time |
-|---|---|---|---|---|
-| CKA | Practice Lab - Core Concepts | 10 | Easy | 60 min |
-| CKA | Practice Lab - Advanced Administration | 20 | Hard | 120 min |
-| CKA | **Practice Lab - Troubleshooting & Cluster Operations** *(new)* | 18 | Hard | 120 min |
-| CKA | **Mock Exam 01 (theplatformlab)** *(new)* | 15 | Medium | 120 min |
-| CKA | **Mock Exam 02 (theplatformlab)** *(new)* | 15 | Medium | 120 min |
-| CKAD | Comprehensive Lab - 1 | 21 | Medium | 120 min |
-| CKAD | Comprehensive Lab - 2 | 20 | Hard | 120 min |
-| CKS | Practice Lab - Kubernetes Security Essentials | 12 | Hard | 120 min |
-| Other | Docker Speed Run - Core Concepts | 16 | Medium | 90 min |
-| Other | Helm Fundamentals Lab | 12 | Medium | 90 min |
+Work through them in this order:
 
-The two mock exams are adapted from [theplatformlab/CKA-Certified-Kubernetes-Administrator](https://github.com/theplatformlab/CKA-Certified-Kubernetes-Administrator) (MIT). Tasks that need SSH access to the nodes (container runtime setup, audit logs, `kubeadm certs renew`) were replaced with equivalents that can be graded through the API; each lab's solutions page explains the original kubeadm procedure.
+| # | Exam | Difficulty | Tasks | Time |
+|---|---|---|---|---|
+| 1 | CKA 1 · Warm-up: Core Concepts | Easy | 10 | 60 min |
+| 2 | **CKA 2 · Mock Exam A** *(new)* | Medium | 15 | 120 min |
+| 3 | **CKA 3 · Mock Exam B** *(new)* | Medium | 15 | 120 min |
+| 4 | CKA 4 · Advanced Administration *(questions clarified, graders fixed)* | Hard | 20 | 120 min |
+| 5 | **CKA 5 · Troubleshooting & Cluster Operations** *(new)* | Hard | 18 | 120 min |
+| 6 | **CKA 6 · Final Exam Simulation** *(new)* | Hard | 14 | 120 min |
+| – | Helm Fundamentals | Medium | 12 | 90 min |
+
+- **Mock Exams A and B** are adapted from [theplatformlab/CKA-Certified-Kubernetes-Administrator](https://github.com/theplatformlab/CKA-Certified-Kubernetes-Administrator) (MIT).
+- **Final Exam Simulation** is an original exam; its list of topics was inspired by [markdjones82/CKA-PREP-2025-v2](https://github.com/markdjones82/CKA-PREP-2025-v2).
+- **Not covered:** CK-X gives no SSH access to cluster nodes, so node-level tasks (kubeadm upgrades, etcd backup/restore, kubelet and control-plane repair, CNI and container runtime installation) can't be practised here. The solutions pages explain the kubeadm procedures where a lab replaced such a task.
 
 ## Requirements
 

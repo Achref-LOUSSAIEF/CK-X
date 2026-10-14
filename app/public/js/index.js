@@ -280,12 +280,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Display names and order for certification categories
     const CATEGORY_INFO = {
-        CKA:   'CKA - Kubernetes Administrator',
-        CKAD:  'CKAD - Application Developer',
-        CKS:   'CKS - Security Specialist',
-        KCNA:  'KCNA - Cloud Native Associate',
-        KCSA:  'KCSA - Cloud Native Security Associate',
-        Other: 'Other'
+        CKA:  'CKA - Certified Kubernetes Administrator',
+        Helm: 'Helm practice'
     };
     const CATEGORY_ORDER = Object.keys(CATEGORY_INFO);
     let activeCategory = null;
@@ -349,7 +345,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Render the labs of a category as selectable cards
     function renderLabList(category) {
         const filteredLabs = labs.filter(lab => lab.category === category)
-            .sort((a, b) => String(a.id).localeCompare(String(b.id), undefined, { numeric: true }));
+            .sort((a, b) => (a.order ?? 999) - (b.order ?? 999)
+                || String(a.id).localeCompare(String(b.id), undefined, { numeric: true }));
         labList.innerHTML = '';
         selectedLab = null;
         startSelectedExamBtn.disabled = true;
@@ -379,6 +376,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="lab-card-meta">
                     <span class="lab-badge ${difficultyClass(difficulty)}">${escapeHtml(difficulty)}</span>
                     <span><i class="far fa-clock me-1"></i>${escapeHtml(minutes)} min</span>
+                    ${lab.questionCount ? `<span><i class="fas fa-list-check me-1"></i>${escapeHtml(lab.questionCount)} tasks</span>` : ''}
                 </div>`;
             card.addEventListener('click', () => selectLab(lab.id));
             card.addEventListener('dblclick', () => { selectLab(lab.id); startSelectedExamBtn.click(); });

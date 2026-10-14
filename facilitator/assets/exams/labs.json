@@ -1,104 +1,88 @@
 {
-    "labs": [
-      {
-        "id": "ckad-001",
-        "assetPath": "assets/exams/ckad/001",
-        "name": "CKAD Comprehensive Lab - 1",
-        "category": "CKAD",
-        "description": "Hands-on exercises covering core Kubernetes concepts, pod configuration, deployments, and services with practical tasks for application deployment in a cluster.",
-        "warmUpTimeInSeconds": 260,
-         "difficulty": "Medium",
-         "examDurationInMinutes": 120
-      },
-      {
-        "id": "ckad-002",
-        "assetPath": "assets/exams/ckad/002",
-        "name": "CKAD Comprehensive Lab - 2",
-        "category": "CKAD",
-        "description": "Series of practical tasks on multi-container pods, pod design patterns, configuration, services, and networking in Kubernetes environments.",
-        "warmUpTimeInSeconds": 260,
-        "difficulty": "Hard",
-        "examDurationInMinutes": 120
-      },
-      {
-        "id": "cks-001",
-        "assetPath": "assets/exams/cks/001",
-        "name": "CKS Practice Lab - Kubernetes Security Essentials",
-        "category": "CKS",
-        "description": "Practice essential Kubernetes security concepts including network policies, RBAC, supply chain security, and runtime protection",
-        "warmUpTimeInSeconds": 260,
-        "difficulty": "Hard",
-        "examDurationInMinutes": 120
-      },
-      {
-        "id": "cka-002",
-        "assetPath": "assets/exams/cka/002",
-        "name": "CKA Practice Lab - Advanced Administration",
-        "category": "CKA",
-        "description": "Comprehensive lab covering advanced Kubernetes administration topics including storage, networking, security, and troubleshooting with focus on real-world scenarios, updated with the latest CKA exam curriculum changes.",
-        "warmUpTimeInSeconds": 360,
-        "difficulty": "Hard",
-        "examDurationInMinutes": 120
-      },
-      {
-        "id": "cka-001",
-        "assetPath": "assets/exams/cka/001",
-        "name": "CKA Practice Lab - Core Concepts",
-        "category": "CKA",
-        "description": "Practice essential Kubernetes administrator tasks covering cluster management, networking, storage, and security",
-        "warmUpTimeInSeconds": 260,
-        "difficulty": "Easy",
-        "examDurationInMinutes": 60
-      },
-      {
-        "id": "cka-003",
-        "assetPath": "assets/exams/cka/003",
-        "name": "CKA Practice Lab - Troubleshooting & Cluster Operations",
-        "category": "CKA",
-        "description": "18 exam-style tasks weighted toward the Troubleshooting domain: broken deployments, services, scheduling and DNS, container logs and metrics, node drain, RBAC, CRDs, Ingress, NetworkPolicies, DaemonSets, CronJobs, native sidecars, PV reclaim policy, ServiceAccount kubeconfigs and topology spread constraints.",
-        "warmUpTimeInSeconds": 360,
-        "difficulty": "Hard",
-        "examDurationInMinutes": 120
-      },
-      {
-        "id": "cka-004",
-        "assetPath": "assets/exams/cka/004",
-        "name": "CKA Mock Exam 01 (theplatformlab)",
-        "category": "CKA",
-        "description": "15-question mock exam adapted from theplatformlab/CKA-Certified-Kubernetes-Administrator (MIT): ConfigMap troubleshooting, RBAC, node maintenance, static PV/PVC, three-tier NetworkPolicies, Helm, RBAC auditing, HPA, TLS Ingress, scheduler troubleshooting, StatefulSets, quotas, Pod Security and sidecars.",
-        "warmUpTimeInSeconds": 360,
-        "difficulty": "Medium",
-        "examDurationInMinutes": 120
-      },
-      {
-        "id": "cka-005",
-        "assetPath": "assets/exams/cka/005",
-        "name": "CKA Mock Exam 02 (theplatformlab)",
-        "category": "CKA",
-        "description": "15-question mock exam adapted from theplatformlab/CKA-Certified-Kubernetes-Administrator (MIT): DNS, rollbacks, Secrets, DaemonSets with tolerations, API server health, ConfigMap reloads, PriorityClasses, NodePort, CronJobs, CSR certificates, PDBs, CRDs, Pod Security, dynamic provisioning and quotas.",
-        "warmUpTimeInSeconds": 360,
-        "difficulty": "Medium",
-        "examDurationInMinutes": 120
-      },
-      {
-        "id": "docker-001",
-        "assetPath": "assets/exams/other/001",
-        "name": "Docker Speed Run - Core Concepts",
-        "category": "Other",
-        "description": "Fast-paced practice lab covering Docker fundamentals including images, containers, volumes, networking, OCI, logging, and security best practices.",
-        "warmUpTimeInSeconds": 120,
-        "difficulty": "Medium",
-        "examDurationInMinutes": 90
-      },
-      {
-        "id": "helm-001",
-        "assetPath": "assets/exams/other/002",
-        "name": "Helm Fundamentals Lab",
-        "category": "Other",
-        "description": "Comprehensive lab covering Helm basics including chart installation, repositories, customization, packaging, debugging, and advanced Helm operations for Kubernetes applications.",
-        "warmUpTimeInSeconds": 260,
-        "difficulty": "Medium",
-        "examDurationInMinutes": 90
-      }
-    ]
-  } 
+  "labs": [
+    {
+      "id": "cka-001",
+      "assetPath": "assets/exams/cka/001",
+      "name": "CKA 1 · Warm-up: Core Concepts",
+      "category": "CKA",
+      "description": "Start here. The basics every CKA task builds on: pods, static pods, storage, multi-container pods, RBAC, NetworkPolicy, Deployments and Services, resources, ConfigMaps and probes.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Easy",
+      "examDurationInMinutes": 60,
+      "questionCount": 10,
+      "order": 1
+    },
+    {
+      "id": "cka-004",
+      "assetPath": "assets/exams/cka/004",
+      "name": "CKA 2 · Mock Exam A",
+      "category": "CKA",
+      "description": "Full 2-hour mock exam: ConfigMap troubleshooting, RBAC, node maintenance, static PV/PVC, three-tier NetworkPolicies, Helm, RBAC auditing, HPA, TLS Ingress, scheduler troubleshooting, StatefulSets, quotas, Pod Security and sidecars. Adapted from theplatformlab's Mock Exam 01 (MIT).",
+      "warmUpTimeInSeconds": 360,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120,
+      "questionCount": 15,
+      "order": 2
+    },
+    {
+      "id": "cka-005",
+      "assetPath": "assets/exams/cka/005",
+      "name": "CKA 3 · Mock Exam B",
+      "category": "CKA",
+      "description": "Second full mock exam: DNS, rollbacks, Secrets, DaemonSets with tolerations, API server health, ConfigMap reloads, PriorityClasses, NodePort, CronJobs, CSR certificates, PDBs, CRDs, Pod Security, dynamic provisioning and quotas. Adapted from theplatformlab's Mock Exam 02 (MIT).",
+      "warmUpTimeInSeconds": 360,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120,
+      "questionCount": 15,
+      "order": 3
+    },
+    {
+      "id": "cka-002",
+      "assetPath": "assets/exams/cka/002",
+      "name": "CKA 4 · Advanced Administration",
+      "category": "CKA",
+      "description": "Long and dense (20 tasks): storage classes and PVs, autoscaling, affinity, taints, Pod Security, StatefulSets, DNS, Helm, Kustomize, Gateway API, quotas, RBAC, NetworkPolicies, rolling updates, priorities and troubleshooting.",
+      "warmUpTimeInSeconds": 360,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120,
+      "questionCount": 20,
+      "order": 4
+    },
+    {
+      "id": "cka-003",
+      "assetPath": "assets/exams/cka/003",
+      "name": "CKA 5 · Troubleshooting & Cluster Operations",
+      "category": "CKA",
+      "description": "Troubleshooting-heavy with less hand-holding: broken Deployments, Services, scheduling and DNS, logs and metrics, node drain, RBAC, CRDs, Ingress, NetworkPolicies, DaemonSets, CronJobs, native sidecars, PV reclaim policy, ServiceAccount kubeconfigs and topology spread.",
+      "warmUpTimeInSeconds": 360,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120,
+      "questionCount": 18,
+      "order": 5
+    },
+    {
+      "id": "cka-006",
+      "assetPath": "assets/exams/cka/006",
+      "name": "CKA 6 · Final Exam Simulation",
+      "category": "CKA",
+      "description": "Closest to the current exam style: reuse a Released PV, render a Helm chart without CRDs, native sidecars, HPA behavior, CRDs and kubectl explain, PriorityClasses, dedicated nodes, Ingress-to-Gateway migration, Ingress troubleshooting, least-permissive NetworkPolicy, StorageClasses, NodePort, TLS config and kubectl patch.",
+      "warmUpTimeInSeconds": 360,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120,
+      "questionCount": 14,
+      "order": 6
+    },
+    {
+      "id": "helm-001",
+      "assetPath": "assets/exams/other/002",
+      "name": "Helm Fundamentals",
+      "category": "Helm",
+      "description": "Helm drills: repositories, search, install, upgrade, rollback, values files, creating and packaging a chart, a local chart repository and debugging a broken release.",
+      "warmUpTimeInSeconds": 260,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 90,
+      "questionCount": 12,
+      "order": 7
+    }
+  ]
+}
