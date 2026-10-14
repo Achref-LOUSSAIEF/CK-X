@@ -41,10 +41,11 @@ EOF
 
 Create a StorageClass named `fast-storage` and a PVC named `data-pvc` with the following specifications:
 
-StorageClass:
+StorageClass (cluster-scoped, so it has no namespace):
 - Name: fast-storage
 - Provisioner: kubernetes.io/no-provisioner
-- Namespace: storage
+- Reclaim policy: Delete
+- Marked as a default StorageClass with the annotation `storageclass.kubernetes.io/is-default-class: "true"`
 
 PVC:
 - Name: data-pvc
@@ -63,7 +64,10 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: fast-storage
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
 provisioner: kubernetes.io/no-provisioner
+reclaimPolicy: Delete
 EOF
 
 # Create PVC

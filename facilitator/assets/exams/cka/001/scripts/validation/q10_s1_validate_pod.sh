@@ -19,7 +19,7 @@ fi
 
 # Check if correct image is used
 POD_IMAGE=$(kubectl get pod $POD_NAME -o jsonpath='{.spec.containers[0].image}')
-if [ "$POD_IMAGE" != "$EXPECTED_IMAGE" ]; then
+if [[ "$POD_IMAGE" != "$EXPECTED_IMAGE" && "$POD_IMAGE" != "$EXPECTED_IMAGE":* ]]; then
     echo "❌ Pod '$POD_NAME' using incorrect image: $POD_IMAGE (expected: $EXPECTED_IMAGE)"
     exit 1
 fi

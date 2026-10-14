@@ -5,7 +5,7 @@
       "namespace": "app-team1",
       "machineHostname": "cka-q1",
       "domain": "Workloads & Scheduling",
-      "question": "Create a pod named `nginx-pod` using the `nginx:1.19` image.\n\nEnsure the pod is created in the `app-team1` namespace and has the label `run=nginx-pod`.\n\nVerify that the pod is in the Running state.",
+      "question": "Create the namespace `app-team1` and run a Pod `nginx-pod` in it with the image `nginx:1.19` and the label `run=nginx-pod`. The Pod must be Running.",
       "concepts": ["pods", "labels", "namespaces"],
       "verification": [
         {
@@ -36,7 +36,7 @@
       "namespace": "default",
       "machineHostname": "cka-q2",
       "domain": "Workloads & Scheduling",
-      "question": "Create a static pod named `static-web` on `cka-q2` using the `nginx:1.19` image.\nThe pod should expose port `80`.\n\nPlace the static pod manifest file at `/etc/kubernetes/manifests/static-web.yaml`.",
+      "question": "On `cka-q2`, write a static Pod manifest at `/etc/kubernetes/manifests/static-web.yaml` for a Pod `static-web` with the image `nginx:1.19` and the container port `80`.\n\nNote: in this lab `cka-q2` is not a cluster node, so only the manifest file is graded.",
       "concepts": ["static pods", "node configuration"],
       "verification": [
         {
@@ -60,7 +60,7 @@
       "namespace": "storage",
       "machineHostname": "cka-q3",
       "domain": "Storage",
-      "question": "Create a StorageClass named `fast-storage` with the provisioner `kubernetes.io/no-provisioner`.\n\nCreate a PersistentVolumeClaim named `data-pvc` in the `storage` namespace that uses this StorageClass.\n\nSet the access mode to `ReadWriteOnce` and request `1Gi` of storage.",
+      "question": "Create a StorageClass `fast-storage` with the provisioner `kubernetes.io/no-provisioner` and the reclaim policy `Delete`, and mark it as a default StorageClass. Then create a PVC `data-pvc` in the namespace `storage` that uses it, with the access mode `ReadWriteOnce` and a request of `1Gi`.",
       "concepts": ["storage", "storage classes", "persistent volumes"],
       "verification": [
         {
@@ -84,7 +84,7 @@
       "namespace": "monitoring",
       "machineHostname": "cka-q4",
       "domain": "Workloads & Scheduling",
-      "question": "Create a pod named `logger` in the `monitoring` namespace with two containers:\n\n1. A `busybox` container that writes logs to `/var/log/app.log`\n2. A `fluentd` container that reads logs from the same location\n\nUse an `emptyDir` volume named `log-volume` to share logs between containers. Mount this volume at `/var/log` in both containers.\n\nEnsure both containers are running.",
+      "question": "In the namespace `monitoring`, create a Pod `logger` with two containers that share an `emptyDir` volume `log-volume` mounted at `/var/log`:\n\n- container `busybox` (image `busybox`), which appends a line to `/var/log/app.log` every few seconds\n- container `fluentd` (image `fluentd`, any tag), the log collector\n\nBoth containers must be running and `/var/log/app.log` must contain entries.",
       "concepts": ["multi-container pods", "volumes", "logging"],
       "verification": [
         {
@@ -108,7 +108,7 @@
       "namespace": "default",
       "machineHostname": "cka-q5",
       "domain": "Cluster Architecture, Installation & Configuration",
-      "question": "Create a ServiceAccount named `app-sa` in the `default` namespace.\n\nCreate a Role named `pod-reader` that allows listing and getting pods.\n\nCreate a RoleBinding named `read-pods` that binds the `pod-reader` Role to the `app-sa` ServiceAccount.",
+      "question": "In the namespace `default`, create the ServiceAccount `app-sa`, a Role `pod-reader` that allows `get` and `list` on `pods`, and a RoleBinding `read-pods` that grants `pod-reader` to `app-sa`.",
       "concepts": ["RBAC", "service accounts", "roles"],
       "verification": [
         {
@@ -139,7 +139,7 @@
       "namespace": "networking",
       "machineHostname": "cka-q6",
       "domain": "Services & Networking",
-      "question": "Create a NetworkPolicy named `db-policy` in the `networking` namespace that:\n\n1. Allows pods with label `role=frontend` to connect to pods with label `role=db` on port `3306`\n2. Denies all other ingress traffic to pods with label `role=db`\n\nEnsure the policy is correctly applied to pods with the matching labels.",
+      "question": "In the namespace `networking`, create a NetworkPolicy `db-policy` for the Pods labeled `role=db`: allow ingress only from Pods labeled `role=frontend` on TCP port `3306`, and deny all other ingress to them.",
       "concepts": ["network policies", "pod networking"],
       "verification": [
         {
@@ -163,7 +163,7 @@
       "namespace": "default",
       "machineHostname": "cka-q7",
       "domain": "Services & Networking",
-      "question": "Create a deployment named `web-app` in the `default` namespace with `3` replicas using the `nginx:1.19` image.\n\nCreate a NodePort service named `web-service` that exposes the deployment on port `80`.\n\nEnsure the pods are distributed across multiple nodes using an appropriate pod anti-affinity rule.",
+      "question": "In the namespace `default`, create a Deployment `web-app` with `3` replicas of `nginx:1.19`, spread across nodes with a pod anti-affinity rule (topology key `kubernetes.io/hostname`). Expose it with a NodePort Service `web-service` on port `80` (target port `80`). All replicas must be available.",
       "concepts": ["deployments", "services", "pod distribution"],
       "verification": [
         {
@@ -187,7 +187,7 @@
       "namespace": "monitoring",
       "machineHostname": "cka-q8",
       "domain": "Workloads & Scheduling",
-      "question": "Create a pod named `resource-pod` in the `monitoring` namespace using the `nginx` image with the following resource requirements:\n\n- CPU request: `100m`\n- CPU limit: `200m`\n- Memory request: `128Mi`\n- Memory limit: `256Mi`\n\nEnsure the pod is in the Running state with all resource constraints applied correctly.",
+      "question": "In the namespace `monitoring`, run a Pod `resource-pod` with the image `nginx`, requests `cpu: 100m` and `memory: 128Mi`, and limits `cpu: 200m` and `memory: 256Mi`. The Pod must be Running.",
       "concepts": ["resource management", "pod configuration"],
       "verification": [
         {
@@ -211,7 +211,7 @@
       "namespace": "default",
       "machineHostname": "cka-q9",
       "domain": "Workloads & Scheduling",
-      "question": "Create a ConfigMap named `app-config` with the key `APP_COLOR` and value `blue`.\n\nCreate a pod named `config-pod` using the `nginx` image that mounts this ConfigMap as a volume named `config-volume` at `/etc/config`.\n\nVerify that the configuration is correctly accessible within the pod.",
+      "question": "In the namespace `default`, create a ConfigMap `app-config` with `APP_COLOR=blue`, and a Pod `config-pod` (image `nginx`) that mounts it as the volume `config-volume` at `/etc/config`. The file `/etc/config/APP_COLOR` in the Pod must contain `blue`.",
       "concepts": ["configmaps", "volumes", "pod configuration"],
       "verification": [
         {
@@ -242,7 +242,7 @@
       "namespace": "default",
       "machineHostname": "cka-q10",
       "domain": "Workloads & Scheduling",
-      "question": "Create a pod named `health-check` in the `default` namespace using the `nginx` image with the following health check configuration:\n\n- Liveness probe: HTTP GET on path `/` port `80` with initial delay of `5` seconds\n- Readiness probe: HTTP GET on path `/` port `80` with initial delay of `5` seconds\n\nEnsure the pod is running with both probes functioning correctly.",
+      "question": "In the namespace `default`, run a Pod `health-check` with the image `nginx` and two probes, a liveness probe and a readiness probe, both `HTTP GET /` on port `80` with an initial delay of `5` seconds. The Pod must become Ready without restarting.",
       "concepts": ["health checks", "pod lifecycle"],
       "verification": [
         {

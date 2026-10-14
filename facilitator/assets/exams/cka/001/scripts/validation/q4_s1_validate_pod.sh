@@ -26,8 +26,10 @@ if [ "$CONTAINER_COUNT" -ne "$EXPECTED_CONTAINERS" ]; then
 fi
 
 # Check if containers are using correct images
-BUSYBOX_CONTAINER=$(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.spec.containers[?(@.image=="busybox")].name}')
-FLUENTD_CONTAINER=$(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.spec.containers[?(@.image=="fluentd")].name}')
+BUSYBOX_IMAGE=$(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.spec.containers[?(@.name=="busybox")].image}')
+BUSYBOX_CONTAINER=""; [[ "$BUSYBOX_IMAGE" == busybox || "$BUSYBOX_IMAGE" == busybox:* ]] && BUSYBOX_CONTAINER=busybox
+FLUENTD_IMAGE=$(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.spec.containers[?(@.name=="fluentd")].image}')
+FLUENTD_CONTAINER=""; [[ "$FLUENTD_IMAGE" == fluentd || "$FLUENTD_IMAGE" == fluentd:* ]] && FLUENTD_CONTAINER=fluentd
 
 if [ -z "$BUSYBOX_CONTAINER" ] || [ -z "$FLUENTD_CONTAINER" ]; then
     echo "❌ Pod '$POD_NAME' is missing required containers with correct images"
@@ -35,7 +37,7 @@ if [ -z "$BUSYBOX_CONTAINER" ] || [ -z "$FLUENTD_CONTAINER" ]; then
 fi
 
 # Check if volume mount is configured
-LOG_MOUNT=$(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.spec.containers[0].volumeMounts[?(@.mountPath=="/var/log")].mountPath}')
+LOG_MOUNT=$(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.spec.containers[?(@.name=="busybox")].volumeMounts[?(@.mountPath=="/var/log")].mountPath}')
 if [ -z "$LOG_MOUNT" ]; then
     echo "❌ Volume mount '/var/log' not configured in pod '$POD_NAME'"
     exit 1
