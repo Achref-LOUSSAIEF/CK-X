@@ -46,6 +46,11 @@
       "Exceptions": [
         "https://kubernetes.io/*",
         "https://helm.sh/*",
+        "https://gateway-api.sigs.k8s.io/*",
+        "https://argoproj.github.io/argo-helm/*",
+        "https://artifacthub.io/packages/helm/argo/argo-cd*",
+        "https://cert-manager.io/docs/*",
+        "https://github.com/bitnami/charts/*",
         "https://docs.linuxfoundation.org/tc-docs/certification/*"
       ]
     }

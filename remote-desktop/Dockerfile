@@ -109,8 +109,8 @@ RUN mkdir -p /headless/Desktop /headless/.vnc /dockerstartup \
 # create candidate user
 RUN useradd -m candidate
 
-# set hostname as terminal
-RUN echo "export HOSTNAME=terminal" >> /headless/.bashrc
+# the starting machine is called base, like in the real exam
+RUN echo "export HOSTNAME=base" >> /headless/.bashrc
 # set terminal to bash
 RUN echo "export TERM=xterm" >> /headless/.bashrc
 

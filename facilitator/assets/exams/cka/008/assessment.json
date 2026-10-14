@@ -381,6 +381,12 @@
       "machineHostname": "cka-q15",
       "domain": "Services & Networking",
       "question": "In the namespace `gw-lab`, the Gateway `public` (class `ckx-gateway`) and the Services `api-stable` and `api-beta` (port `8080`) already exist. There is no gateway controller, so only the resources are graded.\n\nCreate an HTTPRoute `api` attached to `public` for the hostname `api.example.local`:\n\n- requests with the header `x-channel: beta` go to `api-beta`\n- all other requests go to `api-stable`",
+      "quickReference": [
+        {
+          "title": "Gateway API: HTTP routing",
+          "url": "https://gateway-api.sigs.k8s.io/guides/http-routing/"
+        }
+      ],
       "concepts": [
         "gateway api",
         "httproute",

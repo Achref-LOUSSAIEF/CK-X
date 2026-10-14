@@ -68,6 +68,18 @@ function generateQuestionContent(question) {
         
         // Format question content with improved styling
         const formattedQuestionContent = processQuestionContent(question.content);
+
+        // Task-specific documentation, like the Quick Reference box of the real exam.
+        // The links are meant to be opened in the exam desktop's Firefox, which allows them.
+        const esc = (text) => String(text).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        const quickReference = Array.isArray(originalData.quickReference) ? originalData.quickReference : [];
+        const quickReferenceHtml = quickReference.length === 0 ? '' : `
+                    <div class="mb-3 quick-reference">
+                        <strong>Quick Reference</strong> <span class="text-muted small">(open in the exam desktop's Firefox)</span>
+                        <ul class="mb-0 mt-1">
+                            ${quickReference.map((ref) => `<li>${esc(ref.title)}: <span class="inline-code user-select-all">${esc(ref.url)}</span></li>`).join('')}
+                        </ul>
+                    </div>`;
         
         // Create formatted content with minimal layout
         return `
@@ -81,6 +93,7 @@ function generateQuestionContent(question) {
                     <div class="mb-3">
                         <strong>Namespace:</strong> <span class="text-primary">${namespace}</span>
                     </div>
+                    ${quickReferenceHtml}
                     
                     <hr class="my-3">
                 </div>

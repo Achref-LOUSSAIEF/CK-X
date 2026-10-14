@@ -222,6 +222,12 @@
       "machineHostname": "cka-q9",
       "domain": "Services & Networking",
       "question": "In the namespace `canary`, the Gateway `edge` (class `ckx-gateway`) and the Services `store-v1` and `store-v2` (port `80`) already exist. There is no gateway controller, so only the resources are graded.\n\nCreate an HTTPRoute `store` attached to `edge` for the hostname `store.example.local` that splits all traffic between `store-v1` (weight `90`) and `store-v2` (weight `10`).",
+      "quickReference": [
+        {
+          "title": "Gateway API: traffic splitting",
+          "url": "https://gateway-api.sigs.k8s.io/guides/traffic-splitting/"
+        }
+      ],
       "concepts": [
         "gateway api",
         "traffic splitting"

@@ -309,6 +309,7 @@
       "machineHostname": "cka-q11",
       "domain": "Cluster Architecture, Installation & Configuration",
       "question": "Add the Helm repository `https://charts.bitnami.com/bitnami` as `bitnami`, and install the chart `bitnami/nginx` as the release `web-release` in the namespace `helm-test` with the Service type `NodePort` and `2` replicas. Both Pods must be running.",
+      "quickReference": [{"title": "Bitnami nginx chart", "url": "https://github.com/bitnami/charts/tree/main/bitnami/nginx"}],
       "concepts": ["helm", "package-management"],
       "verification": [
         {
@@ -371,6 +372,7 @@
       "machineHostname": "cka-q13",
       "domain": "Services & Networking",
       "question": "In the namespace `gateway` (the Gateway API CRDs and the GatewayClass `ckx-gateway` are installed; there is no controller, so only the resources are graded):\n\n- a Gateway `main-gateway` with the class `ckx-gateway` and one listener `http`, protocol `HTTP`, port `80`\n- Deployments `app1` and `app2` (image `nginx`) with Services `app1-svc` and `app2-svc` on port `8080` (target port `80`)\n- an HTTPRoute attached to `main-gateway` that sends `PathPrefix /app1` to `app1-svc:8080` and `PathPrefix /app2` to `app2-svc:8080`",
+      "quickReference": [{"title": "Gateway API: HTTP routing", "url": "https://gateway-api.sigs.k8s.io/guides/http-routing/"}],
       "concepts": ["gateway-api", "networking"],
       "verification": [
         {

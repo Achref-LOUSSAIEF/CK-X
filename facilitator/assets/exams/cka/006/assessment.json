@@ -34,6 +34,16 @@
       "machineHostname": "cka-q2",
       "domain": "Cluster Architecture, Installation & Configuration",
       "question": "Argo CD must be deployed by a GitOps pipeline from a pre-rendered manifest. Its CRDs are managed separately, so they must **not** be part of the manifest.\n\n1. Add the Helm repository `https://argoproj.github.io/argo-helm` under the name `argo`\n2. Create the namespace `argocd`\n3. Render the chart `argo/argo-cd` version `7.7.3` for the namespace `argocd` with the release name `argocd`, configuring the chart so that it does not include its CRDs\n4. Save the rendered manifest to `/tmp/exam/q2/argocd.yaml` on `cka-q2`\n\nDo **not** install the chart into the cluster.\n\nHint: `--skip-crds` is not enough for every chart; check the chart's values.",
+      "quickReference": [
+        {
+          "title": "Argo CD Helm chart",
+          "url": "https://artifacthub.io/packages/helm/argo/argo-cd"
+        },
+        {
+          "title": "Argo Helm charts repository",
+          "url": "https://argoproj.github.io/argo-helm/"
+        }
+      ],
       "concepts": [
         "helm",
         "templates",
@@ -124,6 +134,12 @@
       "machineHostname": "cka-q5",
       "domain": "Cluster Architecture, Installation & Configuration",
       "question": "cert-manager's CRDs have been installed in the cluster.\n\n1. Write the names of **all** cert-manager CRDs (one per line, just the names) to `/tmp/exam/q5/crds.txt` on `cka-q5`\n2. Using `kubectl explain`, save the documentation of the field `spec.subject` of the `Certificate` resource to `/tmp/exam/q5/subject.txt`",
+      "quickReference": [
+        {
+          "title": "cert-manager documentation",
+          "url": "https://cert-manager.io/docs/"
+        }
+      ],
       "concepts": [
         "crds",
         "api discovery",
@@ -208,6 +224,16 @@
       "machineHostname": "cka-q8",
       "domain": "Services & Networking",
       "question": "The namespace `web` exposes the Service `web` (port `80`) through the Ingress `web` with TLS (Secret `web-tls`, host `web.example.local`). Migrate it to the Gateway API. The Gateway API CRDs and a GatewayClass `ckx-gateway` are installed (there is no controller, so only the resources are graded).\n\n1. Create a Gateway `web-gateway` (class `ckx-gateway`) with a listener named `https` on port `443`, protocol `HTTPS`, hostname `web.example.local`, terminating TLS with the Secret `web-tls`\n2. Create an HTTPRoute `web-route` attached to `web-gateway` for the hostname `web.example.local` that sends path `/` (`PathPrefix`) to the Service `web` on port `80`\n3. Delete the old Ingress `web`",
+      "quickReference": [
+        {
+          "title": "Gateway API: migrating from Ingress",
+          "url": "https://gateway-api.sigs.k8s.io/guides/migrating-from-ingress/"
+        },
+        {
+          "title": "Gateway API: TLS",
+          "url": "https://gateway-api.sigs.k8s.io/guides/tls/"
+        }
+      ],
       "concepts": [
         "gateway api",
         "ingress",

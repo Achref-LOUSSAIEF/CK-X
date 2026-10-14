@@ -4,6 +4,9 @@ FROM ubuntu:22.04
 # Switch to root user for installations
 USER 0
 
+# The Ubuntu image strips man pages; the real exam hosts have `man`
+RUN rm -f /etc/dpkg/dpkg.cfg.d/excludes
+
 # Update and install required dependencies
 RUN apt-get update && apt-get install -y \
     curl \
@@ -18,6 +21,10 @@ RUN apt-get update && apt-get install -y \
     bash-completion\
     nano \
     docker.io\
+    sudo \
+    man-db \
+    manpages \
+    less \
     jq
 
 # Accept build-time architecture argument
@@ -29,6 +36,12 @@ ARG KUBECTL_VERSION=v1.35.9
 RUN curl -fsSLo /usr/local/bin/kubectl "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${TARGETARCH:-amd64}/kubectl" \
     && chmod +x /usr/local/bin/kubectl \
     && kubectl version --client
+
+# Install yq (mikefarah), like on the real exam hosts
+ARG YQ_VERSION=v4.44.3
+RUN curl -fsSLo /usr/local/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_${TARGETARCH:-amd64}" \
+    && chmod +x /usr/local/bin/yq \
+    && yq --version
 
 # Install Helm
 RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
@@ -63,6 +76,10 @@ RUN useradd -m candidate
 #disable password login for candidate user
 RUN echo "candidate::0:0:candidate:/home/candidate:/bin/bash" > /etc/passwd
 RUN echo "candidate:x:1000:1000:candidate:/home/candidate:/bin/bash" >> /etc/passwd
+# a root account for `sudo -i`, and sudo without password for the candidate, like on the exam hosts
+RUN echo "root:x:0:0:root:/root:/bin/bash" >> /etc/passwd \
+    && printf 'Defaults env_keep += "CKX_HOST"\ncandidate ALL=(ALL) NOPASSWD:ALL\n' > /etc/sudoers.d/candidate \
+    && chmod 440 /etc/sudoers.d/candidate
 
 # Set up Minikube cluster on startup
 RUN mkdir -p /home/candidate/.kube /home/candidate/.minikube
@@ -91,6 +108,22 @@ RUN echo "source /usr/share/bash-completion/bash_completion" >> /home/candidate/
     echo "alias k=kubectl" >> /home/candidate/.bashrc && \
     echo "complete -F __start_kubectl k" >> /home/candidate/.bashrc && \
     echo "source <(helm completion bash)" >> /home/candidate/.bashrc
+
+# the same kubectl setup for root (sudo -i)
+RUN echo "export KUBECONFIG=/home/candidate/.kube/kubeconfig" >> /root/.bashrc && \
+    echo "PS1='\[\e[31m\]\u@\${CKX_HOST:-\h}:\w# \[\e[0m\]'" >> /root/.bashrc && \
+    echo "source /usr/share/bash-completion/bash_completion" >> /root/.bashrc && \
+    echo "source <(kubectl completion bash)" >> /root/.bashrc && \
+    echo "alias k=kubectl" >> /root/.bashrc && \
+    echo "complete -F __start_kubectl k" >> /root/.bashrc && \
+    echo "source <(helm completion bash)" >> /root/.bashrc
+
+# Like the real exam, SSH from one exam host to another is not supported:
+# go back to base with `exit` first. (Only interactive shells; the setup and
+# grading scripts are not affected.)
+COPY no-nested-ssh.sh /usr/local/share/no-nested-ssh.sh
+RUN cat /usr/local/share/no-nested-ssh.sh >> /home/candidate/.bashrc \
+    && cat /usr/local/share/no-nested-ssh.sh >> /root/.bashrc
 
 #start ssh service
 RUN useradd -r -s /usr/sbin/nologin sshd

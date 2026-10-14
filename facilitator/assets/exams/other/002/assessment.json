@@ -23,6 +23,7 @@
       "machineHostname": "cka-q2",
       "domain": "Cluster Architecture, Installation & Configuration",
       "question": "Add the Bitnami chart repository to your Helm configuration with the name `bitnami` and URL `https://charts.bitnami.com/bitnami`.\n\nUpdate the repository to fetch the latest chart information. Verify success by listing all repositories.",
+      "quickReference": [{"title": "Bitnami charts", "url": "https://github.com/bitnami/charts"}],
       "concepts": ["helm", "repositories"],
       "verification": [
         {

@@ -7,7 +7,7 @@ services:
     image: cka-simulator/remote-desktop:local
     build:
       context: ./remote-desktop
-    hostname: terminal
+    hostname: base # the machine you start from, like in the real exam
     shm_size: 512m # Electron and Firefox share memory through /dev/shm
     expose:
       - "5901" # VNC port (internal only)
