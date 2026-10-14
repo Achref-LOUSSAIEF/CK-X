@@ -122,6 +122,13 @@ RUN mkdir -p /home/candidate/.ssh \
  && echo "StrictHostKeyChecking no" >> /home/candidate/.ssh/config \
  && echo "UserKnownHostsFile /dev/null" >> /home/candidate/.ssh/config
 
+# one entry per exam host name, so the jumphost prompt shows the host you
+# connected to (cka-q1, cka-q2, ...)
+RUN for i in $(seq 1 25); do \
+      printf 'Host cka-q%s\n  SetEnv CKX_HOST=cka-q%s\n' "$i" "$i" >> /home/candidate/.ssh/config; \
+    done \
+ && chown -R candidate:candidate /home/candidate/.ssh
+
 # launcher wrapper, application entry and desktop shortcut. The packaged
 # codium.desktop is replaced because it starts Electron directly as root; the
 # wrapper drops to the candidate user first.

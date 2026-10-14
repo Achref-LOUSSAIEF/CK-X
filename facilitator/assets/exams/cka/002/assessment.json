@@ -3,7 +3,7 @@
     {
       "id": "1",
       "namespace": "storage-task",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q1",
       "question": "Create a Dynamic PVC named `data-pvc` with the following specifications:\n\n- Storage Class: `standard`\n- Access Mode: `ReadWriteOnce`\n- Storage Request: `2Gi`\n\nThen create a Pod named `data-pod` using the `nginx` image that mounts this PVC as volume with name `data` at `/usr/share/nginx/html`.\n\nEnsure both the PVC and Pod are in the `storage-task` namespace.",
       "concepts": ["storage", "persistent-volumes", "pods"],
       "verification": [
@@ -33,7 +33,7 @@
     {
       "id": "2",
       "namespace": "storage-class",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q2",
       "question": "Create a new StorageClass named `fast-local` with the following specifications:\n\n- Provisioner: `rancher.io/local-path`\n- VolumeBindingMode: `WaitForFirstConsumer`\n- Set it as the `default` StorageClass\n\nNote: Ensure any existing default StorageClass is no longer marked as default.",
       "concepts": ["storage", "storage-classes"],
       "verification": [
@@ -63,7 +63,7 @@
     {
       "id": "3",
       "namespace": "manual-storage",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q3",
       "question": "Create a PersistentVolume named `manual-pv` with the following specifications:\n\n- Storage: `1Gi`\n- Access Mode: `ReadWriteOnce`\n- Host Path: `/mnt/data`\n- Node Affinity: Must run on node `k3d-cluster-agent-0` (match the label `kubernetes.io/hostname`)\n\nThen create a PersistentVolumeClaim named `manual-pvc` (`1Gi`, `ReadWriteOnce`) in the `manual-storage` namespace that is **Bound to `manual-pv`** (not to a dynamically provisioned volume).\n\nFinally, create a Pod named `manual-pod` in `manual-storage` using the `busybox` image that mounts this PVC at `/data` and runs `sleep 3600` as its container `command` (i.e. `command: [\"sleep\", \"3600\"]`).",
       "concepts": ["storage", "persistent-volumes", "node-affinity"],
       "verification": [
@@ -93,7 +93,7 @@
     {
       "id": "4",
       "namespace": "scaling",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q4",
       "question": "Create a Deployment named `scaling-app` in the `scaling` namespace (Pod label `app=scaling-app`) with the following specifications:\n\n- Image: `nginx`\n- Initial replicas: `2`\n- Resource requests: CPU: `200m`, Memory: `256Mi`\n- Resource limits: CPU: `500m`, Memory: `512Mi`\n\nThen create a `HorizontalPodAutoscaler` named `scaling-app` for this deployment:\n- Use apiVersion: `autoscaling/v1`\n- Min replicas: `2`\n- Max replicas: `5`\n- Target CPU utilization: `70%`",
       "concepts": ["autoscaling", "deployments", "resource-management"],
       "verification": [
@@ -123,7 +123,7 @@
     {
       "id": "5",
       "namespace": "scheduling",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q5",
       "question": "Label the node `k3d-cluster-agent-1` with `disk=ssd`.\n\nThen create a deployment named `app-scheduling` in the `scheduling` namespace with `3` replicas using the `nginx` image that must only run on nodes labeled `disk=ssd`, using node affinity (not `nodeSelector`).\n\nRequirements:\n- Use `requiredDuringSchedulingIgnoredDuringExecution`\n- Match the node with the expression `disk In (ssd)`\n- All 3 Pods must be Running on `k3d-cluster-agent-1`\n\nNote: do this question before Question 7, which taints `k3d-cluster-agent-1`.",
       "concepts": ["scheduling", "node-affinity", "deployments"],
       "verification": [
@@ -153,7 +153,7 @@
     {
       "id": "6",
       "namespace": "security",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q6",
       "question": "Configure Pod Security for the `security` namespace (it already exists) and run a secure nginx Pod in it:\n\n1. Label the `security` namespace for Pod Security Admission:\n   - `pod-security.kubernetes.io/enforce=restricted`\n   - `pod-security.kubernetes.io/enforce-version=latest`\n\n2. Create a Pod named `secure-pod` in the `security` namespace:\n   - Image: `nginxinc/nginx-unprivileged:1.27` (an nginx build that can run as a non-root user)\n   - Pod-level security context: `runAsUser: 1000`, `runAsNonRoot: true`, `seccompProfile.type: RuntimeDefault`\n   - Container-level security context: `allowPrivilegeEscalation: false`, `runAsUser: 1000`, drop `ALL` capabilities\n   - An `emptyDir` volume named `html` mounted at `/usr/share/nginx/html`\n\nThe Pod must be accepted by the `restricted` policy and be Running.",
       "concepts": ["security", "pod-security-policy"],
       "verification": [
@@ -176,7 +176,7 @@
     {
       "id": "7",
       "namespace": "scheduling",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q7",
       "question": "Taint the node `k3d-cluster-agent-1` with key `special-workload`, value `true` and effect `NoSchedule`.\n\nThen, in the `scheduling` namespace:\n\n1. Create a deployment named `toleration-deploy` with `2` replicas using the `nginx` image, with a toleration that matches this taint exactly (key `special-workload`, operator `Equal`, value `true`, effect `NoSchedule`)\n2. Create a deployment named `normal-deploy` with `2` replicas using the `nginx` image and **no** toleration, so its Pods never run on the tainted node\n\nAll Pods of both deployments must be Running.",
       "concepts": ["scheduling", "taints", "tolerations"],
       "verification": [
@@ -206,7 +206,7 @@
     {
       "id": "8",
       "namespace": "stateful",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q8",
       "question": "In the `stateful` namespace, create a StatefulSet named `web` with `3` replicas using the `nginx` image (Pod label `app=web`). Requirements:\n\n- Create a headless service named `web-svc` (selector `app=web`, port `80`) and set it as the StatefulSet's `serviceName`\n- Add a `volumeClaimTemplate` named `www` that requests `1Gi` (`ReadWriteOnce`) from the StorageClass `cold`\n- Mount the `www` volume at `/usr/share/nginx/html`\n\nAll 3 Pods must be Ready and the PVCs `www-web-0`, `www-web-1` and `www-web-2` must be Bound.",
       "concepts": ["statefulsets", "headless-services", "storage"],
       "verification": [
@@ -236,7 +236,7 @@
     {
       "id": "9",
       "namespace": "dns-debug",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q9",
       "question": "Set up a DNS service discovery test environment in the `dns-debug` namespace:\n\n1. Create a deployment named `web-app` with `3` replicas using the `nginx` image (Pod label `app=web-app`)\n\n2. Create a `ClusterIP` service named `web-svc` on port `80` that exposes the deployment\n\n3. Create a ConfigMap named `dns-config` that stores your custom DNS search domains (for example the key `searches` with the value `dns-debug.svc.cluster.local svc.cluster.local`)\n\n4. Create a Pod named `dns-test` using the `busybox` image that:\n   - Runs `wget -qO- http://web-svc && wget -qO- http://web-svc.dns-debug.svc.cluster.local && sleep 36000`\n   - Keeps `dnsPolicy: ClusterFirst` and sets the same custom search domains in `spec.dnsConfig.searches`\n\nFrom `dns-test`, both `http://web-svc` and `http://web-svc.dns-debug.svc.cluster.local` must return the nginx page.",
       "concepts": ["dns", "service-discovery", "networking"],
       "verification": [
@@ -266,7 +266,7 @@
     {
       "id": "10",
       "namespace": "dns-config",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q10",
       "question": "Set up basic DNS service discovery in the `dns-config` namespace:\n\n1. Create a deployment named `dns-app` with `2` replicas using the `nginx` image\n2. Create a service named `dns-svc` on port `80` that exposes the deployment\n3. Create a Pod named `dns-tester` using the `infoblox/dnstools` image that:\n   - Runs `nslookup` for both `dns-svc` and `dns-svc.dns-config.svc.cluster.local`\n   - Writes the output of both lookups to `/tmp/dns-test.txt` inside the Pod\n   - Keeps running afterwards (e.g. ends with `sleep 3600`)",
       "concepts": ["dns", "service-discovery", "networking"],
       "verification": [
@@ -296,7 +296,7 @@
     {
       "id": "11",
       "namespace": "helm-test",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q11",
       "question": "Using Helm:\n\n1. Add the bitnami repository `https://charts.bitnami.com/bitnami`\n2. Install the `nginx` chart from bitnami with release name `web-release` in namespace `helm-test`\n3. Configure the service type as `NodePort` and set the replica count to `2`\n4. Verify the deployment is successful and pods are running",
       "concepts": ["helm", "package-management"],
       "verification": [
@@ -326,7 +326,7 @@
     {
       "id": "12",
       "namespace": "kustomize",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q12",
       "question": "Using Kustomize in the directory `/tmp/exam/kustomize/` (the folders `base/` and `overlays/production/` and `base/kustomization.yaml` already exist):\n\n1. In `base/deployment.yaml`, create a Deployment named `nginx` (Pod label `app=nginx`) with `2` replicas using the `nginx` image, listed in `base/kustomization.yaml`\n2. In `overlays/production/kustomization.yaml`, create an overlay based on `../../base` that:\n   - Sets the namespace `kustomize`\n   - Adds the label `environment=production` to the Deployment and its Pods\n   - Increases the replicas to `3`\n   - Adds a ConfigMap named `nginx-config` with the key `index.html` and the value `Welcome to Production` (a `configMapGenerator` is fine), mounted in the nginx container as a volume named `nginx-index` at `/usr/share/nginx/html`\n3. Apply the overlay with `kubectl apply -k`\n\nAll 3 Pods must be Ready.",
       "concepts": ["kustomize", "configuration-management"],
       "verification": [
@@ -356,7 +356,7 @@
     {
       "id": "13",
       "namespace": "gateway",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q13",
       "question": "Configure Gateway API resources in the `gateway` namespace. The Gateway API CRDs and a GatewayClass named `ckx-gateway` are already installed (there is no gateway controller, so the Gateway will not report `Programmed`; only the resources are graded).\n\n1. Create a Gateway named `main-gateway` using `gatewayClassName: ckx-gateway`, with one listener named `http`, protocol `HTTP`, port `80`\n2. Create an HTTPRoute attached to `main-gateway` (`parentRefs`) with two rules (path match type `PathPrefix`):\n   - Path `/app1` routes to service `app1-svc` port `8080`\n   - Path `/app2` routes to service `app2-svc` port `8080`\n3. Create two deployments `app1` and `app2` (image `nginx`) and the services `app1-svc` and `app2-svc` on port `8080` (forwarding to container port `80`)",
       "concepts": ["gateway-api", "networking"],
       "verification": [
@@ -386,7 +386,7 @@
     {
       "id": "14",
       "namespace": "limits",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q14",
       "question": "Configure resource management in the namespace `limits`:\n\n1. Create a LimitRange of type `Container` with:\n   - Default request: CPU: `100m`, Memory: `128Mi`\n   - Default limit: CPU: `200m`, Memory: `256Mi`\n   - Max limit: CPU: `500m`, Memory: `512Mi`\n\n2. Create a ResourceQuota with these `hard` keys:\n   - `cpu: 2`\n   - `memory: 2Gi`\n   - `pods: 5`\n\n3. Create a deployment named `test-limits` with `2` replicas using the `nginx` image **without** setting any resources, so the LimitRange defaults are applied. Both Pods must be Running.",
       "concepts": ["resource-management", "limitrange", "resourcequota"],
       "verification": [
@@ -416,7 +416,7 @@
     {
       "id": "15",
       "namespace": "monitoring",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q15",
       "question": "In the `monitoring` namespace, create a deployment named `resource-consumer` with 3 replicas (Pod label `app=resource-consumer`) that:\n\n1. Uses the image `gcr.io/kubernetes-e2e-test-images/resource-consumer:1.5`\n2. Sets resource requests:\n   - CPU: `100m`\n   - Memory: `128Mi`\n3. Sets resource limits:\n   - CPU: `200m`\n   - Memory: `256Mi`\n4. Create a `HorizontalPodAutoscaler` named `resource-consumer` for this deployment:\n   - Min replicas: `3`\n   - Max replicas: `6`\n   - Target CPU utilization: `50%`\n\nNote: metrics-server is already installed in the cluster; `kubectl top pod` must work for the Pods.",
       "concepts": ["monitoring", "resource-management", "autoscaling"],
       "verification": [
@@ -446,7 +446,7 @@
     {
       "id": "16",
       "namespace": "cluster-admin",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q16",
       "question": "Perform the following cluster administration tasks in the `cluster-admin` namespace:\n\n1. Create a ServiceAccount named `app-admin`\n2. Create a Role named `app-admin` that allows:\n   - `list`, `get`, `watch` on `pods` and `deployments`\n   - `create` and `delete` on `configmaps`\n   - `update` on `deployments`\n3. Bind the Role to the ServiceAccount with a RoleBinding named `app-admin`\n4. Create a Pod named `admin-pod` that runs as the `app-admin` ServiceAccount (with its token mounted, i.e. do not disable automounting):\n   - Image: `bitnami/kubectl:latest`\n   - Command: `sleep 3600`\n\nThe ServiceAccount must be able to perform the allowed operations but not others (for example, it must not be able to create pods).",
       "concepts": ["rbac", "service-accounts", "security"],
       "verification": [
@@ -476,7 +476,7 @@
     {
       "id": "17",
       "namespace": "network",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q17",
       "question": "Configure network policies in the `network` namespace:\n\n1. Create a deployment named `web` using the `nginx` image with label `app=web`\n2. Create a deployment named `api` using the `nginx` image with label `app=api`\n3. Create a deployment named `db` using the `postgres` image with label `app=db` and the environment variable `POSTGRES_HOST_AUTH_METHOD=trust`\n4. Create these egress NetworkPolicies:\n   - `web-policy`: selects `app=web` Pods and only allows egress to `app=api` Pods\n   - `api-policy`: selects `app=api` Pods and only allows egress to `app=db` Pods\n   (You may additionally allow DNS on port 53 so the Pods can still resolve names.)",
       "concepts": ["networking", "network-policies", "security"],
       "verification": [
@@ -499,7 +499,7 @@
     {
       "id": "18",
       "namespace": "upgrade",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q18",
       "question": "Perform a rolling update in the `upgrade` namespace:\n\n1. Create a deployment named `app-v1` (label `app=app-v1`) with `4` replicas using `nginx:1.19`, with the strategy `RollingUpdate`, `maxUnavailable: 1` and `maxSurge: 1`\n2. Perform a rolling update to `nginx:1.20`\n3. Record the update by setting the annotation `kubernetes.io/change-cause` on the deployment\n4. Save the output of `kubectl rollout history deployment app-v1 -n upgrade` to `/tmp/exam/rollout-history.txt`\n5. Roll back to the previous version (`nginx:1.19`)\n\nAt the end, all 4 Pods must be Ready and run `nginx:1.19`.",
       "concepts": ["deployments", "rolling-updates", "rollback"],
       "verification": [
@@ -529,7 +529,7 @@
     {
       "id": "19",
       "namespace": "scheduling",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q19",
       "question": "Configure advanced scheduling:\n\n1. Create a PriorityClass named `high-priority` with value `1000` and a PriorityClass named `low-priority` with value `100` (neither may be the global default)\n2. In the `scheduling` namespace, create a Pod named `high-priority` using `priorityClassName: high-priority` and a Pod named `low-priority` using `priorityClassName: low-priority` (both with the `nginx` image)\n3. Give both Pods a **required** pod anti-affinity rule with `topologyKey: kubernetes.io/hostname` that selects the other Pod, so they never run on the same node\n\nBoth Pods must be Running on different nodes. (Do not generate real resource pressure on this shared cluster.)",
       "concepts": ["scheduling", "priority", "anti-affinity"],
       "verification": [
@@ -559,7 +559,7 @@
     {
       "id": "20",
       "namespace": "troubleshoot",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q20",
       "question": "A deployment named `failing-app` has been created in the namespace `troubleshoot` but pods are not running. The deployment uses image `nginx:1.25` and should have 3 replicas.\n\nFix the following issues:\n\n1. The deployment is using an incorrect container port (port 8080 instead of 80)\n2. The pods are failing due to insufficient memory (current limit is 64Mi, should be 256Mi)\n3. There's a misconfigured liveness probe checking port 8080 instead of 80\n\nEnsure all pods are running successfully after applying the fixes.",
       "concepts": ["troubleshooting", "debugging", "deployment-configuration"],
       "verification": [

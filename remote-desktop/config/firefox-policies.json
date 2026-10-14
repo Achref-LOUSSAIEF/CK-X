@@ -12,7 +12,7 @@
     "Homepage": {
       "URL": "https://docs.linuxfoundation.org/tc-docs/certification/certification-resources-allowed",
       "StartPage": "homepage",
-      "Locked": false
+      "Locked": true
     },
     "FirefoxHome": {
       "Search": true,
@@ -38,6 +38,16 @@
     "Preferences": {
       "browser.aboutwelcome.enabled": false,
       "datareporting.policy.dataSubmissionPolicyBypassNotification": true
+    },
+    "WebsiteFilter": {
+      "Block": [
+        "<all_urls>"
+      ],
+      "Exceptions": [
+        "https://kubernetes.io/*",
+        "https://helm.sh/*",
+        "https://docs.linuxfoundation.org/tc-docs/certification/*"
+      ]
     }
   }
 }

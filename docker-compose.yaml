@@ -110,7 +110,36 @@ services:
           cpus: "0.5"
           memory: 512M
     networks:
-      - ckx-network
+      ckx-network:
+        # One host name per question (cka-q1, cka-q2, ...), like the real exam's
+        # "ssh <host>" per task. They all reach this same container.
+        aliases:
+          - ckad9999
+          - cka-q1
+          - cka-q2
+          - cka-q3
+          - cka-q4
+          - cka-q5
+          - cka-q6
+          - cka-q7
+          - cka-q8
+          - cka-q9
+          - cka-q10
+          - cka-q11
+          - cka-q12
+          - cka-q13
+          - cka-q14
+          - cka-q15
+          - cka-q16
+          - cka-q17
+          - cka-q18
+          - cka-q19
+          - cka-q20
+          - cka-q21
+          - cka-q22
+          - cka-q23
+          - cka-q24
+          - cka-q25
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "22"]
       interval: 10s

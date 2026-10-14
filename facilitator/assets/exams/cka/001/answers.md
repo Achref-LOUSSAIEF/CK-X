@@ -17,7 +17,7 @@ kubectl run nginx-pod --image=nginx:1.19 -n app-team1 --labels=run=nginx-pod
 
 ## Question 2: Static Pod Creation
 
-Create a static pod named `static-web` on ckad9999 with the following specifications:
+Create a static pod named `static-web` on cka-q2 with the following specifications:
 - Image: nginx:1.19
 - Port: 80
 

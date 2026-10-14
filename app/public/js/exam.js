@@ -769,9 +769,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Terminate session button
-    terminateSessionBtn.addEventListener('click', () => {
-        terminateModal.show();
-    });
+    // Terminate is not offered during the exam (the real CKA only has End Exam);
+    // a stuck session can still be terminated from the home page.
+    if (terminateSessionBtn) {
+        terminateSessionBtn.addEventListener('click', () => {
+            terminateModal.show();
+        });
+    }
     
     // Confirm terminate session
     confirmTerminateBtn.addEventListener('click', () => {

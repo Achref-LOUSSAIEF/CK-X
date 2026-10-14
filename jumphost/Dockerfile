@@ -51,6 +51,8 @@ RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/
 RUN sed -i 's/#PermitEmptyPasswords no/PermitEmptyPasswords yes/' /etc/ssh/sshd_config
 RUN sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication no/' /etc/ssh/sshd_config
 RUN sed -i 's/#UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
+# accept the exam host name sent by the desktop's ssh config (shown in the prompt)
+RUN echo "AcceptEnv CKX_HOST" >> /etc/ssh/sshd_config
 
 # Completely remove password requirement
 RUN echo "root::0:0:root:/root:/bin/bash" > /etc/passwd
@@ -81,7 +83,7 @@ EXPOSE 22
 
 RUN echo "export TERM=xterm" >> /home/candidate/.bashrc
 RUN echo "export KUBECONFIG=/home/candidate/.kube/kubeconfig" >> /home/candidate/.bashrc
-RUN echo "PS1='\[\e[32m\]\u@\h:\w\$ \[\e[0m\]'" >> /home/candidate/.bashrc
+RUN echo "PS1='\[\e[32m\]\u@\${CKX_HOST:-\h}:\w\$ \[\e[0m\]'" >> /home/candidate/.bashrc
 
 #set kubectl autocompletion
 RUN echo "source /usr/share/bash-completion/bash_completion" >> /home/candidate/.bashrc && \

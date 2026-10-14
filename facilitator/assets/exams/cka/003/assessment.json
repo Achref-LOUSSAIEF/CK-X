@@ -3,7 +3,7 @@
     {
       "id": "1",
       "namespace": "trbl-deploy",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q1",
       "question": "The Deployment `payment-api` in the namespace `trbl-deploy` should run `2` replicas, but none of its Pods ever become Ready.\n\nInvestigate and fix **all** problems so that both replicas are Running and Ready.\n\n- The container image must be `nginx:1.25-alpine`\n- Keep the readiness probe (do not remove it), but make sure it checks the port nginx actually listens on",
       "concepts": [
         "troubleshooting",
@@ -37,7 +37,7 @@
     {
       "id": "2",
       "namespace": "trbl-svc",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q2",
       "question": "In the namespace `trbl-svc`, the Deployment `web` is running correctly, but the Service `web-svc` does not route any traffic to it. Requests from the Pod `client` (e.g. `wget -qO- -T 3 http://web-svc`) time out or fail.\n\nFix the **Service** so that `http://web-svc` (port `80`) returns the nginx page from the `client` Pod.\n\nDo **not** modify the Deployment `web`.",
       "concepts": [
         "troubleshooting",
@@ -71,7 +71,7 @@
     {
       "id": "3",
       "namespace": "trbl-sched",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q3",
       "question": "The Pods of the Deployment `batch-processor` in the namespace `trbl-sched` are stuck in `Pending`.\n\nFind out why with `kubectl describe` / events, then fix the Deployment so that both replicas run:\n\n- Remove the node constraint that no node in the cluster satisfies\n- Set the container CPU request to `100m` (keep the memory request `64Mi` unchanged)",
       "concepts": [
         "troubleshooting",
@@ -105,7 +105,7 @@
     {
       "id": "4",
       "namespace": "trbl-config",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q4",
       "question": "The Deployment `order-worker` in the namespace `trbl-config` cannot start its container (check the Pod status and events).\n\n**Without modifying the Deployment**, fix the problem:\n\n1. Create the missing Secret `order-db` with the key `password` and the value `Sup3rS3cret!`\n2. The ConfigMap `order-config` already exists, but it does not contain the key the Deployment expects. Add that key with the value `orders` (keep the existing keys)\n\nThe Deployment must end up with `1` available replica.",
       "concepts": [
         "troubleshooting",
@@ -139,8 +139,8 @@
     {
       "id": "5",
       "namespace": "logging",
-      "machineHostname": "ckad9999",
-      "question": "The Pod `audit-app` in the namespace `logging` has two containers: `app` and `shipper`.\n\n1. Write **every** log line of the container `app` that contains the word `ERROR` to the file `/tmp/exam/q5/errors.log` on `ckad9999`. Lines from the `shipper` container must not be included.\n2. Write the name of the node on which `audit-app` is running to `/tmp/exam/q5/node.txt` (just the node name).",
+      "machineHostname": "cka-q5",
+      "question": "The Pod `audit-app` in the namespace `logging` has two containers: `app` and `shipper`.\n\n1. Write **every** log line of the container `app` that contains the word `ERROR` to the file `/tmp/exam/q5/errors.log` on `cka-q5`. Lines from the `shipper` container must not be included.\n2. Write the name of the node on which `audit-app` is running to `/tmp/exam/q5/node.txt` (just the node name).",
       "concepts": [
         "logging",
         "troubleshooting",
@@ -166,8 +166,8 @@
     {
       "id": "6",
       "namespace": "metrics-lab",
-      "machineHostname": "ckad9999",
-      "question": "Three Pods with the label `app=analytics` are running in the namespace `metrics-lab`.\n\nUsing the Metrics API (`kubectl top`), find the Pod with label `app=analytics` that consumes the **most CPU** and write its name to `/tmp/exam/q6/top-pod.txt` on `ckad9999`.\n\nNote: metrics can take a minute to appear after the Pods start.",
+      "machineHostname": "cka-q6",
+      "question": "Three Pods with the label `app=analytics` are running in the namespace `metrics-lab`.\n\nUsing the Metrics API (`kubectl top`), find the Pod with label `app=analytics` that consumes the **most CPU** and write its name to `/tmp/exam/q6/top-pod.txt` on `cka-q6`.\n\nNote: metrics can take a minute to appear after the Pods start.",
       "concepts": [
         "monitoring",
         "metrics-server",
@@ -186,7 +186,7 @@
     {
       "id": "7",
       "namespace": "maintenance",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q7",
       "question": "The worker node `k3d-cluster-agent-0` needs to go down for maintenance.\n\n1. Mark `k3d-cluster-agent-0` as unschedulable\n2. Safely evict all workloads from it (DaemonSet-managed Pods may stay)\n\nAfter the maintenance preparation, the Deployment `maint-web` in the namespace `maintenance` must still have `3` Ready replicas, none of them on `k3d-cluster-agent-0`.\n\nDo **not** delete the node. You should not need `--force`.",
       "concepts": [
         "cluster maintenance",
@@ -213,7 +213,7 @@
     {
       "id": "8",
       "namespace": "rbac-lab",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q8",
       "question": "Configure RBAC for two teams:\n\n1. Create a ClusterRole `node-viewer` that allows `get`, `list` and `watch` on `nodes` and `persistentvolumes`. Bind it to the **user** `jane` with a ClusterRoleBinding named `jane-node-viewer`.\n2. In the namespace `rbac-lab`, create a Role `deploy-manager` that allows `get`, `list`, `create`, `update`, `patch` and `delete` on `deployments`. Bind it to the **group** `developers` with a RoleBinding named `developers-deploy-manager`.\n\nVerify with `kubectl auth can-i ... --as jane` and `--as someone --as-group developers`.",
       "concepts": [
         "rbac",
@@ -247,7 +247,7 @@
     {
       "id": "9",
       "namespace": "crd-lab",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q9",
       "question": "Extend the Kubernetes API with a CustomResourceDefinition:\n\n- Name: `backups.ops.example.com`, group `ops.example.com`, kind `Backup`, plural `backups`, singular `backup`, short name `bk`\n- Scope: `Namespaced`, single version `v1` (served and storage)\n- Schema: `spec.schedule` of type `string` (required) and `spec.retentionDays` of type `integer` with a minimum of `1`\n\nThen create a `Backup` named `nightly` in the namespace `crd-lab` with `schedule: \"0 2 * * *\"` and `retentionDays: 7`.\n\n`kubectl get bk -n crd-lab` must list it.",
       "concepts": [
         "crds",
@@ -281,7 +281,7 @@
     {
       "id": "10",
       "namespace": "ingress-lab",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q10",
       "question": "Two Deployments, `shop` (label `app=shop`) and `api` (label `app=api`), are running in the namespace `ingress-lab`. Both listen on port `80`.\n\n1. Create a ClusterIP Service `shop-svc` exposing `shop` on port `80`\n2. Create a ClusterIP Service `api-svc` exposing `api` on port `8080` (forwarding to container port `80`)\n3. Create an Ingress `shop-ingress` with ingress class `traefik` for the host `shop.example.local`:\n   - path `/api` (pathType `Prefix`) → `api-svc:8080`\n   - path `/` (pathType `Prefix`) → `shop-svc:80`",
       "concepts": [
         "services",
@@ -308,7 +308,7 @@
     {
       "id": "11",
       "namespace": "np-db",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q11",
       "question": "The namespace `np-db` contains a Pod `db` (label `app=db`) exposed by the Service `db` on port `80`.\n\n1. Create a NetworkPolicy `default-deny-ingress` in `np-db` that denies **all** ingress traffic to every Pod in the namespace\n2. Create a NetworkPolicy `allow-backend-api` in `np-db` that allows ingress to Pods with label `app=db` on TCP port `80` **only** from Pods with label `role=api` that run in namespaces labeled `team=backend`\n\nTest Pods already exist: `np-backend/api` (should be allowed), `np-backend/worker` and `np-other/api` (should be denied).",
       "concepts": [
         "network policies",
@@ -342,7 +342,7 @@
     {
       "id": "12",
       "namespace": "ds-lab",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q12",
       "question": "Create a DaemonSet `node-agent` in the namespace `ds-lab` that runs one Pod on **every** node of the cluster (including the control-plane node):\n\n- Pod label: `app=node-agent`\n- Container `agent`, image `busybox:1.36`, command `sh -c 'while true; do sleep 3600; done'`\n- Mount the host directory `/var/log` **read-only** at `/host/log` (volume name `varlog`)\n- Resource requests: CPU `10m`, memory `16Mi`",
       "concepts": [
         "daemonsets",
@@ -369,7 +369,7 @@
     {
       "id": "13",
       "namespace": "batch-lab",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q13",
       "question": "In the namespace `batch-lab`:\n\n1. Create a CronJob `log-cleanup` that runs every `15` minutes with:\n   - container `cleanup`, image `busybox:1.36`, command `sh -c 'echo cleaning logs; sleep 5'`\n   - `concurrencyPolicy: Forbid`\n   - keep `2` successful and `1` failed Job in history\n   - Jobs are retried at most `2` times (`backoffLimit`) and killed after `60` seconds (`activeDeadlineSeconds`)\n   - Pod `restartPolicy: Never`\n2. Without waiting for the schedule, trigger a Job named `log-cleanup-manual` **from the CronJob** and make sure it completes successfully.",
       "concepts": [
         "cronjobs",
@@ -403,7 +403,7 @@
     {
       "id": "14",
       "namespace": "sidecar-lab",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q14",
       "question": "Create a Pod `web-logger` in the namespace `sidecar-lab` that runs on the node `k3d-cluster-server-0`:\n\n- Two `emptyDir` volumes: `html` and `logs`\n- Init container `setup` (`busybox:1.36`) that writes the text `Hello CKA` to `/work/index.html` (volume `html` mounted at `/work`)\n- **Native sidecar** container `log-tailer` (`busybox:1.36`), defined as an init container with `restartPolicy: Always`, running `tail -F /var/log/nginx/access.log` (volume `logs` mounted at `/var/log/nginx`)\n- Main container `nginx` (`nginx:1.25`) mounting `html` at `/usr/share/nginx/html` and `logs` at `/var/log/nginx`\n\n`curl localhost` inside the `nginx` container must return `Hello CKA`, and the request must appear in the logs of `log-tailer`.",
       "concepts": [
         "sidecar containers",
@@ -438,8 +438,8 @@
     {
       "id": "15",
       "namespace": "storage-ops",
-      "machineHostname": "ckad9999",
-      "question": "In the namespace `storage-ops`, the PersistentVolumeClaim `ledger-data` holds important data. Its dynamically provisioned PersistentVolume would be **deleted** together with the claim.\n\n1. Change the reclaim policy of the PersistentVolume bound to `ledger-data` to `Retain`\n2. Add the label `tier=critical` to that PersistentVolume\n3. Write the name of that PersistentVolume to `/tmp/exam/q15/pv-name.txt` on `ckad9999`\n\nDo not delete or recreate the PVC.",
+      "machineHostname": "cka-q15",
+      "question": "In the namespace `storage-ops`, the PersistentVolumeClaim `ledger-data` holds important data. Its dynamically provisioned PersistentVolume would be **deleted** together with the claim.\n\n1. Change the reclaim policy of the PersistentVolume bound to `ledger-data` to `Retain`\n2. Add the label `tier=critical` to that PersistentVolume\n3. Write the name of that PersistentVolume to `/tmp/exam/q15/pv-name.txt` on `cka-q15`\n\nDo not delete or recreate the PVC.",
       "concepts": [
         "storage",
         "persistent volumes",
@@ -472,8 +472,8 @@
     {
       "id": "16",
       "namespace": "ci",
-      "machineHostname": "ckad9999",
-      "question": "A CI system needs read-only access to the namespace `ci`.\n\n1. Create a ServiceAccount `ci-bot` in the namespace `ci`\n2. Create a long-lived token Secret `ci-bot-token` (type `kubernetes.io/service-account-token`) for `ci-bot`\n3. Create a RoleBinding `ci-bot-view` in `ci` that grants the built-in ClusterRole `view` to `ci-bot`\n4. Create the kubeconfig file `/tmp/exam/q16/ci-bot.kubeconfig` on `ckad9999` containing:\n   - a cluster `ckx` using the same API server and CA as your current kubeconfig\n   - a user `ci-bot` authenticating with the token from `ci-bot-token`\n   - a context `ci-context` (cluster `ckx`, user `ci-bot`, namespace `ci`) set as the **current context**\n\n`kubectl --kubeconfig /tmp/exam/q16/ci-bot.kubeconfig get pods` must work.",
+      "machineHostname": "cka-q16",
+      "question": "A CI system needs read-only access to the namespace `ci`.\n\n1. Create a ServiceAccount `ci-bot` in the namespace `ci`\n2. Create a long-lived token Secret `ci-bot-token` (type `kubernetes.io/service-account-token`) for `ci-bot`\n3. Create a RoleBinding `ci-bot-view` in `ci` that grants the built-in ClusterRole `view` to `ci-bot`\n4. Create the kubeconfig file `/tmp/exam/q16/ci-bot.kubeconfig` on `cka-q16` containing:\n   - a cluster `ckx` using the same API server and CA as your current kubeconfig\n   - a user `ci-bot` authenticating with the token from `ci-bot-token`\n   - a context `ci-context` (cluster `ckx`, user `ci-bot`, namespace `ci`) set as the **current context**\n\n`kubectl --kubeconfig /tmp/exam/q16/ci-bot.kubeconfig get pods` must work.",
       "concepts": [
         "service accounts",
         "kubeconfig",
@@ -507,7 +507,7 @@
     {
       "id": "17",
       "namespace": "spread-lab",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q17",
       "question": "The nodes `k3d-cluster-server-0` and `k3d-cluster-agent-1` are labeled with the zone key `topology.ckx.io/zone` (`zone-a` and `zone-b`).\n\nCreate a Deployment `spread-web` in the namespace `spread-lab`:\n\n- `4` replicas, image `nginx:1.25`, Pod label `app=spread-web`\n- A topology spread constraint with `maxSkew: 1` over the key `topology.ckx.io/zone`, `whenUnsatisfiable: DoNotSchedule`, selecting Pods with `app=spread-web`\n\nAll 4 replicas must be Running and evenly spread across the two zones.",
       "concepts": [
         "scheduling",
@@ -534,7 +534,7 @@
     {
       "id": "18",
       "namespace": "trbl-dns",
-      "machineHostname": "ckad9999",
+      "machineHostname": "cka-q18",
       "question": "Pods of the Deployment `resolver` in the namespace `trbl-dns` cannot resolve any Service names, e.g. `nslookup kubernetes.default.svc.cluster.local` fails.\n\nFix the Deployment so its Pods use the **cluster DNS** again (do not hard-code the CoreDNS IP).",
       "concepts": [
         "troubleshooting",

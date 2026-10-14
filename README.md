@@ -9,6 +9,7 @@ This is a personal fork of [CK-X](https://github.com/sailor-sh/CK-X) by Sailor.s
 - **CKA only.** The CKAD, CKS and Docker labs were removed; six CKA exams and a Helm lab remain, listed in a recommended order from Easy to Hard.
 - **4 extra CKA exams** (62 tasks). See [Labs](#labs).
 - **Simple home page.** The site opens directly on the exam list: pick a certification, pick a lab, start. No landing page, and no paid "premium bundle" entries in the list.
+- **Closer to the real exam interface.** Each question has its own host to SSH to, Firefox in the exam desktop only opens the allowed documentation (kubernetes.io and helm.sh), the question panel doesn't reveal the topic (no "Concepts" line), and there is no plain-terminal view and no Terminate button during the exam, only End Exam.
 - **No pop-ups.** The automatic rating/testimonial pop-up after an exam is gone.
 - **Kubernetes v1.35**, like the current CKA exam. The exam cluster and the `kubectl` in the exam terminal are pinned to the same version (v1.35.9).
 - **No usage tracking.** `TRACK_METRICS` is set to `false`, so nothing is sent to the external CK-X metrics server.
@@ -52,7 +53,7 @@ docker compose up -d
 
 Open **http://localhost:30080**, choose a lab and click **Start exam**. Preparing the cluster takes 3–6 minutes.
 
-During the exam you work in the terminal of the host `ckad9999` (`kubectl`, `helm`, `jq` are installed and `k` is an alias for `kubectl`). When you end the exam, every task is graded and the solutions become available.
+During the exam, each question names its own host, like the real exam (`ssh cka-q1`, `ssh cka-q2`, …). Open the terminal in the exam desktop and SSH to that host first; its prompt shows the host you're on. `kubectl`, `helm` and `jq` are installed, and `k` is an alias for `kubectl`. All these host names reach the same machine, so the habit is what you practise; working on the "wrong" host doesn't cost points here. When you end the exam, every task is graded and the solutions become available.
 
 Stop everything with `docker compose down`.
 
