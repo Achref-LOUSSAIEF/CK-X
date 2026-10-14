@@ -1,7 +1,10 @@
+# CKA Simulator, based on CK-X by Sailor.sh (https://github.com/sailor-sh/CK-X)
+name: cka-simulator
+
 services:
   # VNC Server (Ubuntu)
   remote-desktop:
-    image: nishanb/ck-x-simulator-remote-desktop:latest
+    image: cka-simulator/remote-desktop:local
     build:
       context: ./remote-desktop
     hostname: terminal
@@ -32,7 +35,7 @@ services:
 
   # Web Application (not directly exposed to users)
   webapp:
-    image: nishanb/ck-x-simulator-webapp:latest
+    image: cka-simulator/webapp:local
     build:
       context: ./app
     expose:
@@ -63,7 +66,7 @@ services:
 
   # Nginx Reverse Proxy - ONLY SERVICE EXPOSED TO USERS
   nginx:
-    image: nishanb/ck-x-simulator-nginx:latest
+    image: cka-simulator/nginx:local
     build:
       context: ./nginx
     depends_on:
@@ -92,7 +95,7 @@ services:
 
   # Jump Host (ckad9999 and ckad9988)
   jumphost:
-    image: nishanb/ck-x-simulator-jumphost:latest
+    image: cka-simulator/jumphost:local
     build:
       context: ./jumphost
     hostname: ckad9999
@@ -148,7 +151,7 @@ services:
 
   # Remote Terminal Service
   remote-terminal:
-    image: nishanb/ck-x-simulator-remote-terminal:latest
+    image: cka-simulator/remote-terminal:local
     build:
       context: ./remote-terminal
     hostname: remote-terminal
@@ -172,7 +175,7 @@ services:
 
   # KIND Kubernetes Cluster
   k8s-api-server: # Service name that will be used for DNS resolution
-    image: nishanb/ck-x-simulator-cluster:latest
+    image: cka-simulator/cluster:local
     build:
       context: ./kind-cluster
     container_name: kind-cluster
@@ -230,7 +233,7 @@ services:
 
   # Facilitator Service
   facilitator:
-    image: nishanb/ck-x-simulator-facilitator:latest
+    image: cka-simulator/facilitator:local
     build:
       context: ./facilitator
       dockerfile: Dockerfile
@@ -246,7 +249,7 @@ services:
       - LOG_LEVEL=info
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - TRACK_METRICS=false # usage metrics to the external CK-X metric server are disabled in this fork
+      - TRACK_METRICS=false # usage metrics to the external CK-X metric server are disabled in CKA Simulator
     restart: unless-stopped
     depends_on:
       - jumphost

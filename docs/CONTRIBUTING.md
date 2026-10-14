@@ -1,10 +1,10 @@
-# Contributing to CK-X Simulator
+# Contributing to CKA Simulator
 
 Thank you for your interest in contributing! Here's how you can help:
 
 ## Quick Start
 
-1. Fork and clone the [repository](https://github.com/@sailor-sh/CK-X)
+1. Fork and clone the [repository](https://github.com/Achref-LOUSSAIEF/CK-X)
 2. Follow our [Development Setup Guide](development-setup.md)
 3. Create a new branch for your changes
 4. Submit a Pull Request

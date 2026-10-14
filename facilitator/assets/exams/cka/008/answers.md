@@ -1,6 +1,6 @@
 # CKA 8 · Exam Simulation III: Solutions
 
-> Original CK-X exam, written for CK-X. Every task covers a topic the other CK-X exams do not test (or test differently). Node-level tasks (kubeadm upgrade, etcd backup, CNI install) are not part of it; practise them on a kubeadm cluster such as Killercoda.
+> Original CKA Simulator exam. Every task covers a topic the other CKA Simulator exams do not test (or test differently). Node-level tasks (kubeadm upgrade, etcd backup, CNI install) are not part of it; practise them on a kubeadm cluster such as Killercoda.
 
 ---
 

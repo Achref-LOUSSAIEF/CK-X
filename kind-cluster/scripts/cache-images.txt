@@ -1,4 +1,4 @@
-# Docker Hub images used by the CK-X labs, pre-pulled into the local image
+# Docker Hub images used by the CKA Simulator labs, pre-pulled into the local image
 # cache when the cluster container starts (see image-cache). Images missing
 # from this list are still cached the first time an exam pulls them.
 busybox:1.36

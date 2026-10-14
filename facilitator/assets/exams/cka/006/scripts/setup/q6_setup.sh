@@ -4,7 +4,7 @@ kubectl create namespace jobs --dry-run=client -o yaml | kubectl apply -f -
 
 for pc in "batch-low 1000" "batch-default 50000" "critical-batch 500000" "nightly-reports 2500"; do
   set -- $pc
-  kubectl create priorityclass "$1" --value="$2" --description="CK-X lab" --dry-run=client -o yaml | kubectl apply -f -
+  kubectl create priorityclass "$1" --value="$2" --description="CKA Simulator lab" --dry-run=client -o yaml | kubectl apply -f -
 done
 kubectl apply -f - <<'EOF'
 apiVersion: apps/v1

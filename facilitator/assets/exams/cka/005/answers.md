@@ -1,6 +1,6 @@
-# CKA Mock Exam 02 (CK-X edition): Solutions
+# CKA Mock Exam 02 (CKA Simulator edition): Solutions
 
-> Adapted for CK-X from **Mock Exam 02** of [theplatformlab/CKA-Certified-Kubernetes-Administrator](https://github.com/theplatformlab/CKA-Certified-Kubernetes-Administrator) (MIT License, © 2026 TECH WITH MOHAMED). Questions were made concrete and auto-gradeable. Q5 (API server logs) and Q10 (`kubeadm certs renew`) need SSH access to the control plane, which CK-X does not provide, so they were replaced with tasks done through the API. Q8 uses node port `30808` because NodePorts must be in 30000-32767. Notes on the original kubeadm tasks are included below.
+> Adapted for CKA Simulator from **Mock Exam 02** of [theplatformlab/CKA-Certified-Kubernetes-Administrator](https://github.com/theplatformlab/CKA-Certified-Kubernetes-Administrator) (MIT License, © 2026 TECH WITH MOHAMED). Questions were made concrete and auto-gradeable. Q5 (API server logs) and Q10 (`kubeadm certs renew`) need SSH access to the control plane, which CKA Simulator does not provide, so they were replaced with tasks done through the API. Q8 uses node port `30808` because NodePorts must be in 30000-32767. Notes on the original kubeadm tasks are included below.
 
 ---
 

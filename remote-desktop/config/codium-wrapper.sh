@@ -1,5 +1,5 @@
 #!/bin/bash
-# VSCodium launcher for the CK-X remote desktop.
+# VSCodium launcher for the CKA Simulator remote desktop.
 #
 # The desktop session itself runs as root, but the editor must not: Electron
 # shows a "running as root is not recommended" banner with [Superuser] in the

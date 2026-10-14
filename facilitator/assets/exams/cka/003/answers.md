@@ -1,5 +1,7 @@
 # CKA Practice Lab 3 – Troubleshooting & Cluster Operations: Solutions
 
+> Original CKA Simulator exam.
+
 Troubleshooting is the largest domain of the CKA (30%). For every "broken" task, the workflow is the same:
 
 ```bash

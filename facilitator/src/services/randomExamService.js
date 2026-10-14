@@ -198,7 +198,7 @@ function buildRandomExam(examId, assetPath, config) {
   const answers = [
     '# CKA Random: Solutions for this attempt',
     '',
-    'Each task below comes from one of the CK-X CKA exams; the heading says which one. '
+    'Each task below comes from one of the CKA Simulator exams; the heading says which one. '
       + 'Paths and host names were renumbered for this attempt.',
     ''
   ];

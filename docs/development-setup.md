@@ -1,6 +1,6 @@
-# CK-X Simulator: Development Setup Guide
+# CKA Simulator: Development Setup Guide
 
-This document provides step-by-step instructions for setting up and running the CK-X Simulator locally for development purposes.
+This document provides step-by-step instructions for setting up and running CKA Simulator locally for development purposes.
 
 ## Prerequisites
 

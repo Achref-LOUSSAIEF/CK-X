@@ -1,6 +1,6 @@
 ---
 name: "✨ Feature Request"
-about: Suggest an improvement or new feature for CK-X Simulator
+about: Suggest an improvement or new feature for CKA Simulator
 title: "[Feature] <short description>"
 labels: enhancement
 assignees: ''

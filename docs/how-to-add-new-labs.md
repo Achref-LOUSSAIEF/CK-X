@@ -1,10 +1,10 @@
-# Contributing Labs to CK-X Simulator
+# Contributing Labs to CKA Simulator
 
-This guide explains how to create and contribute your own practice labs for the CK-X Simulator. By following these steps, you can create custom assessment scenarios for Kubernetes certification preparation (CKAD, CKA, CKS) or other container-related topics.
+This guide explains how to create and contribute your own practice labs for CKA Simulator. By following these steps, you can create custom assessment scenarios for Kubernetes certification preparation (CKAD, CKA, CKS) or other container-related topics.
 
 ## Lab Structure Overview
 
-Each lab in CK-X Simulator consists of:
+Each lab in CKA Simulator consists of:
 
 1. **Lab Entry** in the main labs registry
 2. **Configuration File** for lab settings
@@ -136,7 +136,7 @@ Each verification step includes:
 
 ## Step 4: Create Setup and Verification Scripts
 
-The CK-X Simulator uses two types of scripts:
+CKA Simulator uses two types of scripts:
 
 ### Setup Scripts
 
@@ -261,9 +261,9 @@ Before submitting your lab:
 
 ## Contribution Process
 
-1. Fork the CK-X Simulator repository
+1. Fork the CKA Simulator repository
 2. Add your lab following these guidelines
 3. Test thoroughly
 4. Submit a pull request with a description of your lab
 
-Thank you for contributing to the CK-X community! 
+Thank you for contributing! 

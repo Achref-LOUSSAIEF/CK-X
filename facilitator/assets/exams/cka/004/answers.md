@@ -1,6 +1,6 @@
-# CKA Mock Exam 01 (CK-X edition): Solutions
+# CKA Mock Exam 01 (CKA Simulator edition): Solutions
 
-> Adapted for CK-X from **Mock Exam 01** of [theplatformlab/CKA-Certified-Kubernetes-Administrator](https://github.com/theplatformlab/CKA-Certified-Kubernetes-Administrator) (MIT License, © 2026 TECH WITH MOHAMED). Questions were made concrete and auto-gradeable. Q7 (CRI-dockerd), Q8 (API audit logs) and Q11 (kube-scheduler static Pod) need SSH access to the nodes, which CK-X does not provide, so they were replaced with the closest task that can be checked through the API. Notes on what the original task looks like on a kubeadm cluster are included below.
+> Adapted for CKA Simulator from **Mock Exam 01** of [theplatformlab/CKA-Certified-Kubernetes-Administrator](https://github.com/theplatformlab/CKA-Certified-Kubernetes-Administrator) (MIT License, © 2026 TECH WITH MOHAMED). Questions were made concrete and auto-gradeable. Q7 (CRI-dockerd), Q8 (API audit logs) and Q11 (kube-scheduler static Pod) need SSH access to the nodes, which CKA Simulator does not provide, so they were replaced with the closest task that can be checked through the API. Notes on what the original task looks like on a kubeadm cluster are included below.
 
 ---
 

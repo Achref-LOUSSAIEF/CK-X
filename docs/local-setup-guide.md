@@ -1,10 +1,10 @@
-# Local Setup Guide for CK-X Simulator
+# Local Setup Guide for CKA Simulator
 
 ## Quick Setup
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/@sailor-sh/CK-X.git
+git clone https://github.com/Achref-LOUSSAIEF/CK-X.git cka-simulator
 cd ck-x
 ```
 

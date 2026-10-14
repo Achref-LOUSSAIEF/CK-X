@@ -30,7 +30,7 @@ chmod 600 "$HOME/.vnc/passwd"
   echo "localhost=no"
   echo "SecurityTypes=VncAuth"
   echo "AlwaysShared=1"
-  echo "desktopName=CK-X Remote Desktop"
+  echo "desktopName=CKA Simulator Remote Desktop"
 } > "$HOME/.vnc/config"
 
 # The system bus is not running in a fresh container; Thunar and friends want it.

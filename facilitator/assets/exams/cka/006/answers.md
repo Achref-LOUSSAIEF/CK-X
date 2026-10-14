@@ -1,6 +1,6 @@
 # CKA Final Exam Simulation: Solutions
 
-> Original CK-X exam. The list of topics was inspired by [markdjones82/CKA-PREP-2025-v2](https://github.com/markdjones82/CKA-PREP-2025-v2); all scenarios, wording, setup and grading were written for CK-X. Topics that need SSH access to a node (CNI install, cri-dockerd, etcd / kube-apiserver repair) are not part of this exam; practise them on a kubeadm cluster.
+> Original CKA Simulator exam. The list of topics was inspired by [markdjones82/CKA-PREP-2025-v2](https://github.com/markdjones82/CKA-PREP-2025-v2); all scenarios, wording, setup and grading were written for CKA Simulator. Topics that need SSH access to a node (CNI install, cri-dockerd, etcd / kube-apiserver repair) are not part of this exam; practise them on a kubeadm cluster.
 
 ---
 

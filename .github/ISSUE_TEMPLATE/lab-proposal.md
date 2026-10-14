@@ -1,6 +1,6 @@
 ---
 name: "🧪 Lab Request"
-about: Suggest a new lab to be added to the CK-X Simulator
+about: Suggest a new lab to be added to CKA Simulator
 title: "[Lab] <short description of the lab>"
 labels: "lab-request"
 assignees: ''

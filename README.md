@@ -1,10 +1,10 @@
-# CK-X Simulator — Achref's edition
+# CKA Simulator
 
 A self-hosted practice environment for the **CKA (Certified Kubernetes Administrator)** exam. Every attempt runs on a fresh multi-node Kubernetes cluster in Docker, with an exam-style browser interface, a countdown timer, automatic grading and worked solutions.
 
-This is a personal fork of [CK-X](https://github.com/sailor-sh/CK-X) by Sailor.sh, focused only on the CKA (plus Helm practice), with more labs and a simpler, ad-free interface.
+> **CKA Simulator is based on [CK-X](https://github.com/sailor-sh/CK-X) by [Sailor.sh](https://sailor.sh).** It is a personal, non-commercial fork focused only on the CKA (plus Helm practice), with more labs and a simpler, ad-free interface. CK-X's copyright, branding and license notices are kept, as its license requires.
 
-## What's different in this fork
+## What's different from CK-X
 
 - **CKA only.** The CKAD, CKS and Docker labs were removed; eight CKA exams, a random CKA exam and a Helm lab remain, listed in a recommended order from Easy to Hard.
 - **6 extra CKA exams** (94 tasks) and **CKA Random**, a new mix on every attempt. See [Labs](#labs).
@@ -15,6 +15,7 @@ This is a personal fork of [CK-X](https://github.com/sailor-sh/CK-X) by Sailor.s
 - **Kubernetes v1.35**, like the current CKA exam. The exam cluster and the `kubectl` in the exam terminal are pinned to the same version (v1.35.9).
 - **Faster start-up.** A local pull-through cache keeps a copy of every Docker Hub image the labs use, and the cluster container keeps its Docker data, so after the first exam the cluster and the lab Pods start without downloading everything again.
 - **No usage tracking.** `TRACK_METRICS` is set to `false`, so nothing is sent to the external CK-X metrics server.
+- **Its own name.** The interface, the exam desktop and terminal, and the Docker project and images are called CKA Simulator, so it can't be mixed up with an upstream CK-X install.
 
 ## Labs
 
@@ -33,11 +34,10 @@ Work through them in this order:
 | 9 | **CKA Random · New Mix Every Attempt** *(new)* | Hard | 16 | 120 min |
 | – | Helm Fundamentals | Medium | 12 | 90 min |
 
-- **Mock Exams A and B** are adapted from [theplatformlab/CKA-Certified-Kubernetes-Administrator](https://github.com/theplatformlab/CKA-Certified-Kubernetes-Administrator) (MIT).
-- **Final Exam Simulation** is an original exam; its list of topics was inspired by [markdjones82/CKA-PREP-2025-v2](https://github.com/markdjones82/CKA-PREP-2025-v2).
-- **Exam Simulations II and III** are original exams on topics the other labs don't cover (Downward API, local PVs, aggregated ClusterRoles, ValidatingAdmissionPolicy, PDB-blocked drains, HTTPRoute weights and header matches, and more).
+- **Exam Simulations II and III** cover topics the other labs don't (Downward API, local PVs, aggregated ClusterRoles, ValidatingAdmissionPolicy, PDB-blocked drains, HTTPRoute weights and header matches, and more).
 - **CKA Random** builds a different exam on every attempt: 16 tasks drawn from CKA 2 to CKA 8, weighted like the real exam's domains, never two tasks that touch the same namespace, node or cluster-wide object. The solutions page of each attempt says which exam every task comes from. After changing a lab, run `python3 tools/build-random-pool.py` to refresh its pool.
-- **Not covered:** CK-X gives no SSH access to cluster nodes, so node-level tasks (kubeadm upgrades, etcd backup/restore, kubelet and control-plane repair, CNI and container runtime installation) can't be practised here. The solutions pages explain the kubeadm procedures where a lab replaced such a task.
+- Where each exam comes from is listed under [Credits](#credits).
+- **Not covered:** the simulator gives no SSH access to cluster nodes, so node-level tasks (kubeadm upgrades, etcd backup/restore, kubelet and control-plane repair, CNI and container runtime installation) can't be practised here. The solutions pages explain the kubeadm procedures where a lab replaced such a task.
 
 ## Requirements
 
@@ -49,16 +49,15 @@ Work through them in this order:
 
 ## Quick start
 
-This fork has to be **built from source**. The upstream one-line installer downloads the original images, which don't include these changes.
+CKA Simulator is **built from source**; the upstream CK-X installer downloads the original CK-X images, which don't include these changes.
 
 ```bash
-git clone https://github.com/Achref-LOUSSAIEF/CK-X.git
-cd CK-X
-docker compose build webapp facilitator
-docker compose up -d
+git clone https://github.com/Achref-LOUSSAIEF/CK-X.git cka-simulator
+cd cka-simulator
+docker compose up -d --build
 ```
 
-Open **http://localhost:30080**, choose a lab and click **Start exam**. Preparing the cluster takes 3–6 minutes.
+Open **http://localhost:30080**, choose a lab and click **Start exam**. The first build takes a while; preparing the cluster for an exam then takes 3–6 minutes (less once the image cache is filled).
 
 During the exam, each question names its own host, like the real exam (`ssh cka-q1`, `ssh cka-q2`, …). Open the terminal in the exam desktop and SSH to that host first; its prompt shows the host you're on. `kubectl`, `helm` and `jq` are installed, and `k` is an alias for `kubectl`. All these host names reach the same machine, so the habit is what you practise; working on the "wrong" host doesn't cost points here. When you end the exam, every task is graded and the solutions become available.
 
@@ -66,24 +65,25 @@ Stop everything with `docker compose down`.
 
 ## Updating
 
-After pulling new commits, rebuild the two services that contain the interface and the labs:
+After pulling new commits, rebuild and restart:
 
 ```bash
 git pull
-docker compose build webapp facilitator
-docker compose up -d
+docker compose up -d --build
 docker compose restart nginx
 ```
+
+**Coming from a version named CK-X?** The Docker project is now called `cka-simulator`, so stop the old containers **before** updating, otherwise they keep running under the old name and hold port 30080: run `docker compose down` in the folder first, then update and start as above. The old volumes can be removed afterwards with `docker volume ls` and `docker volume rm`.
 
 ## Troubleshooting
 
 | Problem | Fix |
 |---|---|
 | `localhost:30080` shows `{"message":"Facilitator Service API"}` | Containers got new internal addresses after a rebuild. Run `docker compose restart nginx`. |
-| New labs or interface changes don't appear | The prebuilt images are still in use. Run `docker compose build webapp facilitator && docker compose up -d`, then reload with Ctrl+Shift+R. |
-| Port 30080 already in use | Another copy of CK-X is running (for example the one installed by the upstream installer). Stop it with `docker compose down` in its folder. |
+| New labs or interface changes don't appear | The images weren't rebuilt. Run `docker compose up -d --build`, then reload with Ctrl+Shift+R. |
+| Port 30080 already in use | Another copy is running: an upstream CK-X install, or this one under its old name. Stop it with `docker compose down` in its folder (or `docker compose -p <old-folder-name> down`). |
 | Changing the Kubernetes version | Edit `K3S_IMAGE` in `kind-cluster/scripts/env-setup` and `KUBECTL_VERSION` in `jumphost/Dockerfile` (keep them on the same minor version), then run `docker compose build k8s-api-server jumphost && docker compose up -d`. |
-| Check or disable the image cache | `docker compose exec k8s-api-server image-cache status` lists the cached images. To turn the cache off, set `CKX_IMAGE_CACHE=false` under `k8s-api-server` in `docker-compose.yaml` and run `docker compose up -d`. To empty it: `docker compose down` then `docker volume rm ck-x_ckx-image-cache` (the prefix is your folder name). |
+| Check or disable the image cache | `docker compose exec k8s-api-server image-cache status` lists the cached images. To turn the cache off, set `CKX_IMAGE_CACHE=false` under `k8s-api-server` in `docker-compose.yaml` and run `docker compose up -d`. To empty it: `docker compose down` then `docker volume rm cka-simulator_ckx-image-cache`. |
 | Lab preparation never finishes | Check the cluster logs with `docker compose logs -f k8s-api-server` and make sure Docker has enough memory. |
 
 ## Adding your own labs
@@ -92,14 +92,31 @@ Each lab is a folder under `facilitator/assets/exams/<category>/<id>/` with an `
 
 ## Credits
 
-- [CK-X](https://github.com/sailor-sh/CK-X) by [Sailor.sh](https://sailor.sh), the simulator this fork is based on
-- [theplatformlab/CKA-Certified-Kubernetes-Administrator](https://github.com/theplatformlab/CKA-Certified-Kubernetes-Administrator) (MIT, © 2026 TECH WITH MOHAMED), source of the two mock exams
-- Built on [Docker-in-Docker](https://www.docker.com/), [k3d](https://k3d.io/stable/), [Node.js](https://nodejs.org/en), [Nginx](https://nginx.org/) and [ConSol VNC](https://github.com/ConSol/docker-headless-vnc-container/)
+**The simulator.** CKA Simulator is based on [CK-X](https://github.com/sailor-sh/CK-X) by [Sailor.sh](https://sailor.sh), originally created by [Nishan B](https://github.com/nishanb). The exam engine, the interface it grew from, the remote desktop and the cluster setup are theirs.
+
+**The exams.** Where every exam comes from:
+
+| Exam | Source | Owner and license | What was changed |
+|---|---|---|---|
+| CKA 1 · Warm-up: Core Concepts | Original CK-X lab `cka-001` | [CK-X](https://github.com/sailor-sh/CK-X) by Sailor.sh, BSL 1.1 | Reworded like the real exam, graders made less strict about image tags and container names |
+| CKA 2 · Mock Exam A | Mock Exam 01 of [theplatformlab/CKA-Certified-Kubernetes-Administrator](https://github.com/theplatformlab/CKA-Certified-Kubernetes-Administrator) | © 2026 TECH WITH MOHAMED, MIT License | Made concrete and auto-graded; the 3 tasks that need SSH to a node were replaced. The MIT license text is reproduced in its solutions page |
+| CKA 3 · Mock Exam B | Mock Exam 02 of the same repository | © 2026 TECH WITH MOHAMED, MIT License | Same as above |
+| CKA 4 · Advanced Administration | Original CK-X lab `cka-002` | [CK-X](https://github.com/sailor-sh/CK-X) by Sailor.sh, BSL 1.1 | Questions clarified, graders and setup fixed, reworded like the real exam |
+| CKA 5 · Troubleshooting & Cluster Operations | Written for CKA Simulator | – | – |
+| CKA 6 · Final Exam Simulation | Written for CKA Simulator; the list of topics was inspired by [markdjones82/CKA-PREP-2025-v2](https://github.com/markdjones82/CKA-PREP-2025-v2) | Topic idea credited to [markdjones82](https://github.com/markdjones82); no text, scenario or script was copied (that repository has no license) | – |
+| CKA 7 · Exam Simulation II | Written for CKA Simulator | – | – |
+| CKA 8 · Exam Simulation III | Written for CKA Simulator | – | – |
+| CKA Random | A mix of the tasks of CKA 2 to CKA 8, so the credits above apply to each task; every solutions page names the exam each task comes from | – | – |
+| Helm Fundamentals | Original CK-X lab `helm-001` | [CK-X](https://github.com/sailor-sh/CK-X) by Sailor.sh, BSL 1.1 | – |
+
+Each exam's solutions page repeats its credit at the top. If you own one of these sources and want the credit worded differently, or the content removed, please open an issue.
+
+**Software.** Built on [Docker-in-Docker](https://www.docker.com/), [k3d](https://k3d.io/stable/), [Node.js](https://nodejs.org/en), [Nginx](https://nginx.org/) and [ConSol VNC](https://github.com/ConSol/docker-headless-vnc-container/)
 
 ## Disclaimer
 
-CK-X is an independent tool, not affiliated with the CNCF, the Linux Foundation or PSI, and does not guarantee exam success. See the [Privacy Policy](docs/PRIVACY_POLICY.md) and [Terms of Service](docs/TERMS_OF_SERVICE.md).
+CKA Simulator and CK-X are independent tools, not affiliated with the CNCF, the Linux Foundation or PSI, and do not guarantee exam success. See the [Privacy Policy](docs/PRIVACY_POLICY.md) and [Terms of Service](docs/TERMS_OF_SERVICE.md).
 
 ## License
 
-CK-X is licensed under the **Business Source License 1.1** by Sailor.sh. Personal, educational, research and non-production use is allowed; commercial or production use, hosting it as a service, and selling or monetizing it require a commercial license from Sailor.sh. See [LICENSE](LICENSE) for the full terms.
+CKA Simulator is a modified version of CK-X and is distributed under the same license as CK-X: the **Business Source License 1.1** by Sailor.sh. Personal, educational, research and non-production use is allowed; commercial or production use, hosting it as a service, and selling or monetizing it require a commercial license from Sailor.sh. See [LICENSE](LICENSE) for the full terms.

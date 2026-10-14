@@ -1,5 +1,7 @@
 # Helm Basics Lab - Solutions
 
+> From the original CK-X labs (`helm-001`) by [Sailor.sh](https://github.com/sailor-sh/CK-X), BSL 1.1.
+
 ## Question 1: Verify Helm Installation
 
 Verify the Helm installation by running the version command and saving the output to a file:

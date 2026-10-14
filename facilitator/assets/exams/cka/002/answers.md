@@ -1,5 +1,7 @@
 # CKA Exam Solutions
 
+> From the original CK-X labs (`cka-002`) by [Sailor.sh](https://github.com/sailor-sh/CK-X), BSL 1.1. Questions clarified and graders fixed for CKA Simulator.
+
 This document contains detailed solutions for the CKA exam questions. Each solution includes step-by-step instructions and explanations.
 
 ## Question 1: Dynamic PVC and Pod

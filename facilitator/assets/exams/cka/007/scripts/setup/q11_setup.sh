@@ -7,7 +7,7 @@ mkdir -p $C/templates
 cat > $C/Chart.yaml <<'EOF'
 apiVersion: v2
 name: webapp
-description: Small web application chart for the CK-X lab
+description: Small web application chart for the CKA Simulator lab
 type: application
 version: 1.0.0
 appVersion: "1.25"

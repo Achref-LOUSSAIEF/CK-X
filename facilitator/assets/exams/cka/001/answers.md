@@ -1,5 +1,7 @@
 # CKA Assessment Answers
 
+> From the original CK-X labs (`cka-001`) by [Sailor.sh](https://github.com/sailor-sh/CK-X), BSL 1.1. Reworded for CKA Simulator.
+
 ## Question 1: Namespace and Pod Creation
 
 Create a namespace named `app-team1` and create a pod named `nginx-pod` with the following specifications:

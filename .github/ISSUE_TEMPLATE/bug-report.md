@@ -1,6 +1,6 @@
 ---
 name: "🐛 Bug Report"
-about: Report a bug or issue you've found while using CK-X Simulator
+about: Report a bug or issue you've found while using CKA Simulator
 title: "[Bug] <short description>"
 labels: bug
 assignees: ''
@@ -25,9 +25,9 @@ Why does it bother you, and how could it be harmful for the user?
 - System resources: [CPU model, RAM size, available storage]
 - OS: [e.g. Ubuntu 22.04, Windows 11]
 - Browser: [e.g. Chrome 112]
-- CK-X Version: [e.g. v1.2.0 or commit SHA]
+- CKA Simulator version: [e.g. v1.2.0 or commit SHA]
 - Docker version: `docker version`
-- How did you install CK-X? [installer script / manual / other]
+- How did you install CKA Simulator? [installer script / manual / other]
 
 -->
 

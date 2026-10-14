@@ -6,7 +6,7 @@ C=/tmp/exam/helm-charts/monitoring
 cat > $C/Chart.yaml <<'EOF'
 apiVersion: v2
 name: monitoring
-description: Minimal monitoring stack for the CK-X lab
+description: Minimal monitoring stack for the CKA Simulator lab
 type: application
 version: 0.1.0
 appVersion: "1.0"
