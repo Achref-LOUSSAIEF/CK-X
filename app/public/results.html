@@ -64,6 +64,7 @@
                         <div class="score-box">
                             <span id="totalScore">0</span> / <span id="totalPossibleScore">0</span>
                         </div>
+                        <div class="score-percent" id="scorePercent"></div>
                     </div>
                     <div class="rank-display">
                         <div id="rankBadge" class="rank-badge">
@@ -72,6 +73,12 @@
                     </div>
                 </div>
                 
+                <div id="domainBreakdown" class="domain-breakdown" style="display: none;">
+                    <h3>Score by domain</h3>
+                    <p class="domain-note">Same domains as the real CKA score report. Weights are the official exam weights; your percentage is per domain.</p>
+                    <div id="domainRows"></div>
+                </div>
+
                 <div id="questionsContainer" class="questions-container">
                     <!-- Questions will be added here dynamically -->
                 </div>

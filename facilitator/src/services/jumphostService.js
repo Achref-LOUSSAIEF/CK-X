@@ -207,6 +207,7 @@ async function evaluateExamOnJumphost(examId, questions) {
         namespace: question.namespace,
         question: question.question,
         concepts: question.concepts || [],
+        domain: question.domain || null,
         verificationResults: []
       };
 

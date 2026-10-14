@@ -361,6 +361,66 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
     
+    // Official CKA domains and weights, in the order of the CKA curriculum
+    const CKA_DOMAINS = [
+        { name: 'Storage', weight: 10 },
+        { name: 'Troubleshooting', weight: 30 },
+        { name: 'Workloads & Scheduling', weight: 15 },
+        { name: 'Cluster Architecture, Installation & Configuration', weight: 25 },
+        { name: 'Services & Networking', weight: 20 }
+    ];
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text == null ? '' : String(text);
+        return div.innerHTML;
+    }
+
+    // Per-domain score table (hidden when the exam has no domain tags)
+    function renderDomainBreakdown(evaluationResults) {
+        const container = document.getElementById('domainBreakdown');
+        const rows = document.getElementById('domainRows');
+        if (!container || !rows) return;
+
+        const totals = {};
+        evaluationResults.forEach(question => {
+            if (!question.domain) return;
+            const t = totals[question.domain] || (totals[question.domain] = { score: 0, possible: 0, tasks: 0 });
+            t.tasks += 1;
+            (question.verificationResults || []).forEach(v => {
+                t.score += v.score;
+                t.possible += v.weightage;
+            });
+        });
+        if (Object.keys(totals).length === 0) {
+            container.style.display = 'none';
+            return;
+        }
+
+        const known = CKA_DOMAINS.map(d => d.name);
+        const domains = CKA_DOMAINS.concat(
+            Object.keys(totals).filter(n => !known.includes(n)).map(n => ({ name: n, weight: null })));
+
+        rows.innerHTML = domains.map(d => {
+            const t = totals[d.name];
+            const weight = d.weight != null ? `${d.weight}% of exam` : '';
+            if (!t || t.possible === 0) {
+                return `<div class="domain-row domain-empty">
+                    <div class="domain-name">${escapeHtml(d.name)} <span class="domain-weight">${weight}</span></div>
+                    <div class="domain-value">not covered by this exam</div>
+                </div>`;
+            }
+            const pct = Math.round((t.score / t.possible) * 100);
+            const level = pct >= 75 ? 'good' : pct >= 50 ? 'ok' : 'weak';
+            return `<div class="domain-row">
+                <div class="domain-name">${escapeHtml(d.name)} <span class="domain-weight">${weight}</span></div>
+                <div class="domain-bar"><div class="domain-fill domain-${level}" style="width: ${pct}%"></div></div>
+                <div class="domain-value">${pct}% <span class="domain-detail">(${t.score}/${t.possible} points, ${t.tasks} task${t.tasks === 1 ? '' : 's'})</span></div>
+            </div>`;
+        }).join('');
+        container.style.display = 'block';
+    }
+
     // Render exam results
     function renderExamResults(results) {
         // Update basic info
@@ -370,6 +430,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update score
         totalScoreElement.textContent = results.totalScore;
         totalPossibleScoreElement.textContent = results.totalPossibleScore;
+        const scorePercent = document.getElementById('scorePercent');
+        if (scorePercent && results.totalPossibleScore > 0) {
+            const pct = Math.round((results.totalScore / results.totalPossibleScore) * 100);
+            scorePercent.textContent = `${pct}% · real CKA pass mark: 66%`;
+            scorePercent.className = `score-percent ${pct >= 66 ? 'score-pass' : 'score-fail'}`;
+        }
         
         // Update rank
         rankTextElement.textContent = results.rank === 'high' ? 'High Score' : 
@@ -379,6 +445,8 @@ document.addEventListener('DOMContentLoaded', function() {
         rankBadgeElement.className = 'rank-badge';
         rankBadgeElement.classList.add(`rank-${results.rank}`);
         
+        renderDomainBreakdown(results.evaluationResults || []);
+
         // Clear questions container
         questionsContainer.innerHTML = '';
         
@@ -411,7 +479,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const questionHeader = document.createElement('div');
                 questionHeader.className = 'question-header';
                 questionHeader.innerHTML = `
-                    <h3 class="question-title">Question ${question.id}</h3>
+                    <h3 class="question-title">Question ${question.id}${question.domain ? ` <span class="question-domain">${escapeHtml(question.domain)}</span>` : ''}</h3>
                     <div class="question-score">${questionScore} of ${questionPossibleScore}</div>
                 `;
                 
