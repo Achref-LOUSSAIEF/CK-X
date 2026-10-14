@@ -1,55 +1,54 @@
 #!/bin/bash
+# Validate admin-pod and the effective permissions of the app-admin ServiceAccount.
+set -e
 
-# Create a test pod with the app-admin ServiceAccount
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Pod
-metadata:
-  name: rbac-test-pod
-  namespace: cluster-admin
-spec:
-  serviceAccountName: app-admin
-  containers:
-  - name: curl
-    image: curlimages/curl
-    command: ["sleep", "3600"]
-EOF
+NS="cluster-admin"
+SA="system:serviceaccount:$NS:app-admin"
 
-# Wait for pod to be running
-for i in {1..30}; do
-  if kubectl get pod rbac-test-pod -n cluster-admin | grep -q Running; then
-    break
-  fi
-  sleep 2
+kubectl get pod admin-pod -n $NS >/dev/null 2>&1 || {
+    echo "Pod admin-pod not found in namespace $NS"
+    exit 1
+}
+
+POD_SA=$(kubectl get pod admin-pod -n $NS -o jsonpath='{.spec.serviceAccountName}')
+if [[ "$POD_SA" != "app-admin" ]]; then
+    echo "admin-pod does not use the app-admin ServiceAccount (got '$POD_SA')"
+    exit 1
+fi
+
+IMAGE=$(kubectl get pod admin-pod -n $NS -o jsonpath='{.spec.containers[0].image}')
+if [[ "$IMAGE" != *"bitnami/kubectl"* ]]; then
+    echo "admin-pod does not use the bitnami/kubectl image (got '$IMAGE')"
+    exit 1
+fi
+
+AUTOMOUNT=$(kubectl get pod admin-pod -n $NS -o jsonpath='{.spec.automountServiceAccountToken}')
+if [[ "$AUTOMOUNT" == "false" ]]; then
+    echo "admin-pod disables ServiceAccount token automounting"
+    exit 1
+fi
+
+PHASE=$(kubectl get pod admin-pod -n $NS -o jsonpath='{.status.phase}')
+if [[ "$PHASE" != "Running" ]]; then
+    echo "admin-pod is not Running (phase: $PHASE)"
+    exit 1
+fi
+
+can() { kubectl auth can-i "$1" "$2" --as="$SA" -n $NS 2>/dev/null; }
+
+for check in "list pods" "get pods" "watch pods" "list deployments.apps" "get deployments.apps" \
+             "watch deployments.apps" "update deployments.apps" "create configmaps" "delete configmaps"; do
+    set -- $check
+    if [[ "$(can "$1" "$2")" != "yes" ]]; then
+        echo "app-admin cannot $1 $2"
+        exit 1
+    fi
 done
 
-# Test pod operations (should succeed)
-LIST_PODS=$(kubectl auth can-i list pods --as=system:serviceaccount:cluster-admin:app-admin -n cluster-admin)
-GET_PODS=$(kubectl auth can-i get pods --as=system:serviceaccount:cluster-admin:app-admin -n cluster-admin)
-WATCH_PODS=$(kubectl auth can-i watch pods --as=system:serviceaccount:cluster-admin:app-admin -n cluster-admin)
-
-# Test deployment operations (should succeed)
-LIST_DEPLOY=$(kubectl auth can-i list deployments --as=system:serviceaccount:cluster-admin:app-admin -n cluster-admin)
-GET_DEPLOY=$(kubectl auth can-i get deployments --as=system:serviceaccount:cluster-admin:app-admin -n cluster-admin)
-UPDATE_DEPLOY=$(kubectl auth can-i update deployments --as=system:serviceaccount:cluster-admin:app-admin -n cluster-admin)
-
-# Test configmap operations (should succeed)
-CREATE_CM=$(kubectl auth can-i create configmaps --as=system:serviceaccount:cluster-admin:app-admin -n cluster-admin)
-DELETE_CM=$(kubectl auth can-i delete configmaps --as=system:serviceaccount:cluster-admin:app-admin -n cluster-admin)
-
-# Clean up
-kubectl delete pod rbac-test-pod -n cluster-admin --force --grace-period=0 2>/dev/null || true
-
-# Check all permissions are correct
-if [[ "$LIST_PODS" == "yes" && \
-      "$GET_PODS" == "yes" && \
-      "$WATCH_PODS" == "yes" && \
-      "$LIST_DEPLOY" == "yes" && \
-      "$GET_DEPLOY" == "yes" && \
-      "$UPDATE_DEPLOY" == "yes" && \
-      "$CREATE_CM" == "yes" && \
-      "$DELETE_CM" == "yes" ]]; then
-    exit 0
-else
+if [[ "$(can create pods)" != "no" ]]; then
+    echo "app-admin can create pods, but it should not"
     exit 1
-fi 
+fi
+
+echo "admin-pod and permissions validation successful"
+exit 0

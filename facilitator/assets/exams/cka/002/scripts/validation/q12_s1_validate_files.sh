@@ -1,52 +1,47 @@
 #!/bin/bash
+# Validate the Kustomize base/overlay files and what the overlay renders to.
+# The overlay may use any valid technique (replicas field, strategic-merge or JSON patch).
 set -e
 
-# Check base directory structure
 BASE_DIR="/tmp/exam/kustomize/base"
-if [[ ! -d "$BASE_DIR" ]]; then
-    echo "Base directory not found at $BASE_DIR"
-    exit 1
-fi
-
-# Check overlay directory structure
 OVERLAY_DIR="/tmp/exam/kustomize/overlays/production"
-if [[ ! -d "$OVERLAY_DIR" ]]; then
-    echo "Overlay directory not found at $OVERLAY_DIR"
+
+for f in "$BASE_DIR/kustomization.yaml" "$BASE_DIR/deployment.yaml" "$OVERLAY_DIR/kustomization.yaml"; do
+    if [[ ! -f "$f" ]]; then
+        echo "Missing file: $f"
+        exit 1
+    fi
+done
+
+if ! grep -q "deployment.yaml" "$BASE_DIR/kustomization.yaml"; then
+    echo "Base kustomization.yaml does not list deployment.yaml"
     exit 1
 fi
 
-# Check base kustomization.yaml
-if [[ ! -f "$BASE_DIR/kustomization.yaml" ]]; then
-    echo "Base kustomization.yaml not found"
+RENDERED=$(kubectl kustomize "$OVERLAY_DIR" 2>&1) || {
+    echo "Overlay does not build: $RENDERED"
+    exit 1
+}
+
+DEPLOY=$(echo "$RENDERED" | kubectl create --dry-run=client -o json -f - 2>/dev/null \
+    | jq -c 'if .kind == "List" then .items[] else . end | select(.kind == "Deployment" and .metadata.name == "nginx")')
+if [[ -z "$DEPLOY" ]]; then
+    echo "Overlay does not render a Deployment named nginx"
     exit 1
 fi
 
-# Check base deployment.yaml
-if [[ ! -f "$BASE_DIR/deployment.yaml" ]]; then
-    echo "Base deployment.yaml not found"
+if [[ "$(echo "$DEPLOY" | jq -r '.spec.replicas')" != "3" ]]; then
+    echo "Overlay does not set replicas to 3"
     exit 1
 fi
-
-# Check overlay kustomization.yaml
-if [[ ! -f "$OVERLAY_DIR/kustomization.yaml" ]]; then
-    echo "Overlay kustomization.yaml not found"
+if [[ "$(echo "$DEPLOY" | jq -r '.metadata.labels.environment')" != "production" ]]; then
+    echo "Overlay does not add the label environment=production"
     exit 1
 fi
-
-# Validate base kustomization.yaml content
-BASE_RESOURCES=$(cat "$BASE_DIR/kustomization.yaml" | grep "deployment.yaml")
-if [[ -z "$BASE_RESOURCES" ]]; then
-    echo "Base kustomization.yaml does not reference deployment.yaml"
-    exit 1
-fi
-
-# Validate overlay kustomization.yaml content
-OVERLAY_CONTENT=$(cat "$OVERLAY_DIR/kustomization.yaml")
-if [[ ! "$OVERLAY_CONTENT" =~ "production" ]] || \
-   [[ ! "$OVERLAY_CONTENT" =~ "value: 3" ]]; then
-    echo "Overlay kustomization.yaml missing required configurations"
+if [[ "$(echo "$DEPLOY" | jq -r '.metadata.namespace')" != "kustomize" ]]; then
+    echo "Overlay does not set the namespace kustomize"
     exit 1
 fi
 
 echo "Kustomize files validation successful"
-exit 0 
+exit 0

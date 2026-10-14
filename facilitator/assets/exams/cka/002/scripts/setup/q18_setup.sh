@@ -8,6 +8,6 @@ kubectl create namespace upgrade --dry-run=client -o yaml | kubectl apply -f -
 mkdir -p /tmp/exam
 
 # Clean up the pull pods
-kubectl delete pod pull-nginx-1-19 pull-nginx-1-20 -n upgrade
+kubectl delete pod pull-nginx-1-19 pull-nginx-1-20 -n upgrade --ignore-not-found
 
 echo "Setup completed for Question 18" 

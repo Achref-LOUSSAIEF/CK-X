@@ -217,7 +217,7 @@ spec:
       type: RuntimeDefault 
   containers:
   - name: nginx
-    image: nginx
+    image: nginxinc/nginx-unprivileged:1.27
     securityContext:
       allowPrivilegeEscalation: false
       runAsNonRoot: true
@@ -225,6 +225,9 @@ spec:
       capabilities:
         drop:
           - ALL
+    volumeMounts:
+    - name: html
+      mountPath: /usr/share/nginx/html
   volumes:
   - name: html
     emptyDir: {}
@@ -567,19 +570,19 @@ kubectl get pods -n kustomize
 
 ### Solution
 ```yaml
-apiVersion: gateway.networking.k8s.io/v1beta1
+apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: main-gateway
   namespace: gateway
 spec:
-  gatewayClassName: standard
+  gatewayClassName: ckx-gateway
   listeners:
   - name: http
     port: 80
     protocol: HTTP
 ---
-apiVersion: gateway.networking.k8s.io/v1beta1
+apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: app-routes
@@ -590,12 +593,14 @@ spec:
   rules:
   - matches:
     - path:
+        type: PathPrefix
         value: /app1
     backendRefs:
     - name: app1-svc
       port: 8080
   - matches:
     - path:
+        type: PathPrefix
         value: /app2
     backendRefs:
     - name: app2-svc
@@ -813,16 +818,8 @@ spec:
   - name: kubectl
     image: bitnami/kubectl:latest
     command: ["sleep", "3600"]
-    volumeMounts:
-    - name: token
-      mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-  volumes:
-  - name: token
-    projected:
-      sources:
-      - serviceAccountToken:
-          expirationSeconds: 3600
-          audience: kubernetes.default.svc
+  # The ServiceAccount token is mounted automatically at
+  # /var/run/secrets/kubernetes.io/serviceaccount (automountServiceAccountToken defaults to true)
 ```
 
 ## Question 17: Network Policies
@@ -978,7 +975,8 @@ spec:
 
 ```bash
 # Perform update
-kubectl set image deployment/app-v1 nginx=nginx:1.20 -n upgrade --record
+kubectl set image deployment/app-v1 nginx=nginx:1.20 -n upgrade
+kubectl annotate deployment/app-v1 -n upgrade kubernetes.io/change-cause="update to nginx:1.20" --overwrite
 
 # Save rollout history
 kubectl rollout history deployment app-v1 -n upgrade > /tmp/exam/rollout-history.txt

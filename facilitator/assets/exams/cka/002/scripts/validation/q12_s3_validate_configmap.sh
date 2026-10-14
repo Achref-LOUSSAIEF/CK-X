@@ -4,7 +4,8 @@ set -e
 NAMESPACE="kustomize"
 
 # Find the full name of the nginx-config ConfigMap
-CONFIGMAP_NAME=$(kubectl get configmap -n $NAMESPACE --no-headers | awk '/^nginx-config-/ {print $1; exit}')
+# Accept a plain ConfigMap named nginx-config or a configMapGenerator one (nginx-config-<hash>)
+CONFIGMAP_NAME=$(kubectl get configmap -n $NAMESPACE --no-headers | awk '$1 == "nginx-config" || $1 ~ /^nginx-config-/ {print $1; exit}')
 
 if [[ -z "$CONFIGMAP_NAME" ]]; then
   echo "ConfigMap starting with nginx-config not found in namespace $NAMESPACE"
