@@ -97,6 +97,18 @@
       "order": 8
     },
     {
+      "id": "cka-random",
+      "assetPath": "assets/exams/cka/random",
+      "name": "CKA Random · New Mix Every Attempt",
+      "category": "CKA",
+      "description": "A different exam every time: 16 tasks drawn at random from CKA 2 to CKA 8, weighted like the real exam's domains (Troubleshooting 5, Cluster Architecture 4, Services & Networking 3, Workloads 2, Storage 2) and chosen so they never clash. Use it once you have done the other exams.",
+      "warmUpTimeInSeconds": 360,
+      "difficulty": "Hard",
+      "examDurationInMinutes": 120,
+      "questionCount": 16,
+      "order": 9
+    },
+    {
       "id": "helm-001",
       "assetPath": "assets/exams/other/002",
       "name": "Helm Fundamentals",
@@ -106,7 +118,7 @@
       "difficulty": "Medium",
       "examDurationInMinutes": 90,
       "questionCount": 12,
-      "order": 9
+      "order": 10
     }
   ]
 }

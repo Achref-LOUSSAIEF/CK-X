@@ -1,0 +1,1109 @@
+{
+ "generatedBy": "tools/build-random-pool.py",
+ "questions": [
+  {
+   "source": "cka/002",
+   "id": "1",
+   "domain": "Storage",
+   "claims": [
+    "ns:storage-task",
+    "storageclass:standard"
+   ],
+   "uses": [
+    "default-storageclass"
+   ]
+  },
+  {
+   "source": "cka/002",
+   "id": "2",
+   "domain": "Storage",
+   "claims": [
+    "default-storageclass",
+    "ns:storage-class",
+    "storageclass:default-test",
+    "storageclass:fast-local",
+    "storageclass:local-path"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "3",
+   "domain": "Storage",
+   "claims": [
+    "node:k3d-cluster-agent-0",
+    "ns:manual-storage",
+    "pv:manual-pv"
+   ],
+   "uses": [
+    "default-storageclass"
+   ]
+  },
+  {
+   "source": "cka/002",
+   "id": "4",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:scaling"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "5",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "node:k3d-cluster-agent-1",
+    "ns:scheduling"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "6",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:security"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "7",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "node:k3d-cluster-agent-0",
+    "node:k3d-cluster-agent-1",
+    "ns:scheduling"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "8",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:stateful",
+    "storageclass:cold"
+   ],
+   "uses": [
+    "default-storageclass"
+   ]
+  },
+  {
+   "source": "cka/002",
+   "id": "9",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:dns-debug"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "10",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:dns-config",
+    "path:/tmp/dns-test",
+    "path:/tmp/dns-test.txt"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "11",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:helm-test"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "12",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:kustomize",
+    "path:/tmp/exam/kustomize",
+    "path:/tmp/exam/kustomize/base",
+    "path:/tmp/exam/kustomize/base/deployment.yaml",
+    "path:/tmp/exam/kustomize/base/kustomization.yaml",
+    "path:/tmp/exam/kustomize/overlays/production",
+    "path:/tmp/exam/kustomize/overlays/production/kustomization.yaml"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "13",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:gateway"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "14",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:limits"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "15",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:monitoring"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "16",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:cluster-admin"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "17",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:network"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "18",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:upgrade",
+    "path:/tmp/exam/rollout-history.txt"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "19",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:scheduling",
+    "priorityclass:high-priority",
+    "priorityclass:low-priority"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/002",
+   "id": "20",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:troubleshoot"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/003",
+   "id": "1",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:trbl-deploy"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/003",
+   "id": "2",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:trbl-svc"
+   ],
+   "uses": [
+    "node:k3d-cluster-server-0"
+   ]
+  },
+  {
+   "source": "cka/003",
+   "id": "3",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:trbl-sched"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/003",
+   "id": "4",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:trbl-config"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/003",
+   "id": "5",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:logging"
+   ],
+   "uses": [
+    "node:k3d-cluster-server-0"
+   ]
+  },
+  {
+   "source": "cka/003",
+   "id": "6",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:metrics-lab"
+   ],
+   "uses": [
+    "node:k3d-cluster-server-0"
+   ]
+  },
+  {
+   "source": "cka/003",
+   "id": "8",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "clusterrole:node-viewer",
+    "clusterrolebinding:jane-node-viewer",
+    "ns:default",
+    "ns:rbac-lab"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/003",
+   "id": "9",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "crd:backups.ops.example.com",
+    "ns:crd-lab"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/003",
+   "id": "10",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:ingress-lab"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/003",
+   "id": "11",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:np-backend",
+    "ns:np-db",
+    "ns:np-other"
+   ],
+   "uses": [
+    "node:k3d-cluster-server-0"
+   ]
+  },
+  {
+   "source": "cka/003",
+   "id": "12",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:ds-lab"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/003",
+   "id": "13",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:batch-lab"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/003",
+   "id": "14",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:sidecar-lab"
+   ],
+   "uses": [
+    "node:k3d-cluster-server-0"
+   ]
+  },
+  {
+   "source": "cka/003",
+   "id": "15",
+   "domain": "Storage",
+   "claims": [
+    "ns:storage-ops"
+   ],
+   "uses": [
+    "default-storageclass",
+    "node:k3d-cluster-server-0"
+   ]
+  },
+  {
+   "source": "cka/003",
+   "id": "16",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:ci",
+    "ns:default"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/003",
+   "id": "17",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "node:k3d-cluster-agent-0",
+    "node:k3d-cluster-agent-1",
+    "node:k3d-cluster-server-0",
+    "ns:spread-lab"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/003",
+   "id": "18",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:trbl-dns"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/004",
+   "id": "1",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:production"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/004",
+   "id": "2",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:default",
+    "ns:staging"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/004",
+   "id": "4",
+   "domain": "Storage",
+   "claims": [
+    "ns:databases",
+    "pv:db-pv",
+    "storageclass:fast-ssd"
+   ],
+   "uses": [
+    "default-storageclass"
+   ]
+  },
+  {
+   "source": "cka/004",
+   "id": "5",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:shop"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/004",
+   "id": "6",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:monitoring",
+    "path:/tmp/exam/helm-charts",
+    "path:/tmp/exam/helm-charts/monitoring",
+    "path:/tmp/exam/helm-charts/monitoring/templates",
+    "path:/tmp/exam/helm-charts/monitoring/values.yaml"
+   ],
+   "uses": [
+    "default-storageclass"
+   ]
+  },
+  {
+   "source": "cka/004",
+   "id": "7",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:default"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/004",
+   "id": "8",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "clusterrole:configmap-reader",
+    "ns:audit-lab",
+    "ns:default",
+    "ns:kube-public"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/004",
+   "id": "9",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:production"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/004",
+   "id": "10",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:web-api"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/004",
+   "id": "11",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:sched-debug"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/004",
+   "id": "12",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:db-cluster"
+   ],
+   "uses": [
+    "default-storageclass"
+   ]
+  },
+  {
+   "source": "cka/004",
+   "id": "13",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:test"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/004",
+   "id": "14",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:restricted"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/004",
+   "id": "15",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:default"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/005",
+   "id": "1",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:backend",
+    "ns:frontend"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/005",
+   "id": "2",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:payments"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/005",
+   "id": "3",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:app-secrets"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/005",
+   "id": "4",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "node:k3d-cluster-server-0",
+    "ns:monitoring"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/005",
+   "id": "5",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:default"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/005",
+   "id": "6",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:config-reload"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/005",
+   "id": "7",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:priority-lab",
+    "priorityclass:critical",
+    "priorityclass:standard"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/005",
+   "id": "8",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:legacy"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/005",
+   "id": "9",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:backups"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/005",
+   "id": "10",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:default"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/005",
+   "id": "11",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:pdb-lab"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/005",
+   "id": "12",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "crd:databases.stable.example.com",
+    "ns:crd-db"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/005",
+   "id": "13",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:privileged-apps",
+    "ns:restricted-apps"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/005",
+   "id": "14",
+   "domain": "Storage",
+   "claims": [
+    "ns:dyn-storage",
+    "storageclass:ssd-provisioner"
+   ],
+   "uses": [
+    "default-storageclass"
+   ]
+  },
+  {
+   "source": "cka/005",
+   "id": "15",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:batch-jobs"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/006",
+   "id": "1",
+   "domain": "Storage",
+   "claims": [
+    "ns:orders",
+    "path:/tmp/orders-pv",
+    "pv:orders-pv"
+   ],
+   "uses": [
+    "default-storageclass"
+   ]
+  },
+  {
+   "source": "cka/006",
+   "id": "2",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:argocd"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/006",
+   "id": "3",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:billing"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/006",
+   "id": "4",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:checkout"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/006",
+   "id": "5",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:default"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/006",
+   "id": "6",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:jobs",
+    "priorityclass:urgent"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/006",
+   "id": "7",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "node:k3d-cluster-agent-1",
+    "ns:ml"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/006",
+   "id": "8",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:web"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/006",
+   "id": "9",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:store"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/006",
+   "id": "10",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:backend",
+    "ns:frontend"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/006",
+   "id": "11",
+   "domain": "Storage",
+   "claims": [
+    "default-storageclass",
+    "ns:default",
+    "storageclass:fast-retain",
+    "storageclass:local-path"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/006",
+   "id": "12",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:catalog"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/006",
+   "id": "13",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:secure-web"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/006",
+   "id": "14",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:reports"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/007",
+   "id": "1",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:default"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/007",
+   "id": "2",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:sales"
+   ],
+   "uses": [
+    "node:k3d-cluster-agent-0"
+   ]
+  },
+  {
+   "source": "cka/007",
+   "id": "3",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:quota-lab"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/007",
+   "id": "4",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:shop"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/007",
+   "id": "5",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:integrations"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/007",
+   "id": "6",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:vault"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/007",
+   "id": "7",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:batch"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/007",
+   "id": "8",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "clusterrole:monitoring-aggregate",
+    "clusterrole:monitoring-nodes",
+    "clusterrole:monitoring-pods",
+    "clusterrolebinding:prometheus-monitoring",
+    "ns:monitoring"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/007",
+   "id": "9",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:canary"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/007",
+   "id": "10",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:staging"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/007",
+   "id": "11",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:helm-apps"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/007",
+   "id": "13",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:reporting"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/007",
+   "id": "14",
+   "domain": "Storage",
+   "claims": [
+    "ns:archive"
+   ],
+   "uses": [
+    "default-storageclass",
+    "node:k3d-cluster-agent-0"
+   ]
+  },
+  {
+   "source": "cka/007",
+   "id": "15",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:payments-dev",
+    "ns:payments-prod",
+    "vap:require-two-replicas",
+    "vapbinding:require-two-replicas-binding"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/007",
+   "id": "16",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:observability"
+   ],
+   "uses": [
+    "node:k3d-cluster-agent-0"
+   ]
+  },
+  {
+   "source": "cka/008",
+   "id": "1",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:stateful"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/008",
+   "id": "2",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:frontend"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/008",
+   "id": "3",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:telemetry"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/008",
+   "id": "4",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:startup"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/008",
+   "id": "5",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:payments"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/008",
+   "id": "6",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:crawler"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/008",
+   "id": "7",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:cache"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/008",
+   "id": "8",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:ci"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/008",
+   "id": "9",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:config"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/008",
+   "id": "10",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:secure"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/008",
+   "id": "11",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:edge"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/008",
+   "id": "12",
+   "domain": "Storage",
+   "claims": [
+    "ns:localdisk",
+    "pv:ssd-pv-1",
+    "storageclass:local-ssd"
+   ],
+   "uses": [
+    "default-storageclass",
+    "node:k3d-cluster-agent-1"
+   ]
+  },
+  {
+   "source": "cka/008",
+   "id": "13",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:checkout"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/008",
+   "id": "14",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:inventory"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/008",
+   "id": "15",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:gw-lab"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/008",
+   "id": "16",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:orders"
+   ],
+   "uses": []
+  }
+ ]
+}

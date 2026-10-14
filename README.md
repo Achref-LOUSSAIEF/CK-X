@@ -28,11 +28,13 @@ Work through them in this order:
 | 6 | **CKA 6 · Final Exam Simulation** *(new)* | Hard | 14 | 120 min |
 | 7 | **CKA 7 · Exam Simulation II** *(new)* | Hard | 16 | 120 min |
 | 8 | **CKA 8 · Exam Simulation III** *(new)* | Hard | 16 | 120 min |
+| 9 | **CKA Random · New Mix Every Attempt** *(new)* | Hard | 16 | 120 min |
 | – | Helm Fundamentals | Medium | 12 | 90 min |
 
 - **Mock Exams A and B** are adapted from [theplatformlab/CKA-Certified-Kubernetes-Administrator](https://github.com/theplatformlab/CKA-Certified-Kubernetes-Administrator) (MIT).
 - **Final Exam Simulation** is an original exam; its list of topics was inspired by [markdjones82/CKA-PREP-2025-v2](https://github.com/markdjones82/CKA-PREP-2025-v2).
 - **Exam Simulations II and III** are original exams on topics the other labs don't cover (Downward API, local PVs, aggregated ClusterRoles, ValidatingAdmissionPolicy, PDB-blocked drains, HTTPRoute weights and header matches, and more).
+- **CKA Random** builds a different exam on every attempt: 16 tasks drawn from CKA 2 to CKA 8, weighted like the real exam's domains, never two tasks that touch the same namespace, node or cluster-wide object. The solutions page of each attempt says which exam every task comes from. After changing a lab, run `python3 tools/build-random-pool.py` to refresh its pool.
 - **Not covered:** CK-X gives no SSH access to cluster nodes, so node-level tasks (kubeadm upgrades, etcd backup/restore, kubelet and control-plane repair, CNI and container runtime installation) can't be practised here. The solutions pages explain the kubeadm procedures where a lab replaced such a task.
 
 ## Requirements

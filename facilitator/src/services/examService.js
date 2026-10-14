@@ -10,6 +10,7 @@ const logger = require('../utils/logger');
 const redisClient = require('../utils/redisClient');
 const jumphostService = require('./jumphostService');
 const MetricService = require('./metricService');
+const randomExamService = require('./randomExamService');
 
 /**
  * Create a new exam
@@ -38,6 +39,14 @@ async function createExam(examData) {
     const examConfig = fs.readFileSync(path.join(process.cwd(),  examData.assetPath, 'config.json'), 'utf8');
     examData.config = JSON.parse(examConfig); 
     delete examData.answers;
+
+    // "random" labs build a new mix of tasks for every attempt
+    if (examData.config.random) {
+      const attempt = randomExamService.buildRandomExam(examId, examData.assetPath, examData.config);
+      examData.assetPath = attempt.assetPath;
+      examData.config = attempt.config;
+      examData.questionCount = attempt.questionCount;
+    }
 
     //persist created at time
     examData.createdAt = new Date().toISOString();

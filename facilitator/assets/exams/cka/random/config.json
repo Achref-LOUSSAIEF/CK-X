@@ -1,0 +1,31 @@
+{
+  "lab": "cka-random",
+  "workerNodes": 2,
+  "answers": "assets/exams/cka/random/answers.md",
+  "questions": "assessment.json",
+  "totalMarks": 100,
+  "lowScore": 60,
+  "mediumScore": 75,
+  "highScore": 85,
+  "random": {
+    "questionCount": 16,
+    "pool": "pool.json",
+    "domainQuota": {
+      "Troubleshooting": 5,
+      "Cluster Architecture, Installation & Configuration": 4,
+      "Services & Networking": 3,
+      "Workloads & Scheduling": 2,
+      "Storage": 2
+    },
+    "labNames": {
+      "cka/001": "CKA 1 · Warm-up: Core Concepts",
+      "cka/004": "CKA 2 · Mock Exam A",
+      "cka/005": "CKA 3 · Mock Exam B",
+      "cka/002": "CKA 4 · Advanced Administration",
+      "cka/003": "CKA 5 · Troubleshooting & Cluster Operations",
+      "cka/006": "CKA 6 · Final Exam Simulation",
+      "cka/007": "CKA 7 · Exam Simulation II",
+      "cka/008": "CKA 8 · Exam Simulation III"
+    }
+  }
+}

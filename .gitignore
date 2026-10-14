@@ -61,3 +61,5 @@ coverage/
 terraform.tfstate
 terraform.tfstate.backup
 .terragrunt-cache/ 
+# Per-attempt files of the CKA Random exam
+facilitator/assets/exams/cka/random/attempts/
