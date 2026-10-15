@@ -97,7 +97,9 @@
    "claims": [
     "ns:dns-debug"
    ],
-   "uses": []
+   "uses": [
+    "coredns"
+   ]
   },
   {
    "source": "cka/002",
@@ -383,7 +385,9 @@
    "claims": [
     "ns:trbl-dns"
    ],
-   "uses": []
+   "uses": [
+    "coredns"
+   ]
   },
   {
    "source": "cka/004",
@@ -1436,6 +1440,151 @@
    "domain": "Storage",
    "claims": [
     "ns:logs"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/011",
+   "id": "1",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:web-logs"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/011",
+   "id": "2",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "node:k3d-cluster-agent-0",
+    "ns:default"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/011",
+   "id": "3",
+   "domain": "Troubleshooting",
+   "claims": [
+    "coredns",
+    "ns:default",
+    "ns:dns-repair"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/011",
+   "id": "4",
+   "domain": "Services & Networking",
+   "claims": [
+    "coredns",
+    "ns:dns-custom"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/011",
+   "id": "5",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:lookup"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/011",
+   "id": "6",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:init-lab"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/011",
+   "id": "7",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:secret-lab"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/011",
+   "id": "8",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:blog"
+   ],
+   "uses": [
+    "node:k3d-cluster-agent-1"
+   ]
+  },
+  {
+   "source": "cka/011",
+   "id": "9",
+   "domain": "Workloads & Scheduling",
+   "claims": [
+    "ns:oneoff"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/011",
+   "id": "10",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:edge"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/011",
+   "id": "11",
+   "domain": "Cluster Architecture, Installation & Configuration",
+   "claims": [
+    "ns:limits-lab"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/011",
+   "id": "12",
+   "domain": "Storage",
+   "claims": [
+    "ns:default"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/011",
+   "id": "13",
+   "domain": "Storage",
+   "claims": [
+    "ns:retain-lab",
+    "storageclass:keep-local"
+   ],
+   "uses": [
+    "default-storageclass"
+   ]
+  },
+  {
+   "source": "cka/011",
+   "id": "14",
+   "domain": "Services & Networking",
+   "claims": [
+    "ns:infra",
+    "ns:web-app"
+   ],
+   "uses": []
+  },
+  {
+   "source": "cka/011",
+   "id": "15",
+   "domain": "Troubleshooting",
+   "claims": [
+    "ns:audit-lab"
    ],
    "uses": []
   }

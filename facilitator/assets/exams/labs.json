@@ -121,16 +121,28 @@
       "order": 10
     },
     {
+      "id": "cka-011",
+      "assetPath": "assets/exams/cka/011",
+      "name": "CKA 11 · Classic Exam Tasks",
+      "category": "CKA",
+      "description": "Classic CKA tasks and 2025 favourites at a steady level: filtering logs, counting schedulable nodes, repairing CoreDNS and adding a custom DNS entry, Service and Pod DNS names, init containers from a spec file, Secrets as files and variables, sharing a node between replicas, one-off Pods, Helm values, LimitRanges, sorted PVs, a Retain StorageClass, cross-namespace Gateway routes and custom columns. Topics inspired by cloudhein/CKA.",
+      "warmUpTimeInSeconds": 360,
+      "difficulty": "Medium",
+      "examDurationInMinutes": 120,
+      "questionCount": 15,
+      "order": 11
+    },
+    {
       "id": "cka-random",
       "assetPath": "assets/exams/cka/random",
       "name": "CKA Random · New Mix Every Attempt",
       "category": "CKA",
-      "description": "A different exam every time: 16 tasks drawn at random from CKA 2 to CKA 10, weighted like the real exam's domains (Troubleshooting 5, Cluster Architecture 4, Services & Networking 3, Workloads 2, Storage 2) and chosen so they never clash. Use it once you have done the other exams.",
+      "description": "A different exam every time: 16 tasks drawn at random from CKA 2 to CKA 11, weighted like the real exam's domains (Troubleshooting 5, Cluster Architecture 4, Services & Networking 3, Workloads 2, Storage 2) and chosen so they never clash. Use it once you have done the other exams.",
       "warmUpTimeInSeconds": 360,
       "difficulty": "Hard",
       "examDurationInMinutes": 120,
       "questionCount": 16,
-      "order": 11
+      "order": 12
     },
     {
       "id": "helm-001",
@@ -142,7 +154,7 @@
       "difficulty": "Medium",
       "examDurationInMinutes": 90,
       "questionCount": 12,
-      "order": 12
+      "order": 13
     }
   ]
 }

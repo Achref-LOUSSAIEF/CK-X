@@ -6,8 +6,8 @@ A self-hosted practice environment for the **CKA (Certified Kubernetes Administr
 
 ## What's different from CK-X
 
-- **CKA only.** The CKAD, CKS and Docker labs were removed; ten CKA exams, a random CKA exam and a Helm lab remain, listed in a recommended order from Easy to Hard.
-- **8 extra CKA exams** (130 tasks) and **CKA Random**, a new mix on every attempt. See [Labs](#labs).
+- **CKA only.** The CKAD, CKS and Docker labs were removed; eleven CKA exams, a random CKA exam and a Helm lab remain, listed in a recommended order from Easy to Hard.
+- **9 extra CKA exams** (145 tasks) and **CKA Random**, a new mix on every attempt. See [Labs](#labs).
 - **Score by domain.** The results page shows your score for each of the five CKA domains and compares the total with the real pass mark (66%).
 - **Simple home page.** The site opens directly on the exam list: pick a certification, pick a lab, start. No landing page, and no paid "premium bundle" entries in the list.
 - **Closer to the real exam environment.** You start on a machine called `base` with no `kubectl`, and each question names its own host to SSH to; SSH from one exam host to another is refused, as in the real exam, so you go back with `exit`. The exam hosts have `kubectl` (with `k` and completion), `helm`, `yq`, `curl`, `wget`, `man` and passwordless `sudo` / `sudo -i`. Firefox in the exam desktop only opens the documentation the CKA allows (kubernetes.io, helm.sh and the Gateway API docs) plus the task-specific links shown in a question's **Quick Reference**. The question panel doesn't reveal the topic (no "Concepts" line), and there is no plain-terminal view and no Terminate button during the exam, only End Exam.
@@ -33,12 +33,13 @@ Work through them in this order:
 | 8 | **CKA 8 · Exam Simulation III** *(new)* | Hard | 16 | 120 min |
 | 9 | **CKA 9 · mockctl Practice 1** *(new)* | Medium | 18 | 120 min |
 | 10 | **CKA 10 · mockctl Practice 2** *(new)* | Medium | 18 | 120 min |
-| 11 | **CKA Random · New Mix Every Attempt** *(new)* | Hard | 16 | 120 min |
+| 11 | **CKA 11 · Classic Exam Tasks** *(new)* | Medium | 15 | 120 min |
+| 12 | **CKA Random · New Mix Every Attempt** *(new)* | Hard | 16 | 120 min |
 | – | Helm Fundamentals | Medium | 12 | 90 min |
 
-- **CKA 9 and CKA 10** are Medium: do them any time after CKA 3, for example between the Hard exams as a confidence check.
+- **CKA 9, CKA 10 and CKA 11** are Medium: do them any time after CKA 3, for example between the Hard exams as a confidence check. CKA 11 covers classic exam tasks the other labs don't (filtering logs, counting schedulable nodes, repairing CoreDNS and adding a custom DNS entry, Service and Pod DNS names, sharing a node's resources between replicas, cross-namespace Gateway routes, custom columns).
 - **Exam Simulations II and III** cover topics the other labs don't (Downward API, local PVs, aggregated ClusterRoles, ValidatingAdmissionPolicy, PDB-blocked drains, HTTPRoute weights and header matches, and more).
-- **CKA Random** builds a different exam on every attempt: 16 tasks drawn from CKA 2 to CKA 10, weighted like the real exam's domains, never two tasks that touch the same namespace, node or cluster-wide object. The solutions page of each attempt says which exam every task comes from. After changing a lab, run `python3 tools/build-random-pool.py` to refresh its pool.
+- **CKA Random** builds a different exam on every attempt: 16 tasks drawn from CKA 2 to CKA 11, weighted like the real exam's domains, never two tasks that touch the same namespace, node or cluster-wide object. The solutions page of each attempt says which exam every task comes from. After changing a lab, run `python3 tools/build-random-pool.py` to refresh its pool.
 - Where each exam comes from is listed under [Credits](#credits).
 - **Not covered:** the simulator gives no SSH access to cluster nodes, so node-level tasks (kubeadm upgrades, etcd backup/restore, kubelet and control-plane repair, CNI and container runtime installation) can't be practised here. The solutions pages explain the kubeadm procedures where a lab replaced such a task.
 
@@ -111,7 +112,8 @@ Each lab is a folder under `facilitator/assets/exams/<category>/<id>/` with an `
 | CKA 8 · Exam Simulation III | Written for CKA Simulator | – | – |
 | CKA 9 · mockctl Practice 1 | Tasks 1–15 from Unofficial CKA Practice Exam 1 of [ericsson-james/mockctl-exam-lab](https://github.com/ericsson-james/mockctl-exam-lab); tasks 16–18 written for CKA Simulator | © 2026 James Ericsson, MIT License | Moved from mockctl's simulated cluster to a real one; its 3 node-level tasks were left out. The MIT license text is reproduced in its solutions page |
 | CKA 10 · mockctl Practice 2 | Tasks 1–14 from Unofficial CKA Practice Exam 2 of the same repository; tasks 15–18 written for CKA Simulator | © 2026 James Ericsson, MIT License | Same as above |
-| CKA Random | A mix of the tasks of CKA 2 to CKA 10, so the credits above apply to each task; every solutions page names the exam each task comes from | – | – |
+| CKA 11 · Classic Exam Tasks | Written for CKA Simulator; the topics were inspired by the practice questions and runbooks of [cloudhein/CKA](https://github.com/cloudhein/CKA) | Topic ideas credited to [cloudhein](https://github.com/cloudhein); no text, scenario or script was copied (that repository has no license) | – |
+| CKA Random | A mix of the tasks of CKA 2 to CKA 11, so the credits above apply to each task; every solutions page names the exam each task comes from | – | – |
 | Helm Fundamentals | Original CK-X lab `helm-001` | [CK-X](https://github.com/sailor-sh/CK-X) by Sailor.sh, BSL 1.1 | – |
 
 Each exam's solutions page repeats its credit at the top. If you own one of these sources and want the credit worded differently, or the content removed, please open an issue.

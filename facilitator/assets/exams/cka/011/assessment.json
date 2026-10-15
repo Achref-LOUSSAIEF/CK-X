@@ -1,0 +1,438 @@
+{
+  "questions": [
+    {
+      "id": "1",
+      "namespace": "web-logs",
+      "machineHostname": "cka-q1",
+      "domain": "Troubleshooting",
+      "question": "The Pod `bar` in the namespace `web-logs` checks a list of websites and logs the result.\n\nExtract the log lines of `bar` that contain the error `unable-to-access-website` and write **only those lines** to `/tmp/exam/q1/bar-errors.log` on `cka-q1`.",
+      "concepts": [
+        "logs",
+        "troubleshooting"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "bar-errors.log holds exactly the matching log lines",
+          "verificationScriptFile": "q1_s1_validate_file.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "namespace": "default",
+      "machineHostname": "cka-q2",
+      "domain": "Cluster Architecture, Installation & Configuration",
+      "question": "Check how many nodes of the cluster are `Ready` **and** can run normal workloads, i.e. do not carry a taint with the effect `NoSchedule`.\n\nWrite only that number to `/tmp/exam/q2/schedulable-nodes.txt` on `cka-q2`.",
+      "concepts": [
+        "nodes",
+        "taints",
+        "kubectl"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "schedulable-nodes.txt holds the right number",
+          "verificationScriptFile": "q2_s1_validate_count.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "namespace": "dns-repair",
+      "machineHostname": "cka-q3",
+      "domain": "Troubleshooting",
+      "question": "Pods can resolve the names of cluster Services, but every lookup of an external name (for example `kubernetes.io`) times out.\n\nInvestigate and repair CoreDNS so that Pods resolve external names again through the resolvers of the node (`/etc/resolv.conf`). Cluster names must keep working.\n\nThe Pod `dns-client` in the namespace `dns-repair` can be used for testing, e.g. `kubectl exec -n dns-repair dns-client -- nslookup kubernetes.io`.",
+      "concepts": [
+        "dns",
+        "coredns",
+        "troubleshooting"
+      ],
+      "quickReference": [
+        {
+          "title": "Debugging DNS resolution",
+          "url": "https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/"
+        }
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "CoreDNS forwards external names to the node's resolvers",
+          "verificationScriptFile": "q3_s1_validate_config.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Cluster and external names resolve from a Pod",
+          "verificationScriptFile": "q3_s2_validate_resolution.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "namespace": "dns-custom",
+      "machineHostname": "cka-q4",
+      "domain": "Services & Networking",
+      "question": "Workloads need to reach an internal service by the name `myapp.internal`, which is not in any DNS zone.\n\nConfigure CoreDNS so that a lookup of `myapp.internal` from any Pod returns the IP address `10.10.10.10`. Resolution of all other names must keep working.\n\nThe Pod `dns-client` in the namespace `dns-custom` can be used for testing.",
+      "concepts": [
+        "dns",
+        "coredns"
+      ],
+      "quickReference": [
+        {
+          "title": "Customizing DNS Service (CoreDNS ConfigMap)",
+          "url": "https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/"
+        }
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "CoreDNS configuration maps myapp.internal",
+          "verificationScriptFile": "q4_s1_validate_config.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "myapp.internal resolves to 10.10.10.10 from a Pod",
+          "verificationScriptFile": "q4_s2_validate_resolution.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "namespace": "lookup",
+      "machineHostname": "cka-q5",
+      "domain": "Services & Networking",
+      "question": "In the namespace `lookup`, the Deployment `nginx-random` runs nginx on port `80`.\n\n1. Expose it with a `ClusterIP` Service `nginx-random` on port `80`.\n2. From a temporary Pod with the image `busybox:1.36`, look up the DNS name of the Service and save the `nslookup` output to `/tmp/exam/q5/nginx-random.svc` on `cka-q5`.\n3. From a temporary Pod, look up the DNS name of one `nginx-random` **Pod** and save the `nslookup` output to `/tmp/exam/q5/nginx-random.pod`.",
+      "concepts": [
+        "services",
+        "dns",
+        "service discovery"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Service nginx-random on port 80 with endpoints",
+          "verificationScriptFile": "q5_s1_validate_service.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Service lookup saved to nginx-random.svc",
+          "verificationScriptFile": "q5_s2_validate_svc_lookup.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "Pod lookup saved to nginx-random.pod",
+          "verificationScriptFile": "q5_s3_validate_pod_lookup.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "namespace": "init-lab",
+      "machineHostname": "cka-q6",
+      "domain": "Workloads & Scheduling",
+      "question": "The spec file `/tmp/exam/q6/ledger.yaml` on `cka-q6` defines the Pod `ledger` (namespace `init-lab`). Its container exits if the file `/workdir/ready.flag` does not exist.\n\n1. Add an init container named `prepare` (image `busybox:1.36`) that creates the empty file `/workdir/ready.flag` in the Pod's existing `workdir` volume.\n2. Save your changes in `/tmp/exam/q6/ledger.yaml`, then create the Pod from that file.\n\nThe Pod must be `Running` and its container must not have restarted.",
+      "concepts": [
+        "init containers",
+        "volumes",
+        "pods"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ledger.yaml has an init container mounting workdir at /workdir",
+          "verificationScriptFile": "q6_s1_validate_file.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Pod ledger runs after its init container created ready.flag",
+          "verificationScriptFile": "q6_s2_validate_pod.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "namespace": "secret-lab",
+      "machineHostname": "cka-q7",
+      "domain": "Workloads & Scheduling",
+      "question": "In the namespace `secret-lab`:\n\n1. Create a Secret `app-secret` with the key `password` and the value `n0t-s0-s3cret`.\n2. Create a Pod `secret-file` (image `nginx:1.27`) that mounts the Secret as files in the directory `/secrets`.\n3. Create a Pod `secret-env` (image `nginx:1.27`) that exposes the key `password` of the Secret as the environment variable `APP_PASSWORD`.",
+      "concepts": [
+        "secrets",
+        "volumes",
+        "environment variables"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Secret app-secret with the right password",
+          "verificationScriptFile": "q7_s1_validate_secret.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "secret-file reads the password from /secrets/password",
+          "verificationScriptFile": "q7_s2_validate_file_pod.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "secret-env has APP_PASSWORD from the Secret",
+          "verificationScriptFile": "q7_s3_validate_env_pod.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "namespace": "blog",
+      "machineHostname": "cka-q8",
+      "domain": "Workloads & Scheduling",
+      "question": "The Deployment `cms` in the namespace `blog` must run `3` replicas on the node `k3d-cluster-agent-1`, but none of its Pods can be scheduled.\n\nAdjust the resource **requests** so that the node's resources are shared evenly by the 3 Pods, leaving some headroom for the node and its other Pods:\n\n- each Pod requests between `20%` and `30%` of the node's **allocatable** CPU and memory\n- the init container and the `cms` container use exactly the same requests\n- keep the node selector; you don't need to set limits\n\nAll 3 replicas must be running. (Tip: scaling the Deployment to `0` while you edit it can help.)",
+      "concepts": [
+        "resource management",
+        "requests",
+        "init containers",
+        "scheduling"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Requests are 20-30% of the node's allocatable, identical in both containers",
+          "verificationScriptFile": "q8_s1_validate_requests.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        },
+        {
+          "id": "2",
+          "description": "3 replicas of cms are ready",
+          "verificationScriptFile": "q8_s2_validate_running.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "namespace": "oneoff",
+      "machineHostname": "cka-q9",
+      "domain": "Workloads & Scheduling",
+      "question": "In the namespace `oneoff`, run a Pod named `envdump` with the image `busybox:1.36` that prints its environment variables (`env`) once.\n\nSave the output to `/tmp/exam/q9/env.txt` on `cka-q9`. The Pod must not exist anymore when you are done.",
+      "concepts": [
+        "pods",
+        "kubectl run"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "env.txt holds the environment of envdump",
+          "verificationScriptFile": "q9_s1_validate_file.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "The Pod envdump was removed",
+          "verificationScriptFile": "q9_s2_validate_deleted.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "namespace": "edge",
+      "machineHostname": "cka-q10",
+      "domain": "Cluster Architecture, Installation & Configuration",
+      "question": "A Helm chart for the edge proxy is in `/tmp/exam/q10/edge-proxy` on `cka-q10`.\n\nInstall it as the release `edge` in the namespace `edge` (create it), with the proxy's support for the **Kubernetes Gateway API** enabled. Look at the chart's values to find the setting; keep the Ingress support enabled.\n\nDo not edit the chart: set the value at install time.",
+      "concepts": [
+        "helm",
+        "values"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Release edge of edge-proxy is deployed in edge",
+          "verificationScriptFile": "q10_s1_validate_release.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Gateway API provider enabled through values",
+          "verificationScriptFile": "q10_s2_validate_values.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "namespace": "limits-lab",
+      "machineHostname": "cka-q11",
+      "domain": "Cluster Architecture, Installation & Configuration",
+      "question": "In the namespace `limits-lab`, create a LimitRange `container-limits` so that:\n\n- containers that set no resources get the requests `cpu: 100m`, `memory: 50Mi` and the limits `cpu: 200m`, `memory: 100Mi`\n- no container can have a memory limit above `500Mi`\n\nTest it, for example with `kubectl run test -n limits-lab --image=nginx:1.27 --dry-run=server -o yaml`.",
+      "concepts": [
+        "limitranges",
+        "resource management"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "LimitRange container-limits with the right defaults and maximum",
+          "verificationScriptFile": "q11_s1_validate_limitrange.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Defaults applied and the 500Mi maximum enforced",
+          "verificationScriptFile": "q11_s2_validate_effect.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "namespace": "default",
+      "machineHostname": "cka-q12",
+      "domain": "Storage",
+      "question": "Several PersistentVolumes carry the label `team=storage-audit`.\n\nList **only those** PersistentVolumes, **sorted by capacity** from smallest to largest, using `kubectl get` with its default columns, and save the output to `/tmp/exam/q12/pv-by-size.txt` on `cka-q12`.",
+      "concepts": [
+        "persistent volumes",
+        "kubectl",
+        "sorting"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "The storage-audit PVs are listed from smallest to largest",
+          "verificationScriptFile": "q12_s1_validate_file.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "The output has the default kubectl get columns",
+          "verificationScriptFile": "q12_s2_validate_columns.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "namespace": "retain-lab",
+      "machineHostname": "cka-q13",
+      "domain": "Storage",
+      "question": "Show that a `Retain` reclaim policy keeps data after its claim is deleted:\n\n1. Create a StorageClass `keep-local` with the provisioner `rancher.io/local-path`, the reclaim policy `Retain` and the binding mode `WaitForFirstConsumer`. It must not be the default StorageClass.\n2. In the namespace `retain-lab`, create a PVC `scratch` (`64Mi`, `ReadWriteOnce`, StorageClass `keep-local`) and a Pod `writer` (image `busybox:1.36`) that mounts it at `/data` and writes the text `hello from writer` to `/data/hello.txt`.\n3. Once the file is written, delete the Pod `writer` and the PVC `scratch`.\n\nThe PersistentVolume that was provisioned for `scratch` must still exist afterwards, with its data.",
+      "concepts": [
+        "storage classes",
+        "reclaim policy",
+        "dynamic provisioning"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "StorageClass keep-local (local-path, Retain, WaitForFirstConsumer)",
+          "verificationScriptFile": "q13_s1_validate_sc.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "The PV of scratch is Released, PVC and Pod deleted",
+          "verificationScriptFile": "q13_s2_validate_released.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "hello.txt is still on the retained volume",
+          "verificationScriptFile": "q13_s3_validate_data.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "namespace": "web-app",
+      "machineHostname": "cka-q14",
+      "domain": "Services & Networking",
+      "question": "The platform team runs the Gateway `shared-gw` (class `shared-gw-class`) in the namespace `infra`. Its listener `http` (port `80`) currently accepts routes only from its own namespace. There is no gateway controller, so only the resources are graded.\n\nExpose the Service `web-service` (namespace `web-app`, port `80`) through `shared-gw` for the host `web.example.com`:\n\n1. Allow the listener `http` to accept routes from namespaces labeled `gateway-access=true` (not from all namespaces), and label the namespace `web-app` accordingly.\n2. Create an HTTPRoute `web-route` in `web-app`, attached to `shared-gw`, that sends `web.example.com` to `web-service` on port `80`.",
+      "concepts": [
+        "gateway api",
+        "httproute",
+        "namespaces"
+      ],
+      "quickReference": [
+        {
+          "title": "Gateway API: cross-namespace routing",
+          "url": "https://gateway-api.sigs.k8s.io/guides/multiple-ns/"
+        }
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Listener http accepts routes from gateway-access=true namespaces; web-app labeled",
+          "verificationScriptFile": "q14_s1_validate_gateway.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "HTTPRoute web-route attached to infra/shared-gw",
+          "verificationScriptFile": "q14_s2_validate_route.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "namespace": "audit-lab",
+      "machineHostname": "cka-q15",
+      "domain": "Troubleshooting",
+      "question": "Write a report of the Pods in the namespace `audit-lab` to `/tmp/exam/q15/pod-status.txt` on `cka-q15`, using `kubectl` with **custom columns**:\n\n- column `POD_NAME`: the Pod name\n- column `POD_STATUS`: the Pod's phase (`.status.phase`)\n- rows sorted by Pod name\n\nThe file must contain the header line and one line per Pod.",
+      "concepts": [
+        "kubectl",
+        "custom columns",
+        "monitoring"
+      ],
+      "verification": [
+        {
+          "id": "1",
+          "description": "pod-status.txt lists every Pod with its phase, sorted by name",
+          "verificationScriptFile": "q15_s1_validate_file.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    }
+  ]
+}

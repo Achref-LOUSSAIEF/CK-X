@@ -27,13 +27,14 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 EXAMS = os.path.join(ROOT, "facilitator", "assets", "exams")
 OUT = os.path.join(EXAMS, "cka", "random", "pool.json")
 
-SOURCES = ["cka/002", "cka/003", "cka/004", "cka/005", "cka/006", "cka/007", "cka/008", "cka/009", "cka/010"]
+SOURCES = ["cka/002", "cka/003", "cka/004", "cka/005", "cka/006", "cka/007", "cka/008", "cka/009", "cka/010", "cka/011"]
 
 # Tasks that drain or cordon a node: they evict the Pods of every other task
 # on that node, so they only make sense in their own exam.
 EXCLUDE = {"cka/003/7", "cka/004/3", "cka/007/12", "cka/010/14"}
 
 NODE_RE = re.compile(r"k3d-cluster-(?:agent-[01]|server-0)")
+COREDNS_CHANGES = re.compile(r"(?:configmap|cm) coredns|coredns-custom|rollout restart (?:deployment|deploy) coredns")
 NODE_CHANGES = re.compile(r"kubectl (?:taint|label) (?:node|nodes|no)\b|kubectl (?:cordon|drain|uncordon)\b")
 CLUSTER_KINDS = {
     "StorageClass": "storageclass", "PriorityClass": "priorityclass", "ClusterRole": "clusterrole",
@@ -106,6 +107,11 @@ def analyse(lab, q, answers):
         claims.add("default-storageclass")
     elif re.search(r"PersistentVolumeClaim|volumeClaimTemplates|default StorageClass", text):
         uses.add("default-storageclass")
+    # CoreDNS: a task that edits or restarts it would disturb a task that relies on it
+    if COREDNS_CHANGES.search(setup + answers.get(qid, "")):
+        claims.add("coredns")
+    elif re.search(r"coredns", text, re.I):
+        uses.add("coredns")
     uses -= claims
     return sorted(claims), sorted(uses)
 
