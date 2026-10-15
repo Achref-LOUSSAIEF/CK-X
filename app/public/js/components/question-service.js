@@ -5,29 +5,11 @@
 
 // Process question content to improve formatting and highlighting
 function processQuestionContent(content) {
-    // First, preserve existing HTML formatting
-    let processedContent = content;
-    
-    // Add highlighting to text in single quotes that isn't already styled
-    processedContent = processedContent.replace(
-        /`([^`]+)`/g, 
-        function(match, text) {
-            // Skip if already inside an HTML tag or existing styled element
-            if (match.match(/<.*>/) || 
-                match.includes('class="code"') || 
-                match.includes('class="highlight"')) {
-                return match;
-            }
-            return `<span class="inline-code">${text}</span>`;
-        }
-    );
-    
-    // Style inline code with backticks if not already styled
-    processedContent = processedContent.replace(
-        /`([^`]+)`/g, 
-        '<code class="bg-light px-1 rounded">$1</code>'
-    );
-    
+    // Set inline code aside first, so the bold/italic rules below can't eat
+    // the asterisks inside it (a cron schedule like `0 2 * * *` lost two of them)
+    const codeSpans = [];
+    let processedContent = content.replace(/`([^`]+)`/g, (match, text) => `\u0000${codeSpans.push(text) - 1}\u0000`);
+
     // Style bold text
     processedContent = processedContent.replace(
         /\*\*([^*]+)\*\*/g, 
@@ -42,6 +24,8 @@ function processQuestionContent(content) {
     
     // Convert literal newline characters to HTML line breaks
     processedContent = processedContent.replace(/\n/g, '<br>');
+
+    processedContent = processedContent.replace(/\u0000(\d+)\u0000/g, (match, i) => `<span class="inline-code">${codeSpans[i]}</span>`);
     
     // Ensure paragraphs have proper spacing and line breaks
     processedContent = processedContent.replace(
