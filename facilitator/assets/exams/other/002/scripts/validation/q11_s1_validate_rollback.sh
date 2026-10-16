@@ -27,7 +27,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Check if there was a rollback operation in the history
-if ! echo "$history" | grep -q "rollback"; then
+if ! echo "$history" | grep -qi "rollback"; then  # helm prints "Rollback to N"
   echo "❌ No rollback operation found in the release history"
   echo "Release history:"
   echo "$history"
