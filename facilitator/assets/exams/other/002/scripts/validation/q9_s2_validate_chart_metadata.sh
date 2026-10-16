@@ -1,4 +1,6 @@
 #!/bin/bash
+# the chart is created in the home directory of the exam host
+cd /home/candidate || exit 1
 # Validate script for Question 9, Step 2: Check if Chart.yaml is modified correctly
 
 # Check if the Chart.yaml file exists

@@ -44,12 +44,9 @@ if ! echo "$repo_list" | grep -q "localrepo"; then
   exit 1
 fi
 
-# Check if the URL is set to the correct path
-local_path="/tmp/exam/q10/charts"
-if ! echo "$repo_list" | grep -q "localrepo.*$local_path"; then
-  echo "❌ Local repository URL is not set to $local_path"
-  echo "Current repositories:"
-  echo "$repo_list"
+# the repository must serve the webapp chart
+if ! helm search repo localrepo/webapp 2>/dev/null | grep -q "localrepo/webapp"; then
+  echo "❌ 'helm search repo localrepo/webapp' finds nothing (run helm repo update?)"
   exit 1
 fi
 

@@ -5,10 +5,10 @@
 mkdir -p /tmp/exam/q12
 
 # Create a simple chart with an intentional issue
-mkdir -p /tmp/buggy-chart/templates
+mkdir -p /tmp/exam/q12/buggy-chart/templates
 
 # Create Chart.yaml
-cat <<EOF > /tmp/buggy-chart/Chart.yaml
+cat <<EOF > /tmp/exam/q12/buggy-chart/Chart.yaml
 apiVersion: v2
 name: buggy-app
 description: A buggy Helm chart for demonstration
@@ -17,7 +17,7 @@ appVersion: 1.0.0
 EOF
 
 # Create values.yaml with an incorrect image reference
-cat <<EOF > /tmp/buggy-chart/values.yaml
+cat <<EOF > /tmp/exam/q12/buggy-chart/values.yaml
 replicaCount: 1
 
 image:
@@ -32,7 +32,7 @@ service:
 EOF
 
 # Create a deployment template with an issue
-cat <<EOF > /tmp/buggy-chart/templates/deployment.yaml
+cat <<EOF > /tmp/exam/q12/buggy-chart/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -63,7 +63,7 @@ spec:
 EOF
 
 # Create a service template
-cat <<EOF > /tmp/buggy-chart/templates/service.yaml
+cat <<EOF > /tmp/exam/q12/buggy-chart/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -84,10 +84,10 @@ spec:
 EOF
 
 # Install the buggy chart
-helm install buggy-app /tmp/buggy-chart
+helm install buggy-app /tmp/exam/q12/buggy-chart -n default
 
-# Clean up the temporary chart directory
-rm -rf /tmp/buggy-chart
+# keep the chart: the candidate upgrades the release with it
+chmod -R a+rwX /tmp/exam/q12
 
 echo "Buggy Helm release 'buggy-app' has been created"
 exit 0 

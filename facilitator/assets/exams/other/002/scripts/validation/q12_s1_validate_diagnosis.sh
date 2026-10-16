@@ -23,11 +23,9 @@ if ! grep -E -i "(error|issue|problem|failed|debug|helm|not found|missing|incorr
   exit 1
 fi
 
-# Check if the diagnosis contains helm debug commands or output
-if ! grep -E -i "(helm get|helm status|helm debug|helm history|kubectl describe)" /tmp/exam/q12/diagnosis.txt > /dev/null; then
-  echo "❌ Diagnosis does not show evidence of using Helm debugging commands"
-  echo "Expected to find mentions of 'helm get', 'helm status', etc."
-  echo "File content:"
+# the diagnosis must name the cause: the image / its tag
+if ! grep -E -i "(image|tag|nonexistenttag|pull)" /tmp/exam/q12/diagnosis.txt > /dev/null; then
+  echo "❌ Diagnosis does not name the cause (the container image tag)"
   cat /tmp/exam/q12/diagnosis.txt
   exit 1
 fi

@@ -79,15 +79,23 @@ kubectl get pods -l app.kubernetes.io/instance=web-server
 
 First, create the values file for Redis:
 
+The Bitnami Redis chart nests these settings; find the keys first:
+
+```bash
+helm show values bitnami/redis | grep -n -A3 -E "^auth:|^master:|persistence:|resources:"
+```
+
 ```bash
 cat > /tmp/exam/q8/redis-values.yaml << EOF
-password: "password123"
-persistence:
-  enabled: true
-resources:
-  limits:
-    memory: 256Mi
-    cpu: 100m
+auth:
+  password: "password123"
+master:
+  persistence:
+    enabled: true
+  resources:
+    limits:
+      memory: 256Mi
+      cpu: 100m
 EOF
 ```
 
@@ -129,8 +137,12 @@ mv webapp-*.tgz /tmp/exam/q10/charts/
 # Create an index file
 helm repo index /tmp/exam/q10/charts/
 
-# Add the local repo
-helm repo add localrepo /tmp/exam/q10/charts
+# Serve the directory over HTTP (helm repo add does not accept a local path)
+python3 -m http.server 8879 --directory /tmp/exam/q10/charts >/dev/null 2>&1 &
+
+# Add the local repo and check it
+helm repo add localrepo http://localhost:8879
+helm search repo localrepo/webapp
 ```
 
 ## Question 11: Roll Back a Release
@@ -179,8 +191,9 @@ EOF
 Fix the issue:
 
 ```bash
-# Upgrade the release with a valid image tag
-helm upgrade buggy-app buggy-app --set image.tag=latest
+# Upgrade the release with a valid image tag, using the chart in /tmp/exam/q12/buggy-chart
+helm upgrade buggy-app /tmp/exam/q12/buggy-chart -n default --reuse-values --set image.tag=1.27
+kubectl get pods -l app.kubernetes.io/instance=buggy-app
 ```
 
 Alternatively, if you don't have access to the original chart:
@@ -193,5 +206,5 @@ image:
 EOF
 
 # Upgrade using the new values file
-helm upgrade buggy-app buggy-app -f /tmp/fixed-values.yaml
+helm upgrade buggy-app /tmp/exam/q12/buggy-chart -n default -f /tmp/fixed-values.yaml
 ``` 

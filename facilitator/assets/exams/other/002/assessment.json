@@ -146,7 +146,7 @@
       "namespace": "default",
       "machineHostname": "cka-q8",
       "domain": "Cluster Architecture, Installation & Configuration",
-      "question": "Create a new values file at `/tmp/exam/q8/redis-values.yaml` for a Redis installation with the following configurations:\n\n- Password: \"password123\"\n- Persistence enabled\n- Resource limits: 256Mi memory and 100m CPU\n\nThen install the Bitnami Redis chart using this values file, with the release name `cache-db` in the `default` namespace.",
+      "question": "Create a new values file at `/tmp/exam/q8/redis-values.yaml` for a Redis installation with the following configurations:\n\n- Password: \"password123\"\n- Persistence enabled\n- Resource limits: 256Mi memory and 100m CPU\n\nUse the chart's own value names (check them with `helm show values bitnami/redis`). Then install the Bitnami Redis chart using this values file, with the release name `cache-db` in the `default` namespace.",
       "concepts": ["helm", "values files", "advanced installation"],
       "verification": [
         {
@@ -194,7 +194,7 @@
       "namespace": "default",
       "machineHostname": "cka-q10",
       "domain": "Cluster Architecture, Installation & Configuration",
-      "question": "Package the `webapp` chart you created into a `.tgz` file.\n\nThen create a local chart repository by:\n1. Creating a directory at `/tmp/exam/q10/charts`\n2. Moving the packaged chart to this directory\n3. Creating an index file for this repository\n4. Adding this local repository to Helm with the name `localrepo`",
+      "question": "Package the `webapp` chart you created into a `.tgz` file.\n\nThen create a local chart repository by:\n1. Creating a directory at `/tmp/exam/q10/charts`\n2. Moving the packaged chart to this directory\n3. Creating an index file for this repository\n4. Adding this local repository to Helm with the name `localrepo` (Helm needs an HTTP URL: serve the directory, e.g. `python3 -m http.server 8879 --directory /tmp/exam/q10/charts &`)\n\n`helm search repo localrepo/webapp` must find the chart.",
       "concepts": ["helm", "chart packaging", "repository management"],
       "verification": [
         {
@@ -242,7 +242,7 @@
       "namespace": "default",
       "machineHostname": "cka-q12",
       "domain": "Cluster Architecture, Installation & Configuration",
-      "question": "Debug an existing problematic release named `buggy-app` in the `default` namespace.\n\n1. Use Helm's debug capabilities to identify the issue\n2. Create a file at `/tmp/exam/q12/diagnosis.txt` explaining the problem\n3. Fix the release by performing the necessary upgrade or reinstallation",
+      "question": "Debug an existing problematic release named `buggy-app` in the `default` namespace. Its chart is in `/tmp/exam/q12/buggy-chart` on `cka-q12`.\n\n1. Use Helm's debug capabilities to identify the issue\n2. Create a file at `/tmp/exam/q12/diagnosis.txt` explaining the problem (what is wrong and how you found it)\n3. Fix the release by performing the necessary upgrade or reinstallation",
       "concepts": ["helm", "debugging", "troubleshooting"],
       "verification": [
         {
